@@ -1,0 +1,30 @@
+---
+title: "如何使用Hugo生成文章内容"
+date: 2021-01-13T16:40:44+08:00
+tags: [howto]
+---
+
+# 前置要求
+
+首先学会使用**Git**。可以直接阅读[《Pro Git》](https://git-scm.com/book/zh/v2)的在线版。
+
+然后知道一些基本的**Markdown**语法，文章内容使用Markdown+一些主题特定的语法进行编辑。熟悉Markdown语法能编辑出样式精美的文章。
+
+# 使用工具
+
+文章是使用 [Hugo](https://gohugo.io) 生成的，目前使用的主题是 [Cupper](https://github.com/zwbetz-gh/cupper-hugo-theme)。需要知道Hugo的基本概念以及 `hugo`、 `hugo new`、`hugo server` 这些基本操作。内容编辑还可以参考主题目录下的示例文件。
+
+> Cupper 主题提供的特殊[样式](https://cupper-hugo-theme.netlify.com/cupper-shortcodes/)
+
+# 使用方式
+
+* 将项目clone到本地
+* 从master/main分支checkout出开发分支，如果是已经存在开发分支则是merge一下master/main分支最近的提交
+* `git submodule init` 初始化子项目（主题，初次使用时操作）
+* `git submodule update` 拉取子项目（主题，可选）
+* `hugo new` 创建新的文章
+* `hugo server` 用本地server调试文章页面
+* `hugo` 生成站点静态文件
+* 将你开发分支新内容merge回master/main分支
+* 在master/main分支上生成新静态文件
+* 将内容push到Github
