@@ -50,35 +50,35 @@
   })
 }());
 
+/* Add "link here" links to <h2> headings */
+(function () {
+  var headings = document.querySelectorAll('main > h2');
 
-  /* Add "link here" links to <h2> headings */
-  (function () {
-    var headings = document.querySelectorAll('main > h2');
+  Array.prototype.forEach.call(headings, function (heading) {
+    var id = heading.getAttribute('id');
 
-    Array.prototype.forEach.call(headings, function (heading) {
-      var id = heading.getAttribute('id');
+    if (id) {
+      var newHeading = heading.cloneNode(true);
+      newHeading.setAttribute('tabindex', '-1');
 
-      if (id) {
-        var newHeading = heading.cloneNode(true);
-        newHeading.setAttribute('tabindex', '-1');
+      var container = document.createElement('div');
+      container.setAttribute('class', 'h2-container');
+      container.appendChild(newHeading);
 
-        var container = document.createElement('div');
-        container.setAttribute('class', 'h2-container');
-        container.appendChild(newHeading);
+      heading.parentNode.insertBefore(container, heading);
 
-        heading.parentNode.insertBefore(container, heading);
+      var link = document.createElement('a');
+      link.setAttribute('href', '#' + id);
+      var headingText = heading.textContent;
+      link.setAttribute('aria-label', 'This ' + headingText + ' section');
+      link.innerHTML = '<svg aria-hidden="true" class="link-icon" viewBox="0 0 50 50" focusable="false"> <use xlink:href="#link"></use> </svg>';
 
-        var link = document.createElement('a');
-        link.setAttribute('href', '#' + id);
-        link.innerHTML = '<svg aria-hidden="true" class="link-icon" viewBox="0 0 50 50" focusable="false"> <use xlink:href="#link"></use> </svg>';
+      container.appendChild(link);
 
-        container.appendChild(link);
-
-        heading.parentNode.removeChild(heading);
-      }
-    })
-  }());
-
+      heading.parentNode.removeChild(heading);
+    }
+  })
+}());
 
 /* Enable scrolling by keyboard of code samples */
 (function () {
@@ -97,54 +97,37 @@
 
 /* Switch and persist theme */
 (function () {
+  function CSSSupported (property, value) {
+    var prop = property + ':',
+        el = document.createElement('test'),
+        mStyle = el.style;
+    el.style.cssText = prop + value;
+    return mStyle[property];
+  }
+
   var checkbox = document.getElementById('themer');
+  var inverter = document.getElementById('inverter');
 
-  function persistTheme(val) {
-    localStorage.setItem('darkTheme', val);
+  if (!CSSSupported('filter', 'invert(100%)')) {
+    checkbox.parentNode.hidden = true;
+    return;
   }
 
-  function applyDarkTheme() {
-    var rules = [
-      '.intro-and-nav, .main-and-footer { filter: invert(100%); }',
-      '* { background-color: inherit; }',
-      'img:not([src*=".svg"]), .colors, iframe, .demo-container { filter: invert(100%); }'
-    ];
-    rules.forEach(function(rule) {
-      document.styleSheets[0].insertRule(rule);
-    })
-  }
-
-  function clearDarkTheme() {
-    for (let i = 0; i < document.styleSheets[0].cssRules.length; i++) {
-      document.styleSheets[0].deleteRule(i);
-    }
+  function darkTheme(media) {
+    inverter.setAttribute('media', media);
+    inverter.textContent = inverter.textContent.trim();
+    localStorage.setItem('darkTheme', media);
   }
 
   checkbox.addEventListener('change', function () {
-    if (this.checked) {
-      applyDarkTheme();
-      persistTheme('true');
-    } else {
-      clearDarkTheme();
-      persistTheme('false');
-    }
+    darkTheme(this.checked ? 'screen' : 'none');
   });
-
-  function showTheme() {
-    if (localStorage.getItem('darkTheme') === 'true') {
-      applyDarkTheme();
-      checkbox.checked = true;
-    }
-  }
-
-  function showContent() {
-    document.body.style.visibility = 'visible';
-    document.body.style.opacity = 1;
-  }
 
   window.addEventListener('DOMContentLoaded', function () {
-    showTheme();
-    showContent();
+    if ('filter' in document.body.style) {
+      if (localStorage.getItem('darkTheme') === 'screen') {
+        checkbox.click();
+      }
+    }
   });
-
 }());
