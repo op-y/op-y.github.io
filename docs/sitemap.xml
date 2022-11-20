@@ -2,10 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://op-y.github.io/tags/coffee/</loc>
-    <lastmod>2021-08-01T23:46:45+08:00</lastmod>
+    <loc>https://op-y.github.io/tags/docker/</loc>
+    <lastmod>2022-11-20T21:02:40+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/tags/kubernetes/</loc>
+    <lastmod>2022-11-20T21:02:40+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/k8s-history/</loc>
+    <lastmod>2022-11-20T21:02:40+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/tags/</loc>
+    <lastmod>2022-11-20T21:02:40+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/tags/%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2022-11-20T21:02:40+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/tags/coffee/</loc>
     <lastmod>2021-08-01T23:46:45+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/coffee-story/</loc>
