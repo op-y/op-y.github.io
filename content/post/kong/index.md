@@ -28,27 +28,27 @@ caption="Kong Gateway 结构"
 command="Resize"
 options="1080x" >}}
 
-至于 API Gateway 是什么？我个人比较认可它是一个贴近微服务架构的概念，它实现了一种Facade模式，统一对各个服务的反向代理和请求管理，包括并不限于 认证、权限、限流、熔断、安全、监控、日志...
+至于 API Gateway 是什么？我个人比较认可它是一个贴近微服务架构的概念，它实现了一种Facade模式，统一各个服务的反向代理和请求管理，包括并不限于 认证、权限、限流、熔断、安全、监控、日志...
 从实现上说，它可以是个Nginx，也可以是一个OpenResty，还可以是 Kong、APISIX、BFE 等等。
 
 
 # 这些年的变化
 
-上一次自己部署 Kong 的时候，Kong 的版本还是 1.3，当时相比 0.1.x 版本已经有了很大的变换，是那种概念都不一样的非兼容变化。今天看了一些官网，好家伙，都已经是 3.4.x 了，从 Changelogs 上看有了不小的调整（但是主要概念似乎没有发生变化）。我看完后认为比较大的变化是：
+上一次自己部署 Kong 的时候，Kong 的版本还是 1.3，当时相比 0.1.x 版本已经有了很大的变化，是那种概念都不一样的非兼容变化。今天看了下官网，好家伙，都已经是 3.4.x 了，从 Changelogs 上看有了不小的调整（但是主要概念没有发生变化）。我看完后认为比较大的变化是：
 
 * 现在有4种部署模式
 	* Konnect：这个1.3的时候还没注意到，是一个Kong Gateway的SaaS服务；
-	* Hybird: 这个是一个新的模式将服务分成了 Control Panel和Data Panel，也是当下一种比较流行的做法；
-	* Tranditional：这个就是依赖DB部署的传统做法了，本质上时通过DB实现配置的中心化管理；
+	* Hybird: 这个是一个新的模式，将服务分成了 Control Panel和Data Panel，也是当下一种比较流行的做法；
+	* Tranditional：这个就是依赖DB部署的传统做法了，本质上时通过DB实现配置的中心化管理和分发；
 	* Db-less and declarative: 这个时无DB的声明式配置模式，单机部署相当的友好。
-* Traditional with-DB 模式下不在支持 Cassandra DB了（从3.4开始的）。之前的版本增加了 Redis、InfluxDB、Kafka 的支持。当然 Postgres 一直都被支持。之前我部署时选择自己搭建了一个 Cassandra 集群还是因为 Postgres 的双主同步使用了一个 Perl 编写的 bucardo 工具，那简直的搞不明白。
-* 官方增加了一个 Kong Manager 项目，是一个GUI，早先时没有官方GUI的，当时我还是使用的一个第三方GUI项目[Konga](https://github.com/pantsel/konga)，部署的时候还向前端同学求助过。
+* Traditional with-DB 模式下不再支持 Cassandra DB了（从3.4开始的）。之前的版（1.3.x之后）增加了对 Redis、InfluxDB、Kafka 的支持。当然 Postgres 一直都被支持。之前我部署时选择自己搭建了一个 Cassandra 集群，就是因为 Postgres 的双主同步使用了一个 Perl 编写的 bucardo 工具，那简直是的搞不明白。
+* 官方增加了一个 Kong Manager 项目，是一个GUI，早先没有官方GUI的，当时我使用的一个第三方GUI项目[Konga](https://github.com/pantsel/konga)，部署的时候还向前端同学求助过。
 
 # Kong 使用
 
 ## 安装
 
-本次操作由于不想依赖一个DB，所以我们在开发环境部署一个DB-less模式的 Kong Gateway 服务。顺便验证一些这种模式下 Kong Manager是不是可以使用。
+本次操作由于不想依赖一个DB，所以我在开发环境部署一个DB-less模式的 Kong Gateway 服务。顺便验证一些这种模式下 Kong Manager是不是可以使用。
 
 我们的运行环境如下
 
@@ -59,9 +59,6 @@ options="1080x" >}}
 ```
 # 前置要求 curl lsb-release apt-transport-https 已经安装
 
-cd ~
-mkdir download && cd download # 创建一个工作目录
-
 # 添加 Kong 的 apt 源
 curl -1sLf "https://packages.konghq.com/public/gateway-34/gpg.6B5D054B0707DE3B.key" |  gpg --dearmor | sudo tee /usr/share/keyrings/kong-gateway-34-archive-keyring.gpg > /dev/null
 curl -1sLf "https://packages.konghq.com/public/gateway-34/config.deb.txt?distro=debian&codename=$(lsb_release -sc)" | sudo tee /etc/apt/sources.list.d/kong-gateway-34.list > /dev/null
@@ -69,10 +66,12 @@ curl -1sLf "https://packages.konghq.com/public/gateway-34/config.deb.txt?distro=
 # apt-get 安装
 apt install -y kong-enterprise-edition=3.4.0.0
 # 安装完成后根据过往经验确认了几点
-# 自动创建了一个 kong 用于，用于在non-root模式下启动kong
+# 自动创建了一个用户 kong 用于，用于在non-root模式下启动kong
 # kong安装在/usr/local/kong下，顺带安装了一个 /usr/local/openresty
-# 同时顺道安装了/usr/local/bin/luarocks，可以看看 /usr/local/lib
+# 同时顺道安装了/usr/local/bin/luarocks
+# 可以看看 /usr/local/lib
 # lua 5.1 作为动态链接库安装到了 /usr/local/lib/lua 目录下
+# lua 的各种包在 /usr/local/lib/luarocks 目录下
 # /etc/kong 目录中放着kong的初始配置文件模板
 
 
