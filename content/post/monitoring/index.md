@@ -33,7 +33,7 @@ caption="Open Falcon 架构"
 command="Resize"
 options="1080x" >}}
 
-之后由于运维部开发统一的运维平台，我们有了将Open Falcon集成到平台的需求。这时候就需要对Open Falcon进行二次开发了。正是这个契机，促使我认为真学习了Open Falcon的源码，对整个系统有了深入了解。在此基础上我们开发了一个定制版本的 api 模块。虽然这个模块现在已经完成了它的历史使命，但是依然在我的仓库了放着。
+之后由于运维部开发统一的运维平台，我们有了将Open Falcon集成到平台的需求。这时候就需要对Open Falcon进行二次开发了。正是这个契机，促使我认真学习了Open Falcon的源码，对整个系统有了深入了解。在此基础上我们开发了一个定制版本的 api 模块。虽然这个模块现在已经完成了它的历史使命，但是依然在我的仓库了放着。
 
 > [falcon-api](https://github.com/op-y/falcon-api)
 
@@ -46,21 +46,21 @@ options="1080x" >}}
 
 > [MixProvider](https://github.com/op-y/MixProvider)
 
-日子就这样快乐地走到了2019年，Open Falcon的使用过程中逐渐浮现初了很多问题需要解决...
+日子就这样快乐地走到了2019年，Open Falcon使用过程中逐渐浮现出很多问题需要解决...
 
 
 ## 2019-2021
 
-2019年我们面临的问题是 Kubernetes 的流行以及在公司的全面铺开。这个时候很多业务都在向 Kubernetes 中迁移。
+2019年我们面临的情况是 Kubernetes 的流行以及在公司全面铺开。这个时候很多业务都在向 Kubernetes 中迁移。
 
-对于那些在物理机/虚拟机上部署的中间件Open Falcon尚能支持；对于上Kubernetes的业务，Open Falcon的能力就越来越捉襟见肘了。
+对于那些在物理机/虚拟机上部署的中间件，Open Falcon 尚能支持；对于上 Kubernetes 的业务，Open Falcon 的能力就越来越捉襟见肘了。
 
-由于业务程序的Pod会在集群中不停的迁移，业务程序只有两种选择：
+由于业务程序的Pod会在集群中不停地迁移，业务程序只有两种选择：
 * 一种是将监控采集逻辑集成到代码里，主动向 agent 报告数据，这种方式对业务入侵太大；
 * 另一种是集群中每个节点上 agent 能动态感知当前节点上正运行着哪些服务（其实本质上就是服务发现的问题），采集数据。
-我们选择了前者，但显然做得不好。
+我们选择了前者，但显然做得不好...
 
-另外一个问题是，之前Open Falcon的部署，我们一直都是每个IDC独立部署一套。所有的Open Falcon系统不能统一管理，跨IDC的数据也不能聚合，存在一些使用局限。
+另外一个问题是，之前 Open Falcon 的部署，我们一直都是每个IDC独立部署一套。所有的 Open Falcon 系统不能统一管理，跨IDC的数据也不能聚合，存在一些使用局限。
 
 为了解决这些问题，我们的目光又一次投向了开源社区，这个时候 Prometheus 已经成为 Kubernetes 环境下监控的*事实标准*；我们果断用了Prometheus！过程中发现它存在扩展性问题（简单的说就是单节点的极限），之后调研了几个方案最后选择了Thanos。再之后我们把监控系统彻底改造了。
 
@@ -74,10 +74,9 @@ options="1080x" >}}
 
 ## 当前的进展
 
-后来，在最近工作经历中（虽然目前我已经很久没有做监控相关的工作了），了解到现在比较常用的架构是 Prometheus + VictoriaMetrics 的方案。主要的原因是VictoriaMetrics作为时序数据库在性能和资源使用上有远超竞品的优势。接触到好几家大厂都是使用的这种方案。
+后来，在最近工作经历中（目前我已经很久没有做监控相关的工作了），了解到现在比较常用的方案是 Prometheus + VictoriaMetrics。主要的原因为 VictoriaMetrics 作为时序数据库在性能和资源使用上有远超竞品的优势。接触到好几家大厂都是使用的这种方案。
 
-好奇也驱使我在时间充裕时做一个demo试试效果...
-
+我没有这么干过，好奇驱使我做一个demo试试效果...
 
 # 做一个Demo
 
@@ -276,6 +275,8 @@ caption="Grafana 使用VictoriaMetrics数据 页面效果"
 command="Resize"
 options="1080x" >}}
 
+达成目标！
+
 ## 继续
 
 监控真的是一个很大的话题，有时间肯定是要继续深入的。
@@ -289,6 +290,7 @@ options="1080x" >}}
 * OpenFalcon [Github 地址](https://github.com/open-falcon/falcon-plus)
 * Prometheus [官方网站](https://prometheus.io)
 * NodeExporter [官方使用指导](https://prometheus.io/docs/guides/node-exporter/)
+* Thanos [官方网站](https://thanos.io)
 * VictoriaMetrics [官方网站](https://victoriametrics.com/products/open-source/)
 * Grafana [官方网站](https://grafana.com/grafana/)
 
