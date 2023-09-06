@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>victoria-metrics on Qin的自习室</title>
+    <link>https://op-y.github.io/tags/victoria-metrics/</link>
+    <description>Recent content in victoria-metrics on Qin的自习室</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 06 Sep 2023 15:21:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/victoria-metrics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>有关监控</title>
+      <link>https://op-y.github.io/monitoring/</link>
+      <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/monitoring/</guid>
+      <description>写在前面 写这篇文章不为其它，只为总结一下之前做过的一些关于监控系统的工作，或许不久的将来能用得上。
+监控系统的演进 这里说的是曾经的一段工作经历中，公司监控系统的演进过程。包括了每个时期监控系统的建设背景，发展过程中遇到的问题，以及后续的演进方向。
+古早时期（before 2017） 在2017年之前的监控系统：没有监控系统😂！
+那个时期的业务，主要还是线下服务，线上服务刚刚起步，整个机房才20来台机器。我刚过去的时候完全没有监控系统。用户和业务线同学对故障容忍度出奇的高。印象比较深刻的一次，服务挂了半天后才恢复，没有人说啥，默默地恢复服务就好了。
+随着2017年初，公司开始大力发展 SaaS 服务，这种情况开始改变了。某一天乐哥跟我说：监控系统了解过吗？有个国产的监控系统叫 Open Falcon，你去调研一下，我们部署一套试试！
+2017-2019 说实话，之前我一直做业务运维，用过监控系统。但是监控系统长啥样？如何实现？我是完全没接触过的。这个时候我只能硬着头皮去学习Open Falcon了。
+之后的一段时间只能说过得非常充实。我认真看了Open Falcon的官方介绍和文档（当时还是v0.1.x，后来升级到v0.2.x，之后就停止迭代了，现在这个站点都已经无法打开了&amp;hellip;）。跟着官方文档我一步一步搭建起了公司第一套监控系统。之后慢慢扩展到所有的机房。
+ Open Falcon 架构   之后由于运维部开发统一的运维平台，我们有了将Open Falcon集成到平台的需求。这时候就需要对Open Falcon进行二次开发了。正是这个契机，促使我认为真学习了Open Falcon的源码，对整个系统有了深入了解。在此基础上我们开发了一个定制版本的 api 模块。虽然这个模块现在已经完成了它的历史使命，但是依然在我的仓库了放着。
+ falcon-api
+ 在使用Open Falcon过程中，顺带还开发了很多采集器（官方的采集器不少但是真的不够用）。
+ falcon-plugins
+ 此外就是Open Falcon的 alarm 组件需要外部提供的 provider 才能真正实现告警消息的发送，为此我开发了一个功能比较丰富的 provider 程序。
+ MixProvider
+ 日子就这样快乐地走到了2019年，Open Falcon的使用过程中逐渐浮现初了很多问题需要解决&amp;hellip;
+2019-2021 2019年我们面临的问题是 Kubernetes 的流行以及在公司的全面铺开。这个时候很多业务都在向 Kubernetes 中迁移。
+对于那些在物理机/虚拟机上部署的中间件Open Falcon尚能支持；对于上Kubernetes的业务，Open Falcon的能力就越来越捉襟见肘了。
+由于业务程序的Pod会在集群中不停的迁移，业务程序只有两种选择：
+ 一种是将监控采集逻辑集成到代码里，主动向 agent 报告数据，这种方式对业务入侵太大； 另一种是集群中每个节点上 agent 能动态感知当前节点上正运行着哪些服务（其实本质上就是服务发现的问题），采集数据。 我们选择了前者，但显然做得不好。  另外一个问题是，之前Open Falcon的部署，我们一直都是每个IDC独立部署一套。所有的Open Falcon系统不能统一管理，跨IDC的数据也不能聚合，存在一些使用局限。</description>
+    </item>
+    
+  </channel>
+</rss>
