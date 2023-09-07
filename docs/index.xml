@@ -8,6 +8,24 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 13 Jan 2021 16:33:01 +0800</lastBuildDate><atom:link href="https://op-y.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Traefik Ingress Controller</title>
+      <link>https://op-y.github.io/traefik/</link>
+      <pubDate>Thu, 07 Sep 2023 11:07:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/traefik/</guid>
+      <description>引子 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。
+什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。
+在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。
+当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。
+Traefik 是什么？ 其实在引言部分已经说的很清楚了。
+Traefik 官方介绍
+ Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）   Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。
+ Traefik 架构图   Traefik 安装&amp;amp;测试 我们的运行环境如下
+ kuberntes 1.27.2  这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&amp;hellip;
+Traefik 目前有 1.</description>
+    </item>
+    
+    <item>
       <title>有关监控</title>
       <link>https://op-y.github.io/monitoring/</link>
       <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>

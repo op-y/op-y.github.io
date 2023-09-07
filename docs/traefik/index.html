@@ -6,11 +6,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <meta name="generator" content="Hugo 0.83.1" />
-  <link rel="canonical" href="https://op-y.github.io/tags/kubernetes/" />
+  <link rel="canonical" href="https://op-y.github.io/traefik/" />
 
   
     
-    <meta name="description" content="kubernetes">
+    <meta name="description" content="引子 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。
+什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。
+在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。
+当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。
+Traefik 是什么？ 其实在引言部分已经说的很清楚了。
+Traefik 官方介绍
+ Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）   Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。
+ Traefik 架构图   Traefik 安装&amp;测试 我们的运行环境如下
+ kuberntes 1.27.2  这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会…
+Traefik 目前有 1.">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -56,7 +65,7 @@
 
   
   
-  <title>kubernetes | Qin的自习室</title>
+  <title>Traefik Ingress Controller | Qin的自习室</title>
 </head>
 
   <body>
@@ -221,7 +230,7 @@
       
       
       
-      <a href="/tags/" aria-current="page">
+      <a href="/tags/" >
         <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
           <use href="#bookmark"></use>
         </svg>
@@ -251,45 +260,342 @@
       <div class="main-and-footer">
         <div>
           
-<main id="main">
-  <h1>kubernetes</h1>
+  <main id="main">
+    <h1>
+      <svg class="bookmark-icon" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+        <use href="#bookmark"></use>
+      </svg>
+      Traefik Ingress Controller
+    </h1>
+
+    <div class="date">
+      
+      
+      <strong>Publish date: </strong>Sep 7, 2023
+      
+        
+      
+    </div>
+
+    
+      <div class="tags">
+        <strong>Tags: </strong>
+        <ul aria-label="tags">
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/traefik/">Traefik</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/kubernetes/">kubernetes</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+
+
+    <h1 id="引子">引子</h1>
+<p>之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。</p>
+<p>什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。</p>
+<p>在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。</p>
+<p>当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。</p>
+<h1 id="traefik-是什么">Traefik 是什么？</h1>
+<p>其实在引言部分已经说的很清楚了。</p>
+<p>Traefik <a href="https://doc.traefik.io/traefik/">官方介绍</a></p>
+
+
+
+
+
+
+
+
+
   
-  <ul class="patterns-list" id="list">
-    
-    <li>
-      <h2>
-        <a href="/traefik/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Traefik Ingress Controller
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/k8s-history/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Kubernetes的故事一: 前世今生
-        </a>
-      </h2>
-    </li>
-    
-  </ul>
-</main>
+
+
+<figure role="group" aria-describedby="caption-bb00ba617ca4001fa50eea0cf374699a">
+  <a href="/traefik/figure1-traefik-logo.png" class="img-link">
+    <img src="/traefik/figure1-traefik-logo_hu52a88c95b3fa98af44441aa71deb0899_35056_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-bb00ba617ca4001fa50eea0cf374699a">
+    Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）
+  </figcaption>
+</figure>
+
+<p>Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-80c8b875eb8466e034263e0c056d8110">
+  <a href="/traefik/figure2-traefik-arch.png" class="img-link">
+    <img src="/traefik/figure2-traefik-arch_hu2edfb038e9096214cddf27700dc8ad5d_283648_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-80c8b875eb8466e034263e0c056d8110">
+    Traefik 架构图
+  </figcaption>
+</figure>
+
+<h1 id="traefik-安装测试">Traefik 安装&amp;测试</h1>
+<p>我们的运行环境如下</p>
+<ul>
+<li>kuberntes 1.27.2</li>
+</ul>
+<p>这里出现了 <strong>Kubernetes</strong>，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&hellip;</p>
+<p>Traefik 目前有 1.x/2.x/3.x 几个版本（3.0目前还在rc阶段），不同的大版本之间存在不兼容的变更。从1.x到2.x的迭代中，Traefik从使用k8s自带的 Ingress 到使用了很多CRD（Custom Resource Definition）包括自己定义的 IngressRoute。为了更接近当年我们的使用，我使用了2.10版本但是使用 Ingress 作为路由的 provider。</p>
+<p>以下是根据官方说明创建各种资源的yaml文件，部分根据我的测试环境有修改，我做注释说明。</p>
+<p>创建账户 给traefik用</p>
+<pre><code>apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-account
+</code></pre>
+<p>创建集群角色 给traefki用</p>
+<pre><code>kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-role
+rules:
+  - apiGroups:
+      - &quot;&quot;
+    resources:
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+</code></pre>
+<h1 id="集群角色与账号绑定">集群角色与账号绑定</h1>
+<pre><code>kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-role
+subjects:
+  - kind: ServiceAccount
+    name: traefik-account
+    namespace: default # Using &quot;default&quot; because we did not specify a namespace when creating the ClusterAccount.
+</code></pre>
+<p>创建一个traefik daemonset 代理入流量</p>
+<pre><code>kind: DaemonSet # 官方说明使用的Deployment这里为了一个node固定启动一个Pod我改成了DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: traefik-daemonset
+  labels:
+    app: traefik
+spec:
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-account
+      nodeSelector:
+        traefik: &quot;true&quot;
+      containers:
+        - name: traefik
+          image: traefik:v2.10
+          args:
+            - --api.insecure # 启动非安全http 80端口代理
+            - --providers.kubernetesingress # 使用ingress作为provider
+          ports:
+            - name: web
+              containerPort: 80
+            - name: dashboard
+              containerPort: 8080
+</code></pre>
+<p>创建traefik service</p>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-dashboard-service
+spec:
+  type: NodePort # 官方说明使用的LoadBalancer这里我使用的NodePort 使用主机端口 下同
+  ports:
+    - port: 8080
+      targetPort: dashboard
+      nodePort: 30288
+  selector:
+    app: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-web-service
+spec:
+  type: NodePort
+  ports:
+    - targetPort: web
+      port: 80
+      nodePort: 30280
+  selector:
+    app: traefik
+</code></pre>
+<p>为了测试创建一个http应用 whoami，它的响应就是把请求直接返回。</p>
+<pre><code>kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: whoami
+  labels:
+    app: whoami
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - name: web
+              containerPort: 80
+</code></pre>
+<p>创建 whoami 的 service</p>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+
+  selector:
+    app: whoami
+</code></pre>
+<p>创建 ingress 这个是重点 这个ingress 提供给traefik 路由信息 能让请求代理到 whoami上</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: whoami
+            port:
+              name: web
+</code></pre>
+<p>将以上配置应用到 k8s 后，我们看一下集群中 service 情况</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-59936f506b37d226f5517c0a39d8c6c1">
+  <a href="/traefik/figure3-k8s-services.png" class="img-link">
+    <img src="/traefik/figure3-k8s-services_hub986424fc9b09341f4f23b66aeaa1f46_50304_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-59936f506b37d226f5517c0a39d8c6c1">
+    traefik 和 whoami 的service
+  </figcaption>
+</figure>
+
+<p>因为 traefik 使用节点端口 30280 接收请求，我们再将 nginx 从公网接收的请求代理到这个节点的 30280 端口查看效果。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-ac8fe9b4533c94d23b8146a87662ed41">
+  <a href="/traefik/figure4-traefik-proxy.png" class="img-link">
+    <img src="/traefik/figure4-traefik-proxy_hu801d5488f4cb4ec6a007e381be2674bc_97161_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-ac8fe9b4533c94d23b8146a87662ed41">
+    traefik 代理外部请求到 whoami
+  </figcaption>
+</figure>
+
+<p>可以看到流量被代理到k8s集群内部whoami服务上处理并返回响应了。</p>
+<h1 id="还能怎么干">还能怎么干？</h1>
+<p>一边做一边浮想连篇，我想起了在有 Traefik 之前我们是怎么处理这种问题的&hellip;</p>
+<p>那个时候我们使用了一种 nginx + <a href="https://github.com/kelseyhightower/confd">confd</a> 的方式来实现边缘路由的效果。</p>
+<p>关键在于两点：</p>
+<ul>
+<li>nginx 所在机器需要部署 flanneld（我们k8s使用的CNI网络插件），这样流量才能从nginx 进入集群；</li>
+<li>使用 confd 这个工具去 watch k8s etcd（k8s的数据都保存在这里）变化，然后通过一个外部脚步渲染模板生成对应服务的 nginx 配置，然后执行 nginx reload 操作，这样 nginx 上的代理配置就能同步 k8s 中服务的变换。</li>
+</ul>
+<p>非常的粗糙，但是很管用，不知道当时是哪位设计的这个方案，只能说只要脑洞大，没有解决不了的问题！</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li>Traefik <a href="https://docs.konghq.com/gateway/latest/">安装说明</a></li>
+</ul>
+<p>再多的参考资料都不如自己动手实践，共勉！</p>
+
+  </main>
+  <div id="disqus-container">
+  
+</div>
+
 
           
             <footer role="contentinfo">
