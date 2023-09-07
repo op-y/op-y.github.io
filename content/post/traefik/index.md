@@ -49,7 +49,7 @@ Traefik 目前有 1.x/2.x/3.x 几个版本（3.0目前还在rc阶段），不同
 以下是根据官方说明创建各种资源的yaml文件，部分根据我的测试环境有修改，我做注释说明。
 
 
-创建账户 给traefik用
+创建账户 给traefik用。
 ```
 apiVersion: v1
 kind: ServiceAccount
@@ -57,7 +57,7 @@ metadata:
   name: traefik-account
 ```
 
-创建集群角色 给traefki用
+创建集群角色 给traefik用。
 ```
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -93,7 +93,7 @@ rules:
       - update
 ```
 
-# 集群角色与账号绑定
+集群角色与账号绑定。
 ```
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -109,7 +109,7 @@ subjects:
     namespace: default # Using "default" because we did not specify a namespace when creating the ClusterAccount.
 ```
 
-创建一个traefik daemonset 代理入流量
+创建一个traefik daemonset 代理入流量。
 ```
 kind: DaemonSet # 官方说明使用的Deployment这里为了一个node固定启动一个Pod我改成了DaemonSet
 apiVersion: apps/v1
@@ -142,7 +142,7 @@ spec:
               containerPort: 8080
 ```
 
-创建traefik service
+创建traefik service。
 ```
 apiVersion: v1
 kind: Service
@@ -197,7 +197,7 @@ spec:
               containerPort: 80
 ```
 
-创建 whoami 的 service
+创建 whoami 的 service。
 ```
 apiVersion: v1
 kind: Service
@@ -213,7 +213,7 @@ spec:
     app: whoami
 ```
 
-创建 ingress 这个是重点 这个ingress 提供给traefik 路由信息 能让请求代理到 whoami上
+创建 ingress， 这个是重点， 这个ingress 提供给traefik 路由信息 能让请求代理到 whoami上。
 ```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -232,7 +232,7 @@ spec:
               name: web
 ```
 
-将以上配置应用到 k8s 后，我们看一下集群中 service 情况
+将以上配置应用到 k8s 后，我们看一下集群中 service 情况。
 
 {{< figureCupper
 img="figure3-k8s-services.png"
@@ -252,15 +252,15 @@ options="1080x" >}}
 
 # 还能怎么干？
 
-一边做一边浮想连篇，我想起了在有 Traefik 之前我们是怎么处理这种问题的...
+一边做一边浮想连篇，我想起了在 Traefik 出现之前我们是怎么处理这种问题的...
 
 那个时候我们使用了一种 nginx + [confd](https://github.com/kelseyhightower/confd) 的方式来实现边缘路由的效果。
 
 关键在于两点：
 * nginx 所在机器需要部署 flanneld（我们k8s使用的CNI网络插件），这样流量才能从nginx 进入集群；
-* 使用 confd 这个工具去 watch k8s etcd（k8s的数据都保存在这里）变化，然后通过一个外部脚步渲染模板生成对应服务的 nginx 配置，然后执行 nginx reload 操作，这样 nginx 上的代理配置就能同步 k8s 中服务的变换。
+* 使用 confd 这个工具去 watch k8s etcd（k8s的数据都保存在这里）变化，然后通过一个外部脚步渲染模板生成对应服务的 nginx 配置，然后执行 nginx reload 操作，这样 nginx 上的代理配置就能同步 k8s 中服务的变化。
 
-非常的粗糙，但是很管用，不知道当时是哪位设计的这个方案，只能说只要脑洞大，没有解决不了的问题！
+非常的粗糙，但是很管用，不知道当时是哪位设计的这个方案，只要脑洞大，没有解决不了的问题！
 
 
 # 参考
