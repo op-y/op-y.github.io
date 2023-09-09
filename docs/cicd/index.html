@@ -6,11 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <meta name="generator" content="Hugo 0.83.1" />
-  <link rel="canonical" href="https://op-y.github.io/post/" />
+  <link rel="canonical" href="https://op-y.github.io/cicd/" />
 
   
     
-    <meta name="description" content="自习室里的书架">
+    <meta name="description" content="写在前面 之前已经回顾过了
+ 流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes  我们工作拼图中剩下的一大块就是CICD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CICD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。
+简单讲讲CICD CI: 持续集成 CD：持续交付、持续部署
+当我们谈论CICD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。
+说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。
+以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。
+一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab&#43;SCM&#43;TCE&#43;…) 等等。
+CICD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。
+ Devops 最为常见的示意图 （图片来自网络）   Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CICD一定是其中的环节之一。
+ 敏捷开发 Devops CICD 的关系（图片来自网络）   敏捷开发（Agile）、Devops、CICD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。
+接下来要讲讲我们的做法了，当然主要是一些系统与故事。
+我们最早的做法 200块的做法 200w的做法 当前的一些做法 一些思考 参考 再多的参考资料都不如自己动手实践，共勉！">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -56,7 +67,7 @@
 
   
   
-  <title>自习室里的书架 | Qin的自习室</title>
+  <title>关于CI/CD | Qin的自习室</title>
 </head>
 
   <body>
@@ -208,7 +219,7 @@
       
       
       
-      <a href="/post/" aria-current="page">
+      <a href="/post/" >
         <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
           <use href="#bookmark"></use>
         </svg>
@@ -251,141 +262,166 @@
       <div class="main-and-footer">
         <div>
           
-<main id="main">
-  <h1>自习室里的书架</h1>
-  
-  <ul class="patterns-list" id="list">
+  <main id="main">
+    <h1>
+      <svg class="bookmark-icon" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+        <use href="#bookmark"></use>
+      </svg>
+      关于CI/CD
+    </h1>
+
+    <div class="date">
+      
+      
+      <strong>Publish date: </strong>Sep 8, 2023
+      
+        
+      
+    </div>
+
     
-    <li>
-      <h2>
-        <a href="/cicd/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          关于CI/CD
-        </a>
-      </h2>
-    </li>
+      <div class="tags">
+        <strong>Tags: </strong>
+        <ul aria-label="tags">
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/ci/">CI</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/cd/">CD</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/jenkins/">Jenkins</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/docker/">docker</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/kubernetes/">kubernetes</a>
+            </li>
+          
+        </ul>
+      </div>
     
-    <li>
-      <h2>
-        <a href="/traefik/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Traefik Ingress Controller
-        </a>
-      </h2>
-    </li>
+
     
-    <li>
-      <h2>
-        <a href="/monitoring/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          有关监控
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/kong/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Kong 回顾
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/openresty/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          OpenResty上手
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/k8s-history/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Kubernetes的故事一: 前世今生
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/coffee-story/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          一杯咖啡的诞生
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/how_to_use_this_blog/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          如何使用Hugo生成文章内容
-        </a>
-      </h2>
-    </li>
-    
+  <nav class="toc" aria-labelledby="toc-heading">
+    <strong id="toc-heading">Table of Contents</strong>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#写在前面">写在前面</a></li>
+    <li><a href="#简单讲讲cicd">简单讲讲CICD</a></li>
+    <li><a href="#我们最早的做法">我们最早的做法</a></li>
+    <li><a href="#200块的做法">200块的做法</a></li>
+    <li><a href="#200w的做法">200w的做法</a></li>
+    <li><a href="#当前的一些做法">当前的一些做法</a></li>
+    <li><a href="#一些思考">一些思考</a></li>
+    <li><a href="#参考">参考</a></li>
   </ul>
-</main>
+</nav>
+  </nav>
+
+
+
+    <h2 id="写在前面">写在前面</h2>
+<p>之前已经回顾过了</p>
+<ul>
+<li>流量接入与分发（Nginx/OpenResty/Kong/Traefik）</li>
+<li>监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics</li>
+<li>（提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等）</li>
+<li>（开了一个天坑）服务运行环境 Kubernetes</li>
+</ul>
+<p>我们工作拼图中剩下的一大块就是CICD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CICD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。</p>
+<h2 id="简单讲讲cicd">简单讲讲CICD</h2>
+<p>CI: 持续集成
+CD：持续交付、持续部署</p>
+<p>当我们谈论CICD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。</p>
+<p>说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。</p>
+<p>以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。</p>
+<p>一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab+SCM+TCE+&hellip;) 等等。</p>
+<p>CICD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-3d4e4e3b5ff42e0c3284d20b961101cf">
+  <a href="/cicd/figure1-devops.png" class="img-link">
+    <img src="/cicd/figure1-devops_hu59bc98b9cd199c016f2bed6ef0bcaca5_236995_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-3d4e4e3b5ff42e0c3284d20b961101cf">
+    Devops 最为常见的示意图 （图片来自网络）
+  </figcaption>
+</figure>
+
+<p>Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CICD一定是其中的环节之一。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-724ebbe4bca8dfb009bd742254564313">
+  <a href="/cicd/figure2-agile-devops-cicd.jpg" class="img-link">
+    <img src="/cicd/figure2-agile-devops-cicd_hu74a4a41f25e6c0d2d7dc7087b2b8476d_44202_1080x0_resize_q99_box.jpg">
+  </a>
+  <figcaption id="caption-724ebbe4bca8dfb009bd742254564313">
+    敏捷开发 Devops CICD 的关系（图片来自网络）
+  </figcaption>
+</figure>
+
+<p>敏捷开发（Agile）、Devops、CICD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。</p>
+<p>接下来要讲讲我们的做法了，当然主要是一些系统与故事。</p>
+<h2 id="我们最早的做法">我们最早的做法</h2>
+<h2 id="200块的做法">200块的做法</h2>
+<h2 id="200w的做法">200w的做法</h2>
+<h2 id="当前的一些做法">当前的一些做法</h2>
+<h2 id="一些思考">一些思考</h2>
+<h2 id="参考">参考</h2>
+<p>再多的参考资料都不如自己动手实践，共勉！</p>
+
+  </main>
+  <div id="disqus-container">
+  
+</div>
+
 
           
             <footer role="contentinfo">

@@ -56,7 +56,7 @@ options="1080x" >}}
 * 系统发行版：Debian GNU/Linux 11
 
 开始安装
-```
+{{<cmd>}}
 # 前置要求 curl lsb-release apt-transport-https 已经安装
 
 # 添加 Kong 的 apt 源
@@ -65,6 +65,7 @@ curl -1sLf "https://packages.konghq.com/public/gateway-34/config.deb.txt?distro=
 
 # apt-get 安装
 apt install -y kong-enterprise-edition=3.4.0.0
+
 # 安装完成后根据过往经验确认了几点
 # 自动创建了一个用户 kong 用于，用于在non-root模式下启动kong
 # kong安装在/usr/local/kong下，顺带安装了一个 /usr/local/openresty
@@ -74,15 +75,14 @@ apt install -y kong-enterprise-edition=3.4.0.0
 # lua 的各种包在 /usr/local/lib/luarocks 目录下
 # /etc/kong 目录中放着kong的初始配置文件模板
 
-
 # 为了方便管理到配置目录下操作
 cd /etc/kong
 kong config init # 生成DB-less模式声明式配置
 cp kong.conf.default kong.conf # 复制一个运行使用的kong配置文件
 
 # 启动前需要修改 kong.conf 文件
+{{</cmd>}}
 
-```
 
 主要修改的配置有
 
@@ -120,14 +120,13 @@ services:
 
 ## 运行
 
-```
+{{<cmd>}}
 # 启动前先检测配置是个好习惯
 kong check /etc/kong/kong.conf
 
 # 启动 kong
 kong start -c /etc/kong/kong.conf
-
-```
+{{</cmd>}}
 
 这时候我们请求 *我自己的IP地址* 看看效果, 果然去了字节首页。
 

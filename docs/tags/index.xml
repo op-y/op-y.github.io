@@ -6,11 +6,47 @@
     <description>Recent content in Tags on Qin的自习室</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 Sep 2023 11:07:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Sep 2023 23:21:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CD</title>
+      <link>https://op-y.github.io/tags/cd/</link>
+      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/tags/cd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CI</title>
+      <link>https://op-y.github.io/tags/ci/</link>
+      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/tags/ci/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://op-y.github.io/tags/docker/</link>
+      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Jenkins</title>
+      <link>https://op-y.github.io/tags/jenkins/</link>
+      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/tags/jenkins/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>kubernetes</title>
       <link>https://op-y.github.io/tags/kubernetes/</link>
-      <pubDate>Thu, 07 Sep 2023 11:07:00 +0800</pubDate>
+      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
       
       <guid>https://op-y.github.io/tags/kubernetes/</guid>
       <description></description>
@@ -94,15 +130,6 @@
       <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
       
       <guid>https://op-y.github.io/tags/openresty/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>docker</title>
-      <link>https://op-y.github.io/tags/docker/</link>
-      <pubDate>Sun, 20 Nov 2022 21:02:40 +0800</pubDate>
-      
-      <guid>https://op-y.github.io/tags/docker/</guid>
       <description></description>
     </item>
     

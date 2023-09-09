@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CD on Qin的自习室</title>
+    <link>https://op-y.github.io/tags/cd/</link>
+    <description>Recent content in CD on Qin的自习室</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 08 Sep 2023 23:21:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/cd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于CI/CD</title>
+      <link>https://op-y.github.io/cicd/</link>
+      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/cicd/</guid>
+      <description>写在前面 之前已经回顾过了
+ 流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes  我们工作拼图中剩下的一大块就是CICD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CICD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。
+简单讲讲CICD CI: 持续集成 CD：持续交付、持续部署
+当我们谈论CICD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。
+说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。
+以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。
+一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab+SCM+TCE+&amp;hellip;) 等等。
+CICD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。
+ Devops 最为常见的示意图 （图片来自网络）   Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CICD一定是其中的环节之一。
+ 敏捷开发 Devops CICD 的关系（图片来自网络）   敏捷开发（Agile）、Devops、CICD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。
+接下来要讲讲我们的做法了，当然主要是一些系统与故事。
+我们最早的做法 200块的做法 200w的做法 当前的一些做法 一些思考 参考 再多的参考资料都不如自己动手实践，共勉！</description>
+    </item>
+    
+  </channel>
+</rss>

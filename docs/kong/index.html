@@ -388,33 +388,61 @@ Kong 是什么？ Kong Gateway 自己的官方的介绍
 <li>kernel: 5.10.0-15-amd64</li>
 <li>系统发行版：Debian GNU/Linux 11</li>
 </ul>
-<p>开始安装</p>
-<pre><code># 前置要求 curl lsb-release apt-transport-https 已经安装
-
-# 添加 Kong 的 apt 源
-curl -1sLf &quot;https://packages.konghq.com/public/gateway-34/gpg.6B5D054B0707DE3B.key&quot; |  gpg --dearmor | sudo tee /usr/share/keyrings/kong-gateway-34-archive-keyring.gpg &gt; /dev/null
-curl -1sLf &quot;https://packages.konghq.com/public/gateway-34/config.deb.txt?distro=debian&amp;codename=$(lsb_release -sc)&quot; | sudo tee /etc/apt/sources.list.d/kong-gateway-34.list &gt; /dev/null
-
-# apt-get 安装
-apt install -y kong-enterprise-edition=3.4.0.0
-# 安装完成后根据过往经验确认了几点
-# 自动创建了一个用户 kong 用于，用于在non-root模式下启动kong
-# kong安装在/usr/local/kong下，顺带安装了一个 /usr/local/openresty
-# 同时顺道安装了/usr/local/bin/luarocks
-# 可以看看 /usr/local/lib
-# lua 5.1 作为动态链接库安装到了 /usr/local/lib/lua 目录下
-# lua 的各种包在 /usr/local/lib/luarocks 目录下
-# /etc/kong 目录中放着kong的初始配置文件模板
+<p>开始安装
 
 
-# 为了方便管理到配置目录下操作
-cd /etc/kong
-kong config init # 生成DB-less模式声明式配置
-cp kong.conf.default kong.conf # 复制一个运行使用的kong配置文件
-
-# 启动前需要修改 kong.conf 文件
-
-</code></pre>
+<pre class="cmd">
+  
+  <code># 前置要求 curl lsb-release apt-transport-https 已经安装</code>
+  
+  <code></code>
+  
+  <code># 添加 Kong 的 apt 源</code>
+  
+  <code>curl -1sLf &#34;https://packages.konghq.com/public/gateway-34/gpg.6B5D054B0707DE3B.key&#34; |  gpg --dearmor | sudo tee /usr/share/keyrings/kong-gateway-34-archive-keyring.gpg &gt; /dev/null</code>
+  
+  <code>curl -1sLf &#34;https://packages.konghq.com/public/gateway-34/config.deb.txt?distro=debian&amp;codename=$(lsb_release -sc)&#34; | sudo tee /etc/apt/sources.list.d/kong-gateway-34.list &gt; /dev/null</code>
+  
+  <code></code>
+  
+  <code># apt-get 安装</code>
+  
+  <code>apt install -y kong-enterprise-edition=3.4.0.0</code>
+  
+  <code></code>
+  
+  <code># 安装完成后根据过往经验确认了几点</code>
+  
+  <code># 自动创建了一个用户 kong 用于，用于在non-root模式下启动kong</code>
+  
+  <code># kong安装在/usr/local/kong下，顺带安装了一个 /usr/local/openresty</code>
+  
+  <code># 同时顺道安装了/usr/local/bin/luarocks</code>
+  
+  <code># 可以看看 /usr/local/lib</code>
+  
+  <code># lua 5.1 作为动态链接库安装到了 /usr/local/lib/lua 目录下</code>
+  
+  <code># lua 的各种包在 /usr/local/lib/luarocks 目录下</code>
+  
+  <code># /etc/kong 目录中放着kong的初始配置文件模板</code>
+  
+  <code></code>
+  
+  <code># 为了方便管理到配置目录下操作</code>
+  
+  <code>cd /etc/kong</code>
+  
+  <code>kong config init # 生成DB-less模式声明式配置</code>
+  
+  <code>cp kong.conf.default kong.conf # 复制一个运行使用的kong配置文件</code>
+  
+  <code></code>
+  
+  <code># 启动前需要修改 kong.conf 文件</code>
+  
+</pre>
+</p>
 <p>主要修改的配置有</p>
 <pre><code># nginx 监听端口暴露到公网方便测试
 proxy_listen = 0.0.0.0:80 reuseport backlog=16384, 0.0.0.0:443 http2 ssl reuseport backlog=16384
@@ -442,13 +470,22 @@ admin_gui_path = /manager
     - /
 </code></pre>
 <h2 id="运行">运行</h2>
-<pre><code># 启动前先检测配置是个好习惯
-kong check /etc/kong/kong.conf
 
-# 启动 kong
-kong start -c /etc/kong/kong.conf
 
-</code></pre>
+<pre class="cmd">
+  
+  <code># 启动前先检测配置是个好习惯</code>
+  
+  <code>kong check /etc/kong/kong.conf</code>
+  
+  <code></code>
+  
+  <code># 启动 kong</code>
+  
+  <code>kong start -c /etc/kong/kong.conf</code>
+  
+</pre>
+
 <p>这时候我们请求 <em>我自己的IP地址</em> 看看效果, 果然去了字节首页。</p>
 
 

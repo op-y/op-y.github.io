@@ -34,7 +34,7 @@ OpenResty 是什么？ 官方首页上有比较官方的介绍
 OpenResty 使用 安装 常见的操作系统都可以通过包管理工具直接安装对应的二进制版本。为了装逼有点参与感，我们还是源码编译安装。
 我们的运行环境如下
  kernel: 5.10.0-15-amd64 系统发行版：Debian GNU/Linux 11  当前 OpenResty 的最新版本是 openresty-1.21.4.2，我们就选择整个版本，开始操作
-cd ~ mkdir download &amp;amp;&amp;amp; cd download # 创建一个工作目录 wget https://openresty.org/download/openresty-1.21.4.2.tar.gz # 从官网下载源码 tar -zxvf openresty-1.21.4.2.tar.gz # 直接解压到当前目录 apt-get install libpcre3-dev libssl-dev perl make build-essential curl # 安装依赖 # 编译过程基本与nginx相同 # 我们指定了安装目录和一些需要安装的功能选项 cd openresty-1.</description>
+cd ~ mkdir download &amp;amp;&amp;amp; cd download # 创建一个工作目录 wget https://openresty.org/download/openresty-1.21.4.2.tar.gz # 从官网下载源码 tar -zxvf openresty-1.21.4.2.tar.gz # 直接解压到当前目录  apt-get install libpcre3-dev libssl-dev perl make build-essential curl # 安装依赖  # 编译过程基本与nginx相同 # 我们指定了安装目录和一些需要安装的功能选项 cd openresty-1.</description>
     </item>
     
   </channel>

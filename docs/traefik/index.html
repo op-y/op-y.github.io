@@ -582,7 +582,7 @@ spec:
 <p>关键在于两点：</p>
 <ul>
 <li>nginx 所在机器需要部署 flanneld（我们k8s使用的CNI网络插件），这样流量才能从nginx 进入集群；</li>
-<li>使用 confd 这个工具去 watch k8s etcd（k8s的数据都保存在这里）变化，然后通过一个外部脚步渲染模板生成对应服务的 nginx 配置，然后执行 nginx reload 操作，这样 nginx 上的代理配置就能同步 k8s 中服务的变化。</li>
+<li>使用 confd 这个工具去 watch k8s etcd（k8s的数据都保存在这里）变化，然后通过一个外部脚本渲染模板生成对应服务的 nginx 配置，然后执行 nginx reload 操作，这样 nginx 上的代理配置就能同步 k8s 中服务的变化。</li>
 </ul>
 <p>非常的粗糙，但是很管用，不知道当时是哪位设计的这个方案，只要脑洞大，没有解决不了的问题！</p>
 <h1 id="参考">参考</h1>
