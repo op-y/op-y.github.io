@@ -2,10 +2,10 @@
 title: "Traefik Ingress Controller"
 date: 2023-09-07T11:07:00+08:00
 tags: [Traefik, kubernetes]
-toc: false
+toc: true
 ---
 
-# 引子
+## 引子
 
 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。
 
@@ -15,7 +15,7 @@ toc: false
 
 当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。
 
-# Traefik 是什么？
+## Traefik 是什么？
 
 其实在引言部分已经说的很清楚了。
 
@@ -36,7 +36,7 @@ command="Resize"
 options="1080x" >}}
 
 
-# Traefik 安装&测试
+## Traefik 安装&测试
 
 我们的运行环境如下
 
@@ -250,7 +250,7 @@ options="1080x" >}}
 
 可以看到流量被代理到k8s集群内部whoami服务上处理并返回响应了。
 
-# 还能怎么干？
+## 还能怎么干？
 
 一边做一边浮想连篇，我想起了在 Traefik 出现之前我们是怎么处理这种问题的...
 
@@ -263,7 +263,7 @@ options="1080x" >}}
 非常的粗糙，但是很管用，不知道当时是哪位设计的这个方案，只要脑洞大，没有解决不了的问题！
 
 
-# 参考
+## 参考
 
 * Traefik [安装说明](https://docs.konghq.com/gateway/latest/)
 

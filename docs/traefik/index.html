@@ -303,14 +303,27 @@ Traefik 目前有 1.">
     
 
     
+  <nav class="toc" aria-labelledby="toc-heading">
+    <strong id="toc-heading">Table of Contents</strong>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#引子">引子</a></li>
+    <li><a href="#traefik-是什么">Traefik 是什么？</a></li>
+    <li><a href="#traefik-安装测试">Traefik 安装&amp;测试</a></li>
+    <li><a href="#还能怎么干">还能怎么干？</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </nav>
 
 
-    <h1 id="引子">引子</h1>
+
+    <h2 id="引子">引子</h2>
 <p>之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。</p>
 <p>什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。</p>
 <p>在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。</p>
 <p>当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。</p>
-<h1 id="traefik-是什么">Traefik 是什么？</h1>
+<h2 id="traefik-是什么">Traefik 是什么？</h2>
 <p>其实在引言部分已经说的很清楚了。</p>
 <p>Traefik <a href="https://doc.traefik.io/traefik/">官方介绍</a></p>
 
@@ -356,7 +369,7 @@ Traefik 目前有 1.">
   </figcaption>
 </figure>
 
-<h1 id="traefik-安装测试">Traefik 安装&amp;测试</h1>
+<h2 id="traefik-安装测试">Traefik 安装&amp;测试</h2>
 <p>我们的运行环境如下</p>
 <ul>
 <li>kuberntes 1.27.2</li>
@@ -576,7 +589,7 @@ spec:
 </figure>
 
 <p>可以看到流量被代理到k8s集群内部whoami服务上处理并返回响应了。</p>
-<h1 id="还能怎么干">还能怎么干？</h1>
+<h2 id="还能怎么干">还能怎么干？</h2>
 <p>一边做一边浮想连篇，我想起了在 Traefik 出现之前我们是怎么处理这种问题的&hellip;</p>
 <p>那个时候我们使用了一种 nginx + <a href="https://github.com/kelseyhightower/confd">confd</a> 的方式来实现边缘路由的效果。</p>
 <p>关键在于两点：</p>
@@ -585,7 +598,7 @@ spec:
 <li>使用 confd 这个工具去 watch k8s etcd（k8s的数据都保存在这里）变化，然后通过一个外部脚本渲染模板生成对应服务的 nginx 配置，然后执行 nginx reload 操作，这样 nginx 上的代理配置就能同步 k8s 中服务的变化。</li>
 </ul>
 <p>非常的粗糙，但是很管用，不知道当时是哪位设计的这个方案，只要脑洞大，没有解决不了的问题！</p>
-<h1 id="参考">参考</h1>
+<h2 id="参考">参考</h2>
 <ul>
 <li>Traefik <a href="https://docs.konghq.com/gateway/latest/">安装说明</a></li>
 </ul>
