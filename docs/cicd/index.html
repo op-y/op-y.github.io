@@ -343,7 +343,7 @@ CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落�
     <li><a href="#200块的做法">200块的做法</a></li>
     <li><a href="#200w的做法">200w的做法</a></li>
     <li><a href="#当前的一些做法">当前的一些做法</a></li>
-    <li><a href="#一些思考">一些思考</a></li>
+    <li><a href="#一些感悟">一些感悟</a></li>
     <li><a href="#参考">参考</a></li>
   </ul>
 </nav>
@@ -447,10 +447,134 @@ CD：持续交付、持续部署</p>
 <p>后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200+的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。</p>
 <p>这种情况下，大概在2017-2018年左右我们十分<strong>被动</strong>地<strong>主动</strong>完成了一次CI/CD系统的升级改造。</p>
 <h2 id="200块的做法">200块的做法</h2>
+<p>说被动是因为这次改造完全是形式所迫我们不得不解决痛点问题释放劳动力，不然大家都得陷入服务发布的泥潭中；说主动是因为这次改造就是SRE团队自己发起的，没有来自上边的KPI/OKR压力同时也没有人力于资源预算，也不局限于技术方案，目标就是为了实现CI/CD的自动化，解放SRE人力去干更重要的事情。</p>
+<p>这种情况下，当时几个并不太熟悉系统开发的SRE同学，边学变干，还硬生生的改造出了一个基本自动化的CI/CD系统。虽然现在回头看这个系统极为简陋根本没有设计可言，但在当时系统实现了自动化，真真实实地解决了SRE困境，在使用上也得到了业务同学的一致好评。</p>
+<p>那段时光是那几年中的<strong>黄金时代</strong>，团队同学全身心的投入，都无拘无束的。有想法你就可以放开手脚干，没有资源你自己想办法，一不小心就有意外的收获。那时我们机会每个周末都泡在公司，想方案、出设计、写代码、调试、交流&hellip; 累了就去楼下咖啡店喝杯美式&hellip;一切都那么纯粹。以至于多年以后这个CI/CD系统一直被我们戏称为200块的 系统（这个投入就是200块的咖啡钱 同时对比公司后来大力投入开发新的CI/CD系统）。</p>
+<p>感慨了这么多，那这个系统长啥样呢，看看下边的示意图。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-8164c6819ba21bf516a681ca995f5d75">
+  <a href="/cicd/figure4-cicd-system-2.png" class="img-link">
+    <img src="/cicd/figure4-cicd-system-2_hud057b7e2611147e88cdbc9b583664aec_121881_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-8164c6819ba21bf516a681ca995f5d75">
+    200块的CI/CD系统示意图
+  </figcaption>
+</figure>
+
+<p>变化主要在引入了Docker构建（当然不可避免的引入了镜像仓库，我们用的Harbor），既然服务都运行在容器里了为啥构建镜像不行是吧？</p>
+<p>在服务发布一侧，我们编写了一套脚本控制Kubernetes对服务进行升级（不要惊讶，真的是一套脚本，当时我们连Kubernetes 的 API 都没有掌握，纯粹通过脚本调用 kubectl 实现的控制。当然后来随着深入学习和个人成长，控制代码被改造成了通过 go sdk 操作 Kubernetes了。）</p>
+<p>同时我们开发了一个简陋的WebUI，让用户能自行选择需要构建的项目需要发布的项目，这里我们认准了一点就是使用简单（因为这些工作以前都是SRE来做，改造后不能让用户负担显著变大），所以最终的效果是：用户只用选则项目名称和分支点击一键构建，用户选择项目名称和镜像版本点击一键升级，所有操作就这么多！</p>
+<p>最终项目上线后，因为简单可靠（同时确实没有增加公司成本）得到了上下一致好评。</p>
+<p>我们开发过程中，虽然没过多的方法论，但是回头看 <strong>build in container</strong> 的做法不就在有意无意的向云原生的理念上靠近吗？</p>
 <h2 id="200w的做法">200w的做法</h2>
+<p>2019年中，随着公司业务越来约庞大，上上下下思潮涌动&hellip;到这个规模了是不是需要有专业的基础架构研发团队了？我们的系统是不是需要紧跟开源社区的趋势？CI/CD是不是要更加的流畅和智能？</p>
+<p>这个期间公司终于还是引入了专门的基础架构研发团队（当然不只是为了做CI/CD），并开始大刀阔斧的重构CI/CD系统。</p>
+<p>新版本的系统SRE团队自然没有太多机会参与开发，我们只能在一旁观察学习&hellip;具体的实现细节我们不得而知，最终了解到的系统架构如下图示意。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-965808e0a22ae4ce71756506879d2b8e">
+  <a href="/cicd/figure5-cicd-system-3.png" class="img-link">
+    <img src="/cicd/figure5-cicd-system-3_hu2c0464d2ca3519097a636bfe81c82192_75711_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-965808e0a22ae4ce71756506879d2b8e">
+    200w的CI/CD系统示意图
+  </figcaption>
+</figure>
+
+<p>主要的变化</p>
+<ul>
+<li>抛弃了Jenkins，引入了自己了流程控制（据说是airflow实现的，我个人并不觉得Jenkins有啥问题，而且基于我后来做BPMN系统的开发经验，当时airflow的使用也只是做了一个固定的构建发布流程，意义有限。）；</li>
+<li>引入了 ArgoCD，实现了 Kubernetes 上服务发布的自动控制，这一点还是比较有意义的。</li>
+</ul>
+<p>这个过程比较一波三折，前后开发了两个版本，最终才落地下来。最大的问题就是新组件的基础架构研发团队对公司研发系统和研发同学缺乏了解。第一个版本主要以 Devops 思想指导系统开发，把各种研发同学不熟悉的内容统统暴露出来，让研发同学无所侍从，从一键是操作到要去学习各种知识概念，过程也变得复杂，所以系统落地不下来。后来换了一波人又重新写了一边系统，简化了流程，同时加大了对研发同学的培训，才使得系统被慢慢接受。</p>
+<p>这个版本的CI/CD系统前前后后的折腾，加上人力和资源投入，对比最终实现的效果&hellip;一致于我们后来总是戏谑这是200w的系统。</p>
+<p>当然，该说不说，这个版本向云原生方向又迈进了一步。</p>
 <h2 id="当前的一些做法">当前的一些做法</h2>
-<h2 id="一些思考">一些思考</h2>
+<p>后来的故事随着大家的逐渐离开，变得不得而知了。</p>
+<p>这一部分的系统示意图是我个人学习中总结的。只能说个大概，毕竟都是纸上功夫。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-5a3555e33015ae41a0765890e4b18853">
+  <a href="/cicd/figure6-cicd-system-4.png" class="img-link">
+    <img src="/cicd/figure6-cicd-system-4_hub5dbfb477d5230c9dd0fce2767c31913_83109_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-5a3555e33015ae41a0765890e4b18853">
+    当前常见的CI/CD系统示意图
+  </figcaption>
+</figure>
+
+<p>目前 GitOps 方法实践下的CI/CD系统可能是这样的：</p>
+<ul>
+<li>用户向Git仓库commit代码，触发构建；</li>
+<li>构建过程使用 Tekton 来控制，这是现在比较受欢迎的工具了，构建在容器中完成，生成镜像推送的Harbor中，同时使用 Helm 来生成或更新服务应用定义的Chart文件，并推送到应用的Git仓库中；</li>
+<li>Chart 仓库的更新触发 ArgoCD 来发起 Kubernetes 上的服务升级过程；</li>
+<li>最终 Kubernetes 完成服务的升级。</li>
+</ul>
+<p>我总结的这么做的一些优点</p>
+<ul>
+<li>GitOps 思想指导下操作都是通过Git来触发的：有版本控制做历史记录，方便追溯和回滚；CI和CD相关Git仓库分离更好的控制研发和SRE职责范围，影响可控；</li>
+<li>Tekton 实现了 Cloud Native CI；</li>
+<li>ArgoCD 实现了 Coud Native CD；</li>
+<li>这个过程无过多的人工干预，自动化程度非常高，只有研发提交代码、前期SRE对各个环节的配置、发布过程中的监控观察。</li>
+</ul>
+<p>后续还有机会的话，希望能在某处实践一下这个方案。</p>
+<h2 id="一些感悟">一些感悟</h2>
+<p>至此，关于CI/CD的故事基本讲完了，说一些我的感悟吧。</p>
+<ul>
+<li>自驱的学习是快乐的！</li>
+<li>只要实事求是，200块的项目能解决问题不一定就比200w的项目差😄</li>
+<li>有些事情可以自上而下的推也可以自下而上的推，关键看当下的时机与处境。</li>
+<li>做完工作多总结一些，提炼出来的观点就是你的方法论，就像在CI/CD系统开发过程中，我们看到了CloudNative的影子；包括<strong>罗师傅</strong> 想了一个通过 git 来控制 dnsmasq 配置防止配置误删除/无修改的方案，我看到后来所谓GitOps的思想。</li>
+</ul>
+<p>就这么多吧，谢谢你看完我絮叨了这么些🙏！</p>
 <h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%8C%81%E7%BA%8C%E6%95%B4%E5%90%88">CI</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%8C%81%E7%BA%8C%E9%83%A8%E7%BD%B2">CD</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/DevOps">Devops</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%95%8F%E6%8D%B7%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91">Agile</a></li>
+<li><a href="https://xie.infoq.cn/article/c634551471f0338c53a6795e4">GitOps</a></li>
+<li><a href="https://www.jenkins.io">Jenkins</a></li>
+<li><a href="https://about.gitlab.com">Gitlab</a></li>
+<li><a href="https://maven.apache.org">Maven</a></li>
+<li><a href="https://goharbor.io">Harbor</a></li>
+<li><a href="https://www.docker.com">Docker</a></li>
+<li><a href="https://kubernetes.io">Kubernetes</a></li>
+<li><a href="https://helm.sh">Helm</a></li>
+<li><a href="https://argo-cd.readthedocs.io">ArgoCD</a></li>
+<li><a href="https://www.tekton.com">Tekton</a></li>
+</ul>
 <p>再多的参考资料都不如自己动手实践，共勉！</p>
 
   </main>
