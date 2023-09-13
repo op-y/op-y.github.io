@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>https on Qin的自习室</title>
+    <link>https://op-y.github.io/tags/https/</link>
+    <description>Recent content in https on Qin的自习室</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 12 Sep 2023 00:23:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/https/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTTPS 分享</title>
+      <link>https://op-y.github.io/https/</link>
+      <pubDate>Tue, 12 Sep 2023 00:23:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/https/</guid>
+      <description>引言 这是2019年3月一次内部技术分享，当时在笔记上留下了一些大纲，分享时的PPT已经不见了，借此机会再写一遍分享内容，于自己是一次知识巩固，于朋友们也算得上是一次技术交流。
+先聊聊密码学 谈到HTTPS，大家首先想到的是安全和加密通信。所以在开始HTTPS之旅前，有必要先聊一些密码学的内容。
+古典密码 密码并不是一个很新潮的技术，我甚至怀疑从有人类文明开始，密码技术就诞生了。毕竟我们每个人心底里都藏着那没多不想让人知道的秘密😊
+我们先来看看比较古老的密码。
+密码棒 密码棒是一种非常古老的密码，看着也有点像小时候的游戏。用一个纸条或者布条缠绕在有多个面（例如4个面）的棒子上，然后竖着在每个面上写字，写完后将纸条或者布条拉直，这时候得到的就是被打乱顺序的文字了。这也算得上一种密码吧！
+ 密码棒 参考wiki   间接的证据指出，最早提到密码棒的是一位公元前7世纪的希腊诗人阿尔基罗库斯，后来的希腊和罗马作家也在作品提到。
+希腊历史学家普鲁塔克（Plutarch）曾写下密码棒的用法
+wiki 上给了一个例子，按照上述方法处理 &amp;ldquo;Help me I am under attack&amp;rdquo; 这句话，加解密过程为：
+加密过程：明文4个文字绕一圈，所以可以绕棒子5圈，故我们按照5个文字分一组，然后竖着读取每一列。（想象一下）：
+H E L P M E I A M U N D E R A T T A C K  得到密文：
+HENTEIDTLAEAPMRCMUAK  解密过程则相反：将密文4个文字一组分组（每间隔3个文字取一个，到尾部后绕回即可。）
+H E N T--------- E I D T--------- L A E A-------- P M R C--------- M U A K---------  得到明文：</description>
+    </item>
+    
+  </channel>
+</rss>

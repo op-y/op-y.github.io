@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="generator" content="Hugo 0.83.1" />
+  <link rel="canonical" href="https://op-y.github.io/https/" />
+
+  
+    
+    <meta name="description" content="引言 这是2019年3月一次内部技术分享，当时在笔记上留下了一些大纲，分享时的PPT已经不见了，借此机会再写一遍分享内容，于自己是一次知识巩固，于朋友们也算得上是一次技术交流。
+先聊聊密码学 谈到HTTPS，大家首先想到的是安全和加密通信。所以在开始HTTPS之旅前，有必要先聊一些密码学的内容。
+古典密码 密码并不是一个很新潮的技术，我甚至怀疑从有人类文明开始，密码技术就诞生了。毕竟我们每个人心底里都藏着那没多不想让人知道的秘密😊
+我们先来看看比较古老的密码。
+密码棒 密码棒是一种非常古老的密码，看着也有点像小时候的游戏。用一个纸条或者布条缠绕在有多个面（例如4个面）的棒子上，然后竖着在每个面上写字，写完后将纸条或者布条拉直，这时候得到的就是被打乱顺序的文字了。这也算得上一种密码吧！
+ 密码棒 参考wiki   间接的证据指出，最早提到密码棒的是一位公元前7世纪的希腊诗人阿尔基罗库斯，后来的希腊和罗马作家也在作品提到。
+希腊历史学家普鲁塔克（Plutarch）曾写下密码棒的用法
+wiki 上给了一个例子，按照上述方法处理 “Help me I am under attack” 这句话，加解密过程为：
+加密过程：明文4个文字绕一圈，所以可以绕棒子5圈，故我们按照5个文字分一组，然后竖着读取每一列。（想象一下）：
+H E L P M E I A M U N D E R A T T A C K  得到密文：
+HENTEIDTLAEAPMRCMUAK  解密过程则相反：将密文4个文字一组分组（每间隔3个文字取一个，到尾部后绕回即可。）
+H E N T--------- E I D T--------- L A E A-------- P M R C--------- M U A K---------  得到明文：">
+  
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://op-y.github.io/favicon-32x32.png"> 
+  <link rel="icon" type="image/png" sizes="16x16" href="https://op-y.github.io/favicon-16x16.png"> 
+  <link rel="manifest" href="https://op-y.github.io/site.webmanifest"> 
+  <link rel="mask-icon" href="https://op-y.github.io/safari-pinned-tab.svg" color="#000000"> 
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    body {
+      visibility: hidden;
+      opacity: 0;
+    }
+  </style>
+
+  <style id="darkTheme">
+    .intro-and-nav,
+    .main-and-footer {
+      filter: invert(100%);
+    }
+
+    * {
+      background-color: inherit
+    }
+
+    img:not([src*=".svg"]),
+    .colors,
+    iframe,
+    .demo-container {
+      filter: invert(100%);
+    }
+  </style>
+
+  <link rel="stylesheet" href="/css/prism.css" media="none" onload="this.media='all';">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+  
+
+  
+  
+  <title>HTTPS 分享 | Qin的自习室</title>
+</head>
+
+  <body>
+    <a href="#main">skip to content</a>
+    <noscript>
+  <style>
+    body {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</noscript>
+
+    <svg style="display: none">
+  <symbol id="bookmark" viewBox="0 0 40 50">
+   <g transform="translate(2266 3206.2)">
+    <path style="stroke:currentColor;stroke-width:3.2637;fill:none" d="m-2262.2-3203.4-.2331 42.195 16.319-16.318 16.318 16.318.2331-42.428z"/>
+   </g>
+  </symbol>
+
+  <symbol id="w3c" viewBox="0 0 127.09899 67.763">
+   <text font-size="83" style="font-size:83px;font-family:Trebuchet;letter-spacing:-12;fill-opacity:0" letter-spacing="-12" y="67.609352" x="-26.782778">W3C</text>
+   <text font-size="83" style="font-size:83px;font-weight:bold;font-family:Trebuchet;fill-opacity:0" y="67.609352" x="153.21722" font-weight="bold">SVG</text>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m33.695.377 12.062 41.016 12.067-41.016h8.731l-19.968 67.386h-.831l-12.48-41.759-12.479 41.759h-.832l-19.965-67.386h8.736l12.061 41.016 8.154-27.618-3.993-13.397h8.737z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m91.355 46.132c0 6.104-1.624 11.234-4.862 15.394-3.248 4.158-7.45 6.237-12.607 6.237-3.882 0-7.263-1.238-10.148-3.702-2.885-2.47-5.02-5.812-6.406-10.022l6.82-2.829c1.001 2.552 2.317 4.562 3.953 6.028 1.636 1.469 3.56 2.207 5.781 2.207 2.329 0 4.3-1.306 5.909-3.911 1.609-2.606 2.411-5.738 2.411-9.401 0-4.049-.861-7.179-2.582-9.399-1.995-2.604-5.129-3.912-9.397-3.912h-3.327v-3.991l11.646-20.133h-14.062l-3.911 6.655h-2.493v-14.976h32.441v4.075l-12.31 21.217c4.324 1.385 7.596 3.911 9.815 7.571 2.22 3.659 3.329 7.953 3.329 12.892z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m125.21 0 1.414 8.6-5.008 9.583s-1.924-4.064-5.117-6.314c-2.693-1.899-4.447-2.309-7.186-1.746-3.527.73-7.516 4.938-9.258 10.13-2.084 6.21-2.104 9.218-2.178 11.978-.115 4.428.58 7.043.58 7.043s-3.04-5.626-3.011-13.866c.018-5.882.947-11.218 3.666-16.479 2.404-4.627 5.954-7.404 9.114-7.728 3.264-.343 5.848 1.229 7.841 2.938 2.089 1.788 4.213 5.698 4.213 5.698l4.94-9.837z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m125.82 48.674s-2.208 3.957-3.589 5.48c-1.379 1.524-3.849 4.209-6.896 5.555-3.049 1.343-4.646 1.598-7.661 1.306-3.01-.29-5.807-2.032-6.786-2.764-.979-.722-3.486-2.864-4.897-4.854-1.42-2-3.634-5.995-3.634-5.995s1.233 4.001 2.007 5.699c.442.977 1.81 3.965 3.749 6.572 1.805 2.425 5.315 6.604 10.652 7.545 5.336.945 9.002-1.449 9.907-2.031.907-.578 2.819-2.178 4.032-3.475 1.264-1.351 2.459-3.079 3.116-4.108.487-.758 1.276-2.286 1.276-2.286l-1.276-6.644z"/>
+  </symbol>
+
+  <symbol id="tag" viewBox="0 0 177.16535 177.16535">
+    <g transform="translate(0 -875.2)">
+     <path style="fill-rule:evenodd;stroke-width:0;fill:currentColor" d="m159.9 894.3-68.79 8.5872-75.42 77.336 61.931 60.397 75.429-76.565 6.8495-69.755zm-31.412 31.835a10.813 10.813 0 0 1 1.8443 2.247 10.813 10.813 0 0 1 -3.5174 14.872l-.0445.0275a10.813 10.813 0 0 1 -14.86 -3.5714 10.813 10.813 0 0 1 3.5563 -14.863 10.813 10.813 0 0 1 13.022 1.2884z"/>
+    </g>
+  </symbol>
+
+  <symbol id="balloon" viewBox="0 0 141.73228 177.16535">
+   <g transform="translate(0 -875.2)">
+    <g>
+     <path style="fill:currentColor" d="m68.156 882.83-.88753 1.4269c-4.9564 7.9666-6.3764 17.321-5.6731 37.378.36584 10.437 1.1246 23.51 1.6874 29.062.38895 3.8372 3.8278 32.454 4.6105 38.459 4.6694-.24176 9.2946.2879 14.377 1.481 1.2359-3.2937 5.2496-13.088 8.886-21.623 6.249-14.668 8.4128-21.264 10.253-31.252 1.2464-6.7626 1.6341-12.156 1.4204-19.764-.36325-12.93-2.1234-19.487-6.9377-25.843-2.0833-2.7507-6.9865-7.6112-7.9127-7.8436-.79716-.20019-6.6946-1.0922-6.7755-1.0248-.02213.0182-5.0006-.41858-7.5248-.22808l-2.149-.22808h-3.3738z"/>
+     <path style="fill:currentColor" d="m61.915 883.28-3.2484.4497c-1.7863.24724-3.5182.53481-3.8494.63994-2.4751.33811-4.7267.86957-6.7777 1.5696-.28598 0-1.0254.20146-2.3695.58589-5.0418 1.4418-6.6374 2.2604-8.2567 4.2364-6.281 7.6657-11.457 18.43-12.932 26.891-1.4667 8.4111.71353 22.583 5.0764 32.996 3.8064 9.0852 13.569 25.149 22.801 37.517 1.3741 1.841 2.1708 2.9286 2.4712 3.5792 3.5437-1.1699 6.8496-1.9336 10.082-2.3263-1.3569-5.7831-4.6968-21.86-6.8361-33.002-.92884-4.8368-2.4692-14.322-3.2452-19.991-.68557-5.0083-.77707-6.9534-.74159-15.791.04316-10.803.41822-16.162 1.5026-21.503 1.4593-5.9026 3.3494-11.077 6.3247-15.852z"/>
+     <path style="fill:currentColor" d="m94.499 885.78c-.10214-.0109-.13691 0-.0907.0409.16033.13489 1.329 1.0675 2.5976 2.0723 6.7003 5.307 11.273 14.568 12.658 25.638.52519 4.1949.24765 14.361-.5059 18.523-2.4775 13.684-9.7807 32.345-20.944 53.519l-3.0559 5.7971c2.8082.76579 5.7915 1.727 8.9926 2.8441 11.562-11.691 18.349-19.678 24.129-28.394 7.8992-11.913 11.132-20.234 12.24-31.518.98442-10.02-1.5579-20.876-6.7799-28.959-.2758-.4269-.57803-.86856-.89617-1.3166-3.247-6.13-9.752-12.053-21.264-16.131-2.3687-.86369-6.3657-2.0433-7.0802-2.1166z"/>
+     <path style="fill:currentColor" d="m32.52 892.22c-.20090-.13016-1.4606.81389-3.9132 2.7457-11.486 9.0476-17.632 24.186-16.078 39.61.79699 7.9138 2.4066 13.505 5.9184 20.562 5.8577 11.77 14.749 23.219 30.087 38.74.05838.059.12188.1244.18052.1838 1.3166-.5556 2.5965-1.0618 3.8429-1.5199-.66408-.32448-1.4608-1.3297-3.8116-4.4602-5.0951-6.785-8.7512-11.962-13.051-18.486-5.1379-7.7948-5.0097-7.5894-8.0586-13.054-6.2097-11.13-8.2674-17.725-8.6014-27.563-.21552-6.3494.13041-9.2733 1.775-14.987 2.1832-7.5849 3.9273-10.986 9.2693-18.07 1.7839-2.3656 2.6418-3.57 2.4409-3.7003z"/>
+     <path style="fill:currentColor" d="m69.133 992.37c-6.2405.0309-12.635.76718-19.554 2.5706 4.6956 4.7759 9.935 10.258 12.05 12.625l4.1272 4.6202h11.493l3.964-4.4516c2.0962-2.3541 7.4804-7.9845 12.201-12.768-8.378-1.4975-16.207-2.6353-24.281-2.5955z"/>
+     <rect style="stroke-width:0;fill:currentColor" ry="2.0328" height="27.746" width="22.766" y="1017.7" x="60.201"/>
+    </g>
+   </g>
+  </symbol>
+
+  <symbol id="info" viewBox="0 0 41.667 41.667">
+   <g transform="translate(-37.035 -1004.6)">
+    <path style="stroke-linejoin:round;stroke:currentColor;stroke-linecap:round;stroke-width:3.728;fill:none" d="m76.25 1030.2a18.968 18.968 0 0 1 -23.037 13.709 18.968 18.968 0 0 1 -13.738 -23.019 18.968 18.968 0 0 1 23.001 -13.768 18.968 18.968 0 0 1 13.798 22.984"/>
+    <g transform="matrix(1.1146 0 0 1.1146 -26.276 -124.92)">
+     <path style="stroke:currentColor;stroke-linecap:round;stroke-width:3.728;fill:none" d="m75.491 1039.5v-8.7472"/>
+     <path style="stroke-width:0;fill:currentColor" transform="scale(-1)" d="m-73.193-1024.5a2.3719 2.3719 0 0 1 -2.8807 1.7142 2.3719 2.3719 0 0 1 -1.718 -2.8785 2.3719 2.3719 0 0 1 2.8763 -1.7217 2.3719 2.3719 0 0 1 1.7254 2.8741"/>
+    </g>
+   </g>
+  </symbol>
+
+  <symbol id="warning" viewBox="0 0 48.430474 41.646302">
+    <g transform="translate(-1.1273 -1010.2)">
+     <path style="stroke-linejoin:round;stroke:currentColor;stroke-linecap:round;stroke-width:4.151;fill:none" d="m25.343 1012.3-22.14 37.496h44.28z"/>
+     <path style="stroke:currentColor;stroke-linecap:round;stroke-width:4.1512;fill:none" d="m25.54 1027.7v8.7472"/>
+     <path style="stroke-width:0;fill:currentColor" d="m27.839 1042.8a2.3719 2.3719 0 0 1 -2.8807 1.7143 2.3719 2.3719 0 0 1 -1.718 -2.8785 2.3719 2.3719 0 0 1 2.8763 -1.7217 2.3719 2.3719 0 0 1 1.7254 2.8741"/>
+    </g>
+  </symbol>
+
+  <symbol id="menu" viewBox="0 0 50 50">
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="0" x="0"/>
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="20" x="0"/>
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="40" x="0"/>
+   </symbol>
+
+   <symbol id="link" viewBox="0 0 50 50">
+    <g transform="translate(0 -1002.4)">
+     <g transform="matrix(.095670 0 0 .095670 2.3233 1004.9)">
+      <g>
+       <path style="stroke-width:0;fill:currentColor" d="m452.84 192.9-128.65 128.65c-35.535 35.54-93.108 35.54-128.65 0l-42.881-42.886 42.881-42.876 42.884 42.876c11.845 11.822 31.064 11.846 42.886 0l128.64-128.64c11.816-11.831 11.816-31.066 0-42.9l-42.881-42.881c-11.822-11.814-31.064-11.814-42.887 0l-45.928 45.936c-21.292-12.531-45.491-17.905-69.449-16.291l72.501-72.526c35.535-35.521 93.136-35.521 128.64 0l42.886 42.881c35.535 35.523 35.535 93.141-.001 128.66zm-254.28 168.51-45.903 45.9c-11.845 11.846-31.064 11.817-42.881 0l-42.884-42.881c-11.845-11.821-11.845-31.041 0-42.886l128.65-128.65c11.819-11.814 31.069-11.814 42.884 0l42.886 42.886 42.876-42.886-42.876-42.881c-35.54-35.521-93.113-35.521-128.65 0l-128.65 128.64c-35.538 35.545-35.538 93.146 0 128.65l42.883 42.882c35.51 35.54 93.11 35.54 128.65 0l72.496-72.499c-23.956 1.597-48.092-3.784-69.474-16.283z"/>
+      </g>
+     </g>
+    </g>
+  </symbol>
+
+  <symbol id="doc" viewBox="0 0 35 45">
+   <g transform="translate(-147.53 -539.83)">
+    <path style="stroke:currentColor;stroke-width:2.4501;fill:none" d="m149.38 542.67v39.194h31.354v-39.194z"/>
+    <g style="stroke-width:25" transform="matrix(.098003 0 0 .098003 133.69 525.96)">
+     <path d="m220 252.36h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+     <path style="stroke:currentColor;stroke-width:25;fill:none" d="m220 409.95h200"/>
+     <path d="m220 488.74h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+     <path d="m220 331.15h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+    </g>
+   </g>
+ </symbol>
+
+ <symbol id="tick" viewBox="0 0 177.16535 177.16535">
+  <g transform="translate(0 -875.2)">
+   <rect style="stroke-width:0;fill:currentColor" transform="rotate(30)" height="155" width="40" y="702.99" x="556.82"/>
+   <rect style="stroke-width:0;fill:currentColor" transform="rotate(30)" height="40" width="90.404" y="817.99" x="506.42"/>
+  </g>
+ </symbol>
+</svg>
+
+    <div class="wrapper">
+      <header class="intro-and-nav" role="banner">
+  <div>
+    <div class="intro">
+      <a
+        class="logo"
+        href="https://op-y.github.io"
+        aria-label="Qin的自习室 home page"
+      >
+        
+          <img 
+            src="/images/logo.svg" 
+            alt="Logo"
+          >
+        
+      </a>
+      <p class="library-desc">
+         Qin的自习室：记录学习点点滴滴的地方。 
+      </p>
+    </div>
+    <nav id="patterns-nav" class="patterns" role="navigation">
+  <h2 class="vh">Main navigation</h2>
+  <button id="menu-button" aria-expanded="false">
+    <svg viewBox="0 0 50 50" aria-hidden="true" focusable="false">
+      <use href="#menu"></use>
+    </svg>
+    Menu
+  </button>
+  
+  <ul id="patterns-list">
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Qin</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/post/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">分享文章</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/tags/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Tags</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/about/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">关于自习室</span>
+      </a>
+    </li>
+  
+  </ul>
+</nav>
+    
+  </div>
+</header>
+
+      <div class="main-and-footer">
+        <div>
+          
+  <main id="main">
+    <h1>
+      <svg class="bookmark-icon" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+        <use href="#bookmark"></use>
+      </svg>
+      HTTPS 分享
+    </h1>
+
+    <div class="date">
+      
+      
+      <strong>Publish date: </strong>Sep 12, 2023
+      
+        
+      
+    </div>
+
+    
+      <div class="tags">
+        <strong>Tags: </strong>
+        <ul aria-label="tags">
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/https/">https</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/cryptography/">cryptography</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+  <nav class="toc" aria-labelledby="toc-heading">
+    <strong id="toc-heading">Table of Contents</strong>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#引言">引言</a></li>
+    <li><a href="#先聊聊密码学">先聊聊密码学</a>
+      <ul>
+        <li><a href="#古典密码">古典密码</a>
+          <ul>
+            <li><a href="#密码棒">密码棒</a></li>
+            <li><a href="#凯撒密码">凯撒密码</a></li>
+            <li><a href="#维吉尼亚密码">维吉尼亚密码</a></li>
+            <li><a href="#谜码机">谜码机</a></li>
+            <li><a href="#一次性密码本">一次性密码本</a></li>
+          </ul>
+        </li>
+        <li><a href="#现代密码的工具箱">现代密码的工具箱</a>
+          <ul>
+            <li><a href="#对称加密">对称加密</a></li>
+            <li><a href="#非对称加密公钥加密">非对称加密（公钥加密）</a></li>
+            <li><a href="#单向散列函数">单向散列函数</a></li>
+            <li><a href="#消息确认码">消息确认码</a></li>
+            <li><a href="#数字签名">数字签名</a></li>
+            <li><a href="#伪随机数生成器">伪随机数生成器</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#为什么是https">为什么是HTTPS</a>
+      <ul>
+        <li><a href="#http演进历史">HTTP演进历史</a></li>
+        <li><a href="#什么是https">什么是HTTPS</a></li>
+        <li><a href="#如何实现安全传输">如何实现安全传输</a></li>
+      </ul>
+    </li>
+    <li><a href="#有关数字证书">有关数字证书</a>
+      <ul>
+        <li><a href="#数字证书">数字证书</a></li>
+        <li><a href="#验证过程">验证过程</a></li>
+        <li><a href="#证书链">证书链</a></li>
+        <li><a href="#证书获取方式">证书获取方式</a></li>
+        <li><a href="#lets-encrypt">Let&rsquo;s Encrypt</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </nav>
+
+
+
+    <h2 id="引言">引言</h2>
+<p>这是2019年3月一次内部技术分享，当时在笔记上留下了一些大纲，分享时的PPT已经不见了，借此机会再写一遍分享内容，于自己是一次知识巩固，于朋友们也算得上是一次技术交流。</p>
+<h2 id="先聊聊密码学">先聊聊密码学</h2>
+<p>谈到HTTPS，大家首先想到的是安全和加密通信。所以在开始HTTPS之旅前，有必要先聊一些密码学的内容。</p>
+<h3 id="古典密码">古典密码</h3>
+<p>密码并不是一个很新潮的技术，我甚至怀疑从有人类文明开始，密码技术就诞生了。毕竟我们每个人心底里都藏着那没多不想让人知道的秘密😊</p>
+<p>我们先来看看比较古老的密码。</p>
+<h4 id="密码棒">密码棒</h4>
+<p>密码棒是一种非常古老的密码，看着也有点像小时候的游戏。用一个纸条或者布条缠绕在有多个面（例如4个面）的棒子上，然后竖着在每个面上写字，写完后将纸条或者布条拉直，这时候得到的就是被打乱顺序的文字了。这也算得上一种密码吧！</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-24b26b769120f7fceccbfd13fc32ab5a">
+  <a href="/https/figure1-scytale.png" class="img-link">
+    <img src="/https/figure1-scytale_hu808df134f0bb963571dc3430ab7e4e49_30016_260x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-24b26b769120f7fceccbfd13fc32ab5a">
+    密码棒 参考<a href="https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A2%BC%E6%A3%92">wiki</a>
+  </figcaption>
+</figure>
+
+<p>间接的证据指出，最早提到密码棒的是一位公元前7世纪的希腊诗人阿尔基罗库斯，后来的希腊和罗马作家也在作品提到。</p>
+<p>希腊历史学家普鲁塔克（Plutarch）曾写下密码棒的用法</p>
+<p>wiki 上给了一个例子，按照上述方法处理 &ldquo;Help me I am under attack&rdquo; 这句话，加解密过程为：</p>
+<p>加密过程：明文4个文字绕一圈，所以可以绕棒子5圈，故我们按照5个文字分一组，然后竖着读取每一列。（想象一下）：</p>
+<pre><code>H E L P M
+E I A M U
+N D E R A
+T T A C K
+</code></pre>
+<p>得到密文：</p>
+<pre><code>HENTEIDTLAEAPMRCMUAK
+</code></pre>
+<p>解密过程则相反：将密文4个文字一组分组（每间隔3个文字取一个，到尾部后绕回即可。）</p>
+<pre><code>H E N T---------
+E I D T---------
+L A E A--------
+P M R C---------
+M U A K---------
+</code></pre>
+<p>得到明文：</p>
+<pre><code>HELPMEIAMUNDERATTACK
+</code></pre>
+<h4 id="凯撒密码">凯撒密码</h4>
+<p>凯撒密码，即是人们常说的变换加密，根据苏维托尼乌斯的记载，凯撒曾用此方法对重要的军事信息进行加密。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-6ed5026543e3c31076e5339d2f205e58">
+  <a href="/https/figure2-caesar-cipher.png" class="img-link">
+    <img src="/https/figure2-caesar-cipher_hua2f9bf0929635620e2b3765edb221de6_11357_480x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-6ed5026543e3c31076e5339d2f205e58">
+    凯撒密码 参考<a href="https://zh.wikipedia.org/wiki/%E5%87%B1%E6%92%92%E5%AF%86%E7%A2%BC">wiki</a>
+  </figcaption>
+</figure>
+
+<p>对于字母文字而言，可以理解为按照一个固定的偏移量在字母表上将原始字母替换成目标字母。其变种也可以是预先设置好原始字母表和目标字母表的映射关系，然后做字母替换。</p>
+<p>针对第一种情况，在偏移量为3时的一个例子</p>
+<pre><code># 字母表
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+DEFGHIJKLMNOPQRSTUVWXYZABC
+
+# 明文
+THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
+
+# 密文
+WKH TXLFN EURZQ IRA MXPSV RYHU WKH ODCB GRJ
+</code></pre>
+<p>如何破解这种密码呢？各位思考一下。</p>
+<h4 id="维吉尼亚密码">维吉尼亚密码</h4>
+<p>维吉尼亚密码可以算是一种凯撒密码的变种，是使用一系列凯撒密码组成密码字母表的加密算法。详细信息各位可以去<a href="https://zh.wikipedia.org/wiki/%E7%BB%B4%E5%90%89%E5%B0%BC%E4%BA%9A%E5%AF%86%E7%A0%81">wiki</a>上阅读。这里我们给一个示例。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-a5f7b2c1046d0b96288c970d8124b60b">
+  <a href="/https/figure3-Vigen%C3%A8re-square.png" class="img-link">
+    <img src="/https/figure3-Vigen%C3%A8re-square_hubdfab50dc032ef103e9ca098f71cd9fa_127728_480x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-a5f7b2c1046d0b96288c970d8124b60b">
+    维吉尼亚密码
+  </figcaption>
+</figure>
+
+<p>在一个凯撒密码中，字母表中的每一字母都会作一定的偏移，例如偏移量为3时，A就转换为了D、B转换为了E……而维吉尼亚密码则是由一些偏移量不同的凯撒密码组成。</p>
+<p>为了生成密码，需要使用表格法。这一表格包括了26行字母表，每一行都由前一行向左偏移一位得到。具体使用哪一行字母表进行编译是基于密钥进行的，在过程中会不断地变换。</p>
+<pre><code># 明文
+ATTACKATDAWN
+
+# 密钥
+LEMONLEMONLE
+
+# 密文
+LXFOPVEFRNHR
+</code></pre>
+<p>其解密过程反向操作即可。</p>
+<p>如何破解这种密码呢？各位思考一下。</p>
+<h4 id="谜码机">谜码机</h4>
+<p>恩尼格玛密码机（德语：Enigma，又译恩尼格密码机、哑谜机、奇谜机[1]或谜式密码机）是一种用于加密与解密文件的密码机。确切地说，恩尼格玛是对二战时期纳粹德国使用的一系列相似的转子机械加解密机器的统称，它包括了许多不同的型号，为密码学对称加密算法的流加密。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-dc37e5ca018f04e180fbf44ca60c6875">
+  <a href="/https/figure4-enigma.jpg" class="img-link">
+    <img src="/https/figure4-enigma_hu1c8d8a5c5ebac5b574b9886ca380e6ea_13958_480x0_resize_q99_box.jpg">
+  </a>
+  <figcaption id="caption-dc37e5ca018f04e180fbf44ca60c6875">
+    Egigma 密码机
+  </figcaption>
+</figure>
+
+<p>关于谜码机的加密原理我一时之间也搞不清楚，要知道祖师爷 <strong>图灵</strong> 为了破译这个密码都费了老大的功夫了（据说还是没有完成破译工作，对破译工作做出杰出贡献的是三位波兰密码学家马里安·雷耶夫斯基、杰尔兹·罗佐基和亨里克·佐加尔斯基）。详细的内容各位可以参考<a href="https://zh.wikipedia.org/wiki/%E6%81%A9%E5%B0%BC%E6%A0%BC%E7%8E%9B%E5%AF%86%E7%A0%81%E6%9C%BA">wiki</a>上的介绍。</p>
+<p>如果仅仅对故事感兴趣，大家可以去看看《模仿游戏》这部电影。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-6d7d49a2e78dab8288af135a6880497b">
+  <a href="/https/figure5-the-imitation-game.jpg" class="img-link">
+    <img src="/https/figure5-the-imitation-game_hu5cda5adbf72806d47700b2a73ced2cd0_176063_960x0_resize_q99_box.jpg">
+  </a>
+  <figcaption id="caption-6d7d49a2e78dab8288af135a6880497b">
+    电影《模仿游戏》
+  </figcaption>
+</figure>
+
+<h4 id="一次性密码本">一次性密码本</h4>
+<p><a href="https://zh.wikipedia.org/wiki/%E4%B8%80%E6%AC%A1%E6%80%A7%E5%AF%86%E7%A2%BC%E6%9C%AC">wiki</a> 上的介绍</p>
+<p>一次性密码本（英语：one-time pad，缩写为OTP）是古典密码学中的一种加密算法。是以随机的密钥（key）加密明文，且只使用一次。</p>
+<p>在理论上，此种密码具有完善保密性，是牢不可破的。它的安全性已由克劳德·艾尔伍德·香农所证明。
+虽然它在理论上的安全性无庸置疑，但在实际操作上却有着以下的问题：</p>
+<ul>
+<li>用以加密的文本，也就是一次性密码本，必须确实是随机产生的。</li>
+<li>它至少必须和被加密的文件等长。</li>
+<li>用以加密的文本只能用一次，且必须对非关系人小心保密，不再使用时，用以加密的文本应当要销毁，以防重复使用。</li>
+</ul>
+<p>文中给了一个说明和例子：</p>
+<blockquote>
+<p>首先手上要有一本一次性密码本用以加密文件，接着将一次性密码本里的字母，与被加密文件的字母给依序按某个事先约定的规定一一相混，其中一个相混的作法是将字母指定数字（如在英语中，将A至Z依序指定为0至25）然后将一次性密码文本上的字母所代表的数字和被加密文件上相对应的数字给相加，再除以该语言的字母数后获取其余数，假设字母数是 n（如英语为26），若就此得出来的某个数字小于零，则将该小于零的数给加上n，如此便完成加密。</p>
+</blockquote>
+<pre><code># 明文
+This is an example → 19 7 8 18 8 18 0 13 4 23 0 12 15 11 4
+
+# 一次性密码本
+MASKL NSFLD FKJPQ → 12 0 18 10 11 13 18 5 11 3 5 10 9 15 16
+
+# 相加
+31 7 26 28 19 31 18 18 15 26 5 22 24 26 20
+
+# 取余
+5 7 0 2 19 5 18 18 15 0 5 22 24 0 20
+
+# 密文
+FHACTFSSPAFWYAU
+</code></pre>
+<p>其解密过程反向操作即可。</p>
+<h3 id="现代密码的工具箱">现代密码的工具箱</h3>
+<p>前边介绍了一些古典加密方法，有简单有复杂，有不安全有安全，但是在我们即将介绍的HTTPS这个场景下，多少有些不适用之处。</p>
+<p>这个时候现代密码学工具就要派上用场了。</p>
+<h4 id="对称加密">对称加密</h4>
+<h4 id="非对称加密公钥加密">非对称加密（公钥加密）</h4>
+<h4 id="单向散列函数">单向散列函数</h4>
+<h4 id="消息确认码">消息确认码</h4>
+<h4 id="数字签名">数字签名</h4>
+<h4 id="伪随机数生成器">伪随机数生成器</h4>
+<h2 id="为什么是https">为什么是HTTPS</h2>
+<h3 id="http演进历史">HTTP演进历史</h3>
+<h3 id="什么是https">什么是HTTPS</h3>
+<h3 id="如何实现安全传输">如何实现安全传输</h3>
+<h2 id="有关数字证书">有关数字证书</h2>
+<h3 id="数字证书">数字证书</h3>
+<h3 id="验证过程">验证过程</h3>
+<h3 id="证书链">证书链</h3>
+<h3 id="证书获取方式">证书获取方式</h3>
+<h3 id="lets-encrypt">Let&rsquo;s Encrypt</h3>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://www.ituring.com.cn/book/1737">《图解密码技术》</a></li>
+<li><a href="https://www.ituring.com.cn/book/1734">《HTTPS权威指南》</a></li>
+<li>Let&rsquo;s Encrypt <a href="https://letsencrypt.org/zh-cn/">官方网站</a></li>
+</ul>
+<p>再多的参考资料都不如自己动手实践，共勉！</p>
+
+  </main>
+  <div id="disqus-container">
+  
+</div>
+
+
+          
+            <footer role="contentinfo">
+  <div
+  
+  >
+    <label for="themer">
+      dark theme: <input type="checkbox" id="themer" class="vh">
+      
+      <span aria-hidden="true"></span>
+    </label>
+  </div>
+  
+    Powered by <a href="https://gohugo.io/">Hugo</a>. Themed by <a href="https://github.com/zwbetz-gh/cupper-hugo-theme">Cupper</a>.
+  
+</footer>
+
+          
+        </div>
+      </div>
+    </div>
+    
+
+<script src="/js/dom-scripts.js"></script>  
+
+<script src="/js/prism.js"></script>
+
+
+
+
+
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+    
+  
+
+  </body>
+</html>

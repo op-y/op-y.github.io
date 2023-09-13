@@ -2,6 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://op-y.github.io/tags/cryptography/</loc>
+    <lastmod>2023-09-12T00:23:00+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/tags/https/</loc>
+    <lastmod>2023-09-12T00:23:00+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/https/</loc>
+    <lastmod>2023-09-12T00:23:00+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/tags/</loc>
+    <lastmod>2023-09-12T00:23:00+08:00</lastmod>
+  </url><url>
     <loc>https://op-y.github.io/tags/cd/</loc>
     <lastmod>2023-09-08T23:21:00+08:00</lastmod>
   </url><url>
@@ -15,9 +27,6 @@
     <lastmod>2023-09-08T23:21:00+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/tags/kubernetes/</loc>
-    <lastmod>2023-09-08T23:21:00+08:00</lastmod>
-  </url><url>
-    <loc>https://op-y.github.io/tags/</loc>
     <lastmod>2023-09-08T23:21:00+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/cicd/</loc>
