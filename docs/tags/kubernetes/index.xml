@@ -6,7 +6,19 @@
     <description>Recent content in kubernetes on Qin的自习室</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Sep 2023 23:21:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Jan 2024 20:00:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>kubeadm实战: 新增工作节点</title>
+      <link>https://op-y.github.io/kubeadm-node-join/</link>
+      <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/kubeadm-node-join/</guid>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）
+准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
+安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。
+内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system  安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
+    </item>
+    
     <item>
       <title>关于CI/CD</title>
       <link>https://op-y.github.io/cicd/</link>
@@ -47,24 +59,6 @@ Traefik 官方介绍
  Traefik 架构图   Traefik 安装&amp;amp;测试 我们的运行环境如下
  kuberntes 1.27.2  这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&amp;hellip;
 Traefik 目前有 1.</description>
-    </item>
-    
-    <item>
-      <title>Kubernetes的故事一: 前世今生</title>
-      <link>https://op-y.github.io/k8s-history/</link>
-      <pubDate>Sun, 20 Nov 2022 21:02:40 +0800</pubDate>
-      
-      <guid>https://op-y.github.io/k8s-history/</guid>
-      <description>服务部署方式的变迁 当我们谈论部署服务的时候，我们在谈论什么？
-TCE 或者一个更常被成为 Kubernetes 的东西！？ 写好代码、push 到代码库、SCM给我们一编译、然后去TCE平台上一键触发上线（当然更懒的我们会事先准备好一条ByteCycle流水线把这些动作串起来一键做了），顺利的话我们就可以喝着咖啡聊着天等待上线结果了。再顺利一点的话服务完全符合预期，收拾东西下班！
-真就如此简单，从一开始？如果你是刚刚走出校园来到这个所谓的大厂里搬砖，那也许从一开始真就这么简单。而我，不禁回头看了一眼来时的路&amp;hellip;&amp;hellip;
- 服务部署方式演进   传统部署 很久以前，那时还在另一个厂里搬砖&amp;hellip;同事们的代码是怎样部署的？新项目的话，先估计好需要的资源走流程申请，如果老板是个土豪（项目比较重要）就直接给你一堆物理机；如果老板比较抠门（项目太边缘）会说xxx的机器我看闲得很，你俩直接共用吧。不管是哪种情况，接下来聪明又懒惰的SRE同学会用早就准备好的自动化工具：编译代码生成二进制部署产物；将编译产物连同需要的其它配置文件远程复制到物理机上；执行部署脚本 停止旧服务-备份旧版本-部署新版本-启动新服务；当然SRE还会留一手如果出现问题，部署脚本还会快速回滚版本。
- 优点：真是不要太简单，整个过程几个脚本或者一个简单的自动化工具就能搞定。 缺点：资源很难合理估计和利用，内存干到100%，CPU只用到10%；共同部署的应用真就成了命运共同体，一个占满资源所有的跟真倒霉；更苦笑不得的是那句，我在本地跑得好好的，咋部署在你这就不行了？  虚拟化部署 为了解决传统部署的问题，聪明的人们创造了一种全新的技术，当然今天我们听着老掉牙了，这就是虚拟化。不是说资源分配不合理吗？服务不好隔离吗？环境不统一吗？这么着，在物理机上做个虚拟层，一台机器秒变N台，资源按需分配，项目之间各管各的，还可以使用统一的OS Image让你不在有环境不统一的问题。至于部署上线，SRE还是可以偷偷懒，自动化管理VM的申请和回收，项目该如何上线还是如何上线。
- 优点：资源可以按需申请了；项目之间不会相互产生影响，安全性隔离也做得很好；同一个项目环境也能统一了。 缺点：SRE怎么发现资源缩水了；RD发现程序运行效率咋就变低了；所有人都感觉用上了VM管理复杂了使用成本变高了。  容器化部署 为了解决虚拟层引入的新问题，聪明的人们翻起了故纸堆，惊奇的发现要做虚拟化不一定要OS on OS，有远见的开拓者们早就给我们准备好了两份礼物 Linux Control Group（CGroups）和 Linux Namespace (这两大技术先按下不表)，有这两样东西我们在kernel层就能按需分配资源、隔离进程了，没有了OS on OS这种臃肿结构，程序执行起来就更快了。SRE同学辛苦辛苦，部署上线就改成编译-生成容器-部署容器。
- 优点：这下似乎资源利用率上来了，服务隔离了，环境似乎也统一了，运行速度够快； 缺点：似乎完美了&amp;hellip;  真的吗？
- 虽然有了Cgroups 和 Namespace，一个隔离环境如何定义，大家会自成体系； Cgroups 和 Namespace 共用kernel，大家真的就隔离彻底了吗？ 以前物理机部署一个机器故障，换个机器重新部署就是；现在一个机器故障，上边可是几十成百的容器，怎么让他们能快速在其它机器上跑起来？ 从 SRE 效率上而言，传统部署时代的命题一个都不能少：怎么样做到横向扩展容器数量；如何跨云服务商、跨Linux操作系统发行版进行部署&amp;hellip;  Docker &amp;amp; Kubernetes 回望来时的路，我们已经知道答案，这一路上有两个名字是无法绕过的：Docker 和 Kubernetes！
-在深入认识 Docker 和 Kubernetes 之前，先看一个故事。
-一个故事: 容器编排之争 本故事来自 张磊 《深入剖析 Kubernetes》01 - 04，稍有改动和编辑，不能说非常相似只能说是一模一样，如有雷同纯属我抄他，分享给大家。</description>
     </item>
     
   </channel>
