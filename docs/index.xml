@@ -8,6 +8,28 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 13 Jan 2021 16:33:01 +0800</lastBuildDate><atom:link href="https://op-y.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>kubeadm实战: 升级集群</title>
+      <link>https://op-y.github.io/kubeadm-upgrade-cluster/</link>
+      <pubDate>Tue, 02 Jan 2024 20:46:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/kubeadm-upgrade-cluster/</guid>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。
+准备工作 查看可以升级的版本
+apt update apt-cache madison kubeadm  升级kubeadm
+apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version  升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
+    </item>
+    
+    <item>
+      <title>kubeadm实战: 删除工作节点</title>
+      <link>https://op-y.github.io/kubeadm-node-delete/</link>
+      <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/kubeadm-node-delete/</guid>
+      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。
+移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
+    </item>
+    
+    <item>
       <title>kubeadm实战: 新增工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-join/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>

@@ -6,11 +6,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <meta name="generator" content="Hugo 0.83.1" />
-  <link rel="canonical" href="https://op-y.github.io/post/" />
+  <link rel="canonical" href="https://op-y.github.io/kubeadm-upgrade-cluster/" />
 
   
     
-    <meta name="description" content="自习室里的书架">
+    <meta name="description" content="目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。
+准备工作 查看可以升级的版本
+apt update apt-cache madison kubeadm  升级kubeadm
+apt-mark unhold kubeadm &amp;&amp; \ apt-get update &amp;&amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;&amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version  升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -56,7 +59,7 @@
 
   
   
-  <title>自习室里的书架 | Qin的自习室</title>
+  <title>kubeadm实战: 升级集群 | Qin的自习室</title>
 </head>
 
   <body>
@@ -208,7 +211,7 @@
       
       
       
-      <a href="/post/" aria-current="page">
+      <a href="/post/" >
         <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
           <use href="#bookmark"></use>
         </svg>
@@ -251,189 +254,246 @@
       <div class="main-and-footer">
         <div>
           
-<main id="main">
-  <h1>自习室里的书架</h1>
-  
-  <ul class="patterns-list" id="list">
+  <main id="main">
+    <h1>
+      <svg class="bookmark-icon" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+        <use href="#bookmark"></use>
+      </svg>
+      kubeadm实战: 升级集群
+    </h1>
+
+    <div class="date">
+      
+      
+      <strong>Publish date: </strong>Jan 2, 2024
+      
+        
+      
+    </div>
+
     
-    <li>
-      <h2>
-        <a href="/kubeadm-upgrade-cluster/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          kubeadm实战: 升级集群
-        </a>
-      </h2>
-    </li>
+      <div class="tags">
+        <strong>Tags: </strong>
+        <ul aria-label="tags">
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/kubernetes/">kubernetes</a>
+            </li>
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/kubeadm/">kubeadm</a>
+            </li>
+          
+        </ul>
+      </div>
     
-    <li>
-      <h2>
-        <a href="/kubeadm-node-join/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          kubeadm实战: 新增工作节点
-        </a>
-      </h2>
-    </li>
+
     
-    <li>
-      <h2>
-        <a href="/kubeadm-node-delete/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          kubeadm实战: 删除工作节点
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/https/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          HTTPS 分享
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/cicd/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          关于CI/CD
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/traefik/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Traefik Ingress Controller
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/monitoring/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          有关监控
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/kong/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          Kong 回顾
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/openresty/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          OpenResty上手
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/coffee-story/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          一杯咖啡的诞生
-        </a>
-      </h2>
-    </li>
-    
-    <li>
-      <h2>
-        <a href="/how_to_use_this_blog/">
-          <svg
-            class="bookmark"
-            aria-hidden="true"
-            viewBox="0 0 40 50"
-            focusable="false"
-          >
-            <use href="#bookmark"></use>
-          </svg>
-          如何使用Hugo生成文章内容
-        </a>
-      </h2>
-    </li>
-    
+  <nav class="toc" aria-labelledby="toc-heading">
+    <strong id="toc-heading">Table of Contents</strong>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#目标">目标</a></li>
+    <li><a href="#准备工作">准备工作</a></li>
+    <li><a href="#升级控制面">升级控制面</a></li>
+    <li><a href="#升级工作节点2">升级工作节点2</a></li>
+    <li><a href="#升级工作节点1-操作同上">升级工作节点1 操作同上</a></li>
+    <li><a href="#效果">效果</a></li>
   </ul>
-</main>
+</nav>
+  </nav>
+
+
+
+    <h2 id="目标">目标</h2>
+<p>这篇笔记记录的是使用 <strong>kubeadm</strong> 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。</p>
+<h2 id="准备工作">准备工作</h2>
+<p>查看可以升级的版本</p>
+<pre><code>apt update
+apt-cache madison kubeadm
+</code></pre>
+<p>升级kubeadm</p>
+<pre><code>apt-mark unhold kubeadm &amp;&amp; \
+apt-get update &amp;&amp; apt-get install -y kubeadm='1.28.2-00*' &amp;&amp; \
+apt-mark hold kubeadm
+
+# 确认版本
+kubeadm version
+</code></pre>
+<h2 id="升级控制面">升级控制面</h2>
+<pre><code># 确认升级计划
+kubeadm upgrade plan v1.28.2
+
+# dry-run 可以看有哪些更改
+# kubeadm upgrade apply v1.28.2 --dry-run
+
+# 升级控制面
+kubeadm upgrade apply v1.28.2
+
+# 输出
+[upgrade/config] Making sure the configuration is correct:
+[upgrade/config] Reading configuration from the cluster...
+[upgrade/config] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+[preflight] Running pre-flight checks.
+[upgrade] Running cluster health checks
+[upgrade/version] You have chosen to change the cluster version to &quot;v1.28.2&quot;
+[upgrade/versions] Cluster version: v1.27.2
+[upgrade/versions] kubeadm version: v1.28.2
+[upgrade] Are you sure you want to proceed? [y/N]: y
+[upgrade/prepull] Pulling images required for setting up a Kubernetes cluster
+[upgrade/prepull] This might take a minute or two, depending on the speed of your internet connection
+[upgrade/prepull] You can also perform this action in beforehand using 'kubeadm config images pull'
+[upgrade/apply] Upgrading your Static Pod-hosted control plane to version &quot;v1.28.2&quot; (timeout: 5m0s)...
+[upgrade/etcd] Upgrading to TLS for etcd
+[upgrade/staticpods] Preparing for &quot;etcd&quot; upgrade
+[upgrade/staticpods] Renewing etcd-server certificate
+[upgrade/staticpods] Renewing etcd-peer certificate
+[upgrade/staticpods] Renewing etcd-healthcheck-client certificate
+[upgrade/staticpods] Moved new manifest to &quot;/etc/kubernetes/manifests/etcd.yaml&quot; and backed up old manifest to &quot;/etc/kubernetes/tmp/kubeadm-backup-manifests-2024-01-01-23-45-23/etcd.yaml&quot;
+[upgrade/staticpods] Waiting for the kubelet to restart the component
+[upgrade/staticpods] This might take a minute or longer depending on the component/version gap (timeout 5m0s)
+E0101 23:46:00.227491 1246646 request.go:1116] Unexpected error when reading response body: net/http: request canceled (Client.Timeout or context cancellation while reading body)
+[apiclient] Found 1 Pods for label selector component=etcd
+[upgrade/staticpods] Component &quot;etcd&quot; upgraded successfully!
+[upgrade/etcd] Waiting for etcd to become available
+[upgrade/staticpods] Writing new Static Pod manifests to &quot;/etc/kubernetes/tmp/kubeadm-upgraded-manifests1583548336&quot;
+[upgrade/staticpods] Preparing for &quot;kube-apiserver&quot; upgrade
+[upgrade/staticpods] Renewing apiserver certificate
+[upgrade/staticpods] Renewing apiserver-kubelet-client certificate
+[upgrade/staticpods] Renewing front-proxy-client certificate
+[upgrade/staticpods] Renewing apiserver-etcd-client certificate
+[upgrade/staticpods] Moved new manifest to &quot;/etc/kubernetes/manifests/kube-apiserver.yaml&quot; and backed up old manifest to &quot;/etc/kubernetes/tmp/kubeadm-backup-manifests-2024-01-01-23-45-23/kube-apiserver.yaml&quot;
+[upgrade/staticpods] Waiting for the kubelet to restart the component
+[upgrade/staticpods] This might take a minute or longer depending on the component/version gap (timeout 5m0s)
+[apiclient] Found 1 Pods for label selector component=kube-apiserver
+[upgrade/staticpods] Component &quot;kube-apiserver&quot; upgraded successfully!
+[upgrade/staticpods] Preparing for &quot;kube-controller-manager&quot; upgrade
+[upgrade/staticpods] Renewing controller-manager.conf certificate
+[upgrade/staticpods] Moved new manifest to &quot;/etc/kubernetes/manifests/kube-controller-manager.yaml&quot; and backed up old manifest to &quot;/etc/kubernetes/tmp/kubeadm-backup-manifests-2024-01-01-23-45-23/kube-controller-manager.yaml&quot;
+[upgrade/staticpods] Waiting for the kubelet to restart the component
+[upgrade/staticpods] This might take a minute or longer depending on the component/version gap (timeout 5m0s)
+[apiclient] Found 1 Pods for label selector component=kube-controller-manager
+[upgrade/staticpods] Component &quot;kube-controller-manager&quot; upgraded successfully!
+[upgrade/staticpods] Preparing for &quot;kube-scheduler&quot; upgrade
+[upgrade/staticpods] Renewing scheduler.conf certificate
+[upgrade/staticpods] Moved new manifest to &quot;/etc/kubernetes/manifests/kube-scheduler.yaml&quot; and backed up old manifest to &quot;/etc/kubernetes/tmp/kubeadm-backup-manifests-2024-01-01-23-45-23/kube-scheduler.yaml&quot;
+[upgrade/staticpods] Waiting for the kubelet to restart the component
+[upgrade/staticpods] This might take a minute or longer depending on the component/version gap (timeout 5m0s)
+[apiclient] Found 1 Pods for label selector component=kube-scheduler
+[upgrade/staticpods] Component &quot;kube-scheduler&quot; upgraded successfully!
+[upload-config] Storing the configuration used in ConfigMap &quot;kubeadm-config&quot; in the &quot;kube-system&quot; Namespace
+[kubelet] Creating a ConfigMap &quot;kubelet-config&quot; in namespace kube-system with the configuration for the kubelets in the cluster
+[upgrade] Backing up kubelet config file to /etc/kubernetes/tmp/kubeadm-kubelet-config3821068939/config.yaml
+[kubelet-start] Writing kubelet configuration to file &quot;/var/lib/kubelet/config.yaml&quot;
+[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to get nodes
+[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstrap-token] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstrap-token] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+[upgrade/successful] SUCCESS! Your cluster was upgraded to &quot;v1.28.2&quot;. Enjoy!
+
+[upgrade/kubelet] Now that your control plane is upgraded, please proceed with upgrading your kubelets if you haven't already done so.
+
+# 升级控制面kubelet
+kubectl drain &lt;nodename&gt; --ignore-daemonsets
+
+apt-mark unhold kubelet kubectl &amp;&amp; \
+apt-get update &amp;&amp; apt-get install -y kubelet='1.28.2-00' kubectl='1.28.2-00' &amp;&amp; \
+apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+kubectl uncordon &lt;nodename&gt;
+</code></pre>
+<h2 id="升级工作节点2">升级工作节点2</h2>
+<aside aria-label="note" class="note">
+  <div>
+    <svg class="sign" aria-hidden="true" viewBox="0 0 41.667306 41.66729" focusable="false">
+      <use href="#info"></use>
+    </svg>
+    工作节点上的升级过程应该一次执行一个节点，或者一次执行几个节点， 以不影响运行工作负载所需的最小容量。
+  </div>
+</aside>
+<pre><code>apt-mark unhold kubeadm &amp;&amp; \
+apt-get update &amp;&amp; apt-get install -y kubeadm=1.28.2-00 &amp;&amp; \
+apt-mark hold kubeadm
+
+kubeadm upgrade node
+
+# 输出
+[upgrade] Reading configuration from the cluster...
+[upgrade] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+[preflight] Running pre-flight checks
+[preflight] Skipping prepull. Not a control plane node.
+[upgrade] Skipping phase. Not a control plane node.
+[upgrade] Backing up kubelet config file to /etc/kubernetes/tmp/kubeadm-kubelet-config3984534232/config.yaml
+[kubelet-start] Writing kubelet configuration to file &quot;/var/lib/kubelet/config.yaml&quot;
+[upgrade] The configuration for this node was successfully updated!
+[upgrade] Now you should go ahead and upgrade the kubelet package using your package manager.
+
+# 升级工作节点kubelet
+kubectl drain &lt;nodename&gt;  --ignore-daemonsets
+
+apt-mark unhold kubelet kubectl &amp;&amp; \
+apt-get update &amp;&amp; apt-get install -y kubelet=1.28.2-00 kubectl=1.28.2-00 &amp;&amp; \
+apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+kubectl uncordon &lt;nodename&gt;
+</code></pre>
+<h2 id="升级工作节点1-操作同上">升级工作节点1 操作同上</h2>
+<p>过程中遇到一些异常</p>
+<pre><code>error: unable to drain node &quot;iz2zefyb2ejhxw9uh3c52wz&quot; due to error:[cannot delete Pods with local storage (use --delete-emptydir-data to override): &lt;pod list ...&gt;, cannot delete Pods declare no controller (use --force to override): &lt;pod list ...&gt;], continuing command...
+There are pending nodes to be drained:
+ &lt;nodename&gt;
+...
+</code></pre>
+<p>以上报错有两个原因引起：</p>
+<ul>
+<li>有些Pod使用了了本地 emptydir 数据卷，直接删除会导致数据丢失，根据提示使用 <code>--delete-emptydir-data</code> 可以直接删除；</li>
+<li>有些Pod是直接启动的没有控制器，根据提示使用 <code>--force</code> 可以强制删除。</li>
+</ul>
+<p>当然生产环境中还是要根据实际情况进行处理。</p>
+<h2 id="效果">效果</h2>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-ce3f17b0ce87140a71ba9f0793493ee5">
+  <a href="/kubeadm-upgrade-cluster/figure1-kubeadm-upgrade-cluster.png" class="img-link">
+    <img src="/kubeadm-upgrade-cluster/figure1-kubeadm-upgrade-cluster_hud0ed96d9ccc035df297ef0a829615dcd_53245_1080x0_resize_box_2.png">
+  </a>
+  <figcaption id="caption-ce3f17b0ce87140a71ba9f0793493ee5">
+    使用kubeadm升级集群
+  </figcaption>
+</figure>
+
+
+  </main>
+  <div id="disqus-container">
+  
+</div>
+
 
           
             <footer role="contentinfo">
