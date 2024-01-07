@@ -3,15 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://op-y.github.io/tags/kubeadm/</loc>
-    <lastmod>2024-01-02T20:46:00+08:00</lastmod>
+    <lastmod>2024-01-07T20:30:00+08:00</lastmod>
   </url><url>
-    <loc>https://op-y.github.io/kubeadm-upgrade-cluster/</loc>
-    <lastmod>2024-01-02T20:46:00+08:00</lastmod>
+    <loc>https://op-y.github.io/kubeadm-ha-cluster/</loc>
+    <lastmod>2024-01-07T20:30:00+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/tags/kubernetes/</loc>
-    <lastmod>2024-01-02T20:46:00+08:00</lastmod>
+    <lastmod>2024-01-07T20:30:00+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/tags/</loc>
+    <lastmod>2024-01-07T20:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://op-y.github.io/kubeadm-upgrade-cluster/</loc>
     <lastmod>2024-01-02T20:46:00+08:00</lastmod>
   </url><url>
     <loc>https://op-y.github.io/kubeadm-node-delete/</loc>

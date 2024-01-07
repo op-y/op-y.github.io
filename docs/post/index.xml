@@ -8,6 +8,19 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 13 Jan 2021 16:38:44 +0800</lastBuildDate><atom:link href="https://op-y.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>kubeadm实战: 搭建高可用集群</title>
+      <link>https://op-y.github.io/kubeadm-ha-cluster/</link>
+      <pubDate>Sun, 07 Jan 2024 20:30:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/kubeadm-ha-cluster/</guid>
+      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。
+参考文档
+ 容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置     使用的版本 Kubernetes 1.28.2   环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
+安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体  安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单
+sh -c &amp;quot;$(curl -fsSL https://raw.</description>
+    </item>
+    
+    <item>
       <title>kubeadm实战: 升级集群</title>
       <link>https://op-y.github.io/kubeadm-upgrade-cluster/</link>
       <pubDate>Tue, 02 Jan 2024 20:46:00 +0800</pubDate>
