@@ -800,7 +800,7 @@ spec:
 
 正常部署。
 
-将yellow节点上，kube-controller-manager 静态Pod的 manifest 文件mv到其它地方，这个Pod会主动小时，根据观察，red节点上的 kube-controller-manager 正常接手了controller manager的工作。
+将yellow节点上，kube-controller-manager 静态Pod的 manifest 文件mv到其它地方，这个Pod会主动消失，根据观察，red节点上的 kube-controller-manager 正常接手了controller manager的工作。
 
 此时将nginx的副本书调整为4，新增的Pod正常被创建出来。
 
@@ -810,7 +810,7 @@ caption="Nginx Deployment"
 command="Resize"
 options="1080x" >}}
 
-至此初步验证了组建的高可用。
+至此初步验证了组件的高可用。
 
 
 ## 后记
