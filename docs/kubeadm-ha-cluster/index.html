@@ -603,6 +603,7 @@ systemctl restart containerd
 </aside>
 <pre><code># nerdctl
 wget https://github.com/containerd/nerdctl/releases/download/v1.4.0/nerdctl-1.4.0-linux-amd64.tar.gz
+tar Czxvf /usr/local/bin/ nerdctl-1.4.0-linux-amd64.tar.gz
 
 # .zshrc 做几个别名方便使用
 # alias crictl=&quot;crictl --runtime-endpoint unix:///var/run/containerd/containerd.sock&quot;
@@ -642,7 +643,6 @@ WantedBy=multi-user.target
 sudo apt-get install -y apt-transport-https ca-certificates curl
 
 # 使用阿里云的源 原因大家都懂
-sudo apt-get update &amp;&amp; sudo apt-get install -y apt-transport-https
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -
 cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
 deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main

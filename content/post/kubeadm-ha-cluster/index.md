@@ -276,6 +276,7 @@ containerd 自身提供了一个crictl 做完客户端工具进行操作，十�
 ```
 # nerdctl
 wget https://github.com/containerd/nerdctl/releases/download/v1.4.0/nerdctl-1.4.0-linux-amd64.tar.gz
+tar Czxvf /usr/local/bin/ nerdctl-1.4.0-linux-amd64.tar.gz
 
 # .zshrc 做几个别名方便使用
 # alias crictl="crictl --runtime-endpoint unix:///var/run/containerd/containerd.sock"
@@ -318,7 +319,6 @@ sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl
 
 # 使用阿里云的源 原因大家都懂
-sudo apt-get update && sudo apt-get install -y apt-transport-https
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
