@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>summary on Qin的自习室</title>
+    <link>https://op-y.github.io/tags/summary/</link>
+    <description>Recent content in summary on Qin的自习室</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 09 Feb 2024 20:00:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/summary/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2024春节前总结</title>
+      <link>https://op-y.github.io/summary-in-spring-festival-2024/</link>
+      <pubDate>Fri, 09 Feb 2024 20:00:00 +0800</pubDate>
+      
+      <guid>https://op-y.github.io/summary-in-spring-festival-2024/</guid>
+      <description>新年好！ 一晃又春节了，从八月底到现在已经五个多月了。这段时间学的做的内容也不少，在新年之前做一下整理，为假期后的工作做些准备。
+工作回顾  OpenResty Kong Traefik CI/CD系统 监控系统 HTTPS 完成了一部分，内容有点庞大 DNS项目  专项知识点 Go并发编程 二刷课程Go 并发编程实战课 和书籍 Go语言并发之道，写了一些代码片段。
+gRPC 二刷了《gRPC与云原生应用开发：以Go和Java为例》 系统学习了gRPC编程。 整理和重新编写了相关的示例代码，这了使用了Go和Python。
+prometheus 在工作回顾中监控系统部分提到过prometheus相关内容，在此基础上，参考官方文档，做了一个Go代码Instrumentation。顺道把prometheus client-go 代码学习了一遍。
+性能 重新学习了两门课程，在阿里云上做了一些实践。
+ Linux 性能优化实战 后续做系统整理。 eBPF 核心技术与实战 eBPF确实是太底层了，要掌握很不容易，后续还要学习更多资料和做更多的实践。  kubernetes kubernetes 实战  kubeadm实战: 新增工作节点 kubeadm实战: 删除工作节点 kubeadm实战: 升级集群 kubeadm实战: 搭建高可用集群 kubernetes存储实战: 使用JuiceFS 还有一个关于 calico 网络插件的实践，由于在阿里云环境上最终没有实现预期效果，所以没有写文档记录。  kubernetes operator开发 按照内容递进阅读了书籍
+ Kubernetes 编程 Kubernetes Operator Kubernetes Operator 开发进阶  阅读了官方文档
+ Kubebuilder Operator SDK  总做了几个Demo示例</description>
+    </item>
+    
+  </channel>
+</rss>
