@@ -127,10 +127,10 @@ caption="配置 iTerm2 触发器"
 command="Resize"
 options="1080x" >}}
 
-| Regular Expression            | ... |
-| ------------------------------| --- |
-|rz waiting to receive.\*\*B0100| ... |
-|\*\*B00000000000000            | ... |
+| Regular Expression                | ... |
+| ----------------------------------| --- |
+|rz waiting to receive.\\\*\\\*B0100| ... |
+|\\\*\\\*B00000000000000            | ... |
 
 ### 配置本地域名解析
 
