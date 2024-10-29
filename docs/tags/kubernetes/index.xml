@@ -1,121 +1,61 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>kubernetes on Qin的自习室</title>
+    <title>Kubernetes on Qin的自习室</title>
     <link>https://op-y.github.io/tags/kubernetes/</link>
-    <description>Recent content in kubernetes on Qin的自习室</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Kubernetes on Qin的自习室</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Jan 2024 21:26:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Jan 2024 21:26:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>kubernetes存储实战: 使用JuiceFS</title>
       <link>https://op-y.github.io/juicefs-in-kubernetes/</link>
       <pubDate>Thu, 11 Jan 2024 21:26:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/juicefs-in-kubernetes/</guid>
-      <description>目标 在Kubernetes的使用过程中，有两个主题是无法回避的：网络与存储。经过早期版本的各种尝试，目前Kubernetes 提供了 CNI 与 CSI 以开放接口的形式对接任何第三方厂商开发的网络插件和存储插件。
-本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。
-准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。
-安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。
- 客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据  具体可以参考官方技术架构说明
-安装Redis Redis的安装比较简单，这里不再赘述。
-准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！
- 阿里云OSS免费试用   完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。
-过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。
-如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。
-本地安装JuiceFS 参考官方文档
- 安装JuiceFS客户端 分布式模式  在一台云服务器上下载JuiceFS客户端
-JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&amp;quot;&#39; -f 4 | tr -d &#39;v&#39;) wget &amp;quot;https://github.</description>
+      <description>目标 在Kubernetes的使用过程中，有两个主题是无法回避的：网络与存储。经过早期版本的各种尝试，目前Kubernetes 提供了 CNI 与 CSI 以开放接口的形式对接任何第三方厂商开发的网络插件和存储插件。&#xA;本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。&#xA;准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。&#xA;安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。&#xA;客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据 具体可以参考官方技术架构说明&#xA;安装Redis Redis的安装比较简单，这里不再赘述。&#xA;准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！&#xA;阿里云OSS免费试用 完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。&#xA;过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。&#xA;如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。&#xA;本地安装JuiceFS 参考官方文档&#xA;安装JuiceFS客户端 分布式模式 在一台云服务器上下载JuiceFS客户端&#xA;JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&amp;quot;&#39; -f 4 | tr -d &#39;v&#39;) wget &amp;quot;https://github.com/juicedata/juicefs/releases/download/v${JFS_LATEST_TAG}/juicefs-${JFS_LATEST_TAG}-linux-amd64.tar.gz tar -zxvf juicefs-1.1.1-linux-amd64.tar.gz install juicefs /usr/local/bin/ # 只有这一个二进制文件 创建文件系统</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 搭建高可用集群</title>
       <link>https://op-y.github.io/kubeadm-ha-cluster/</link>
       <pubDate>Sun, 07 Jan 2024 20:30:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-ha-cluster/</guid>
-      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。
-参考文档
- 容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置     使用的版本 Kubernetes 1.28.2   环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
-安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体  安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单
-sh -c &amp;quot;$(curl -fsSL https://raw.</description>
+      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。&#xA;参考文档&#xA;容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置 使用的版本 Kubernetes 1.28.2 环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。&#xA;安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体 安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单&#xA;sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot; 安装完成后，可以编辑 ~/.zshrc 配置文件更换主题，这里我个人习惯使用 agnoster 。</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 升级集群</title>
       <link>https://op-y.github.io/kubeadm-upgrade-cluster/</link>
       <pubDate>Tue, 02 Jan 2024 20:46:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-upgrade-cluster/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。
-准备工作 查看可以升级的版本
-apt update apt-cache madison kubeadm  升级kubeadm
-apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version  升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。&#xA;准备工作 查看可以升级的版本&#xA;apt update apt-cache madison kubeadm 升级kubeadm&#xA;apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version 升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 删除工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-delete/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-node-delete/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。
-移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。&#xA;移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 新增工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-join/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-node-join/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）
-准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
-安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。
-内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system  安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）&#xA;准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。&#xA;安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。&#xA;内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system 安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
     </item>
-    
     <item>
       <title>关于CI/CD</title>
       <link>https://op-y.github.io/cicd/</link>
       <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/cicd/</guid>
-      <description>写在前面 之前已经回顾过了
- 流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes  我们工作拼图中剩下的一大块就是CI/CD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CI/CD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。
-简单讲讲CI/CD CI: 持续集成 CD：持续交付、持续部署
-当我们谈论CI/CD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。
-说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。
-以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。
-一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab+SCM+TCE+&amp;hellip;) 等等。
-CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。
- Devops 最为常见的示意图 （图片来自网络）   Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CI/CD一定是其中的环节之一。
- 敏捷开发 Devops CI/CD 的关系（图片来自网络）   敏捷开发（Agile）、Devops、CI/CD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。
-接下来要讲讲我们的做法了，当然主要是一些系统与故事。
-我们最早的做法 我接触到的最早期的CI/CD系统入下图。
- 最早期的CI/CD系统示意图   当时情况是大部分服务还在机房的物理机上，通过一些非常古老系统来部署运行（我们的业务是Java生态，当时使用了Tomcat、Jetty、Resin、Mule、AcitveMQ 这一类的Java Web Server、ESB、MQ等等，这些名词对于刚刚进入职场的同学而言都应该存在于历史书中。）
-这个阶段我们的CI/CD非常原始，但是也有效。大概的过程是：
- 一台物理机上部署了Jenkins，它通过插件能完成从GitLab拉取代码库并通过Maven进行构建生成Jar/War包； SRE同学通过人工方式（有些操作过于复杂没有交给Jenkins完成）去机器上执行一些部署脚本完成部署动作； 最后构建产生的Jar/War包在物理机上的各种系统中（Tomcat、Jetty、Resin、Mule 等）部署运行。  由于当时服务并不复杂，服务模块数量也不多，这种以Jenkins为中心辅之以自动化脚本的方式也算是能有效完成任务。
-后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200+的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。</description>
+      <description>写在前面 之前已经回顾过了&#xA;流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes 我们工作拼图中剩下的一大块就是CI/CD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CI/CD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。&#xA;简单讲讲CI/CD CI: 持续集成 CD：持续交付、持续部署&#xA;当我们谈论CI/CD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。&#xA;说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。&#xA;以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。&#xA;一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab+SCM+TCE+&amp;hellip;) 等等。&#xA;CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。&#xA;Devops 最为常见的示意图 （图片来自网络） Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CI/CD一定是其中的环节之一。&#xA;敏捷开发 Devops CI/CD 的关系（图片来自网络） 敏捷开发（Agile）、Devops、CI/CD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。&#xA;接下来要讲讲我们的做法了，当然主要是一些系统与故事。&#xA;我们最早的做法 我接触到的最早期的CI/CD系统入下图。&#xA;最早期的CI/CD系统示意图 当时情况是大部分服务还在机房的物理机上，通过一些非常古老系统来部署运行（我们的业务是Java生态，当时使用了Tomcat、Jetty、Resin、Mule、AcitveMQ 这一类的Java Web Server、ESB、MQ等等，这些名词对于刚刚进入职场的同学而言都应该存在于历史书中。）&#xA;这个阶段我们的CI/CD非常原始，但是也有效。大概的过程是：&#xA;一台物理机上部署了Jenkins，它通过插件能完成从GitLab拉取代码库并通过Maven进行构建生成Jar/War包； SRE同学通过人工方式（有些操作过于复杂没有交给Jenkins完成）去机器上执行一些部署脚本完成部署动作； 最后构建产生的Jar/War包在物理机上的各种系统中（Tomcat、Jetty、Resin、Mule 等）部署运行。 由于当时服务并不复杂，服务模块数量也不多，这种以Jenkins为中心辅之以自动化脚本的方式也算是能有效完成任务。&#xA;后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200+的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。&#xA;这种情况下，大概在2017-2018年左右我们十分被动地主动完成了一次CI/CD系统的升级改造。&#xA;200块的做法 说被动是因为这次改造完全是形式所迫我们不得不解决痛点问题释放劳动力，不然大家都得陷入服务发布的泥潭中；说主动是因为这次改造就是SRE团队自己发起的，没有来自上边的KPI/OKR压力同时也没有人力于资源预算，也不局限于技术方案，目标就是为了实现CI/CD的自动化，解放SRE人力去干更重要的事情。&#xA;这种情况下，当时几个并不太熟悉系统开发的SRE同学，边学变干，还硬生生的改造出了一个基本自动化的CI/CD系统。虽然现在回头看这个系统极为简陋根本没有设计可言，但在当时系统实现了自动化，真真实实地解决了SRE困境，在使用上也得到了业务同学的一致好评。&#xA;那段时光是那几年中的黄金时代，团队同学全身心的投入，都无拘无束的。有想法你就可以放开手脚干，没有资源你自己想办法，一不小心就有意外的收获。那时我们几乎每个周末都泡在公司，想方案、出设计、写代码、调试、交流&amp;hellip; 累了就去楼下咖啡店喝杯美式&amp;hellip;一切都那么纯粹。以至于多年以后这个CI/CD系统一直被我们戏称为200块的 系统（这个投入就是200块的咖啡钱 同时对比公司后来大力投入开发新的CI/CD系统）。&#xA;感慨了这么多，那这个系统长啥样呢，看看下边的示意图。&#xA;200块的CI/CD系统示意图 变化主要在引入了Docker构建（当然不可避免的引入了镜像仓库，我们用的Harbor），既然服务都运行在容器里了为啥构建镜像不行是吧？&#xA;在服务发布一侧，我们编写了一套脚本控制Kubernetes对服务进行升级（不要惊讶，真的是一套脚本，当时我们连Kubernetes 的 API 都没有掌握，纯粹通过脚本调用 kubectl 实现的控制。当然后来随着深入学习和个人成长，控制代码被改造成了通过 go sdk 操作 Kubernetes了。）</description>
     </item>
-    
     <item>
       <title>Traefik Ingress Controller</title>
       <link>https://op-y.github.io/traefik/</link>
       <pubDate>Thu, 07 Sep 2023 11:07:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/traefik/</guid>
-      <description>引子 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。
-什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。
-在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。
-当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。
-Traefik 是什么？ 其实在引言部分已经说的很清楚了。
-Traefik 官方介绍
- Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）   Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。
- Traefik 架构图   Traefik 安装&amp;amp;测试 我们的运行环境如下
- kuberntes 1.27.2  这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&amp;hellip;
-Traefik 目前有 1.</description>
+      <description>引子 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。&#xA;什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。&#xA;在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。&#xA;当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。&#xA;Traefik 是什么？ 其实在引言部分已经说的很清楚了。&#xA;Traefik 官方介绍&#xA;Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象） Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。&#xA;Traefik 架构图 Traefik 安装&amp;amp;测试 我们的运行环境如下&#xA;kuberntes 1.27.2 这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&amp;hellip;&#xA;Traefik 目前有 1.x/2.x/3.x 几个版本（3.0目前还在rc阶段），不同的大版本之间存在不兼容的变更。从1.x到2.x的迭代中，Traefik从使用k8s自带的 Ingress 到使用了很多CRD（Custom Resource Definition）包括自己定义的 IngressRoute。为了更接近当年我们的使用，我使用了2.10版本但是使用 Ingress 作为路由的 provider。</description>
     </item>
-    
   </channel>
 </rss>

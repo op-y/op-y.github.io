@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>kong on Qin的自习室</title>
+    <title>Kong on Qin的自习室</title>
     <link>https://op-y.github.io/tags/kong/</link>
-    <description>Recent content in kong on Qin的自习室</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Kong on Qin的自习室</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 Sep 2023 22:52:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/kong/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Sep 2023 22:52:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/tags/kong/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kong 回顾</title>
       <link>https://op-y.github.io/kong/</link>
       <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kong/</guid>
-      <description>引子 稍早之前对 OpenResty 进行了一个回顾，记得之前工作中，在接入网关升级改造中，使用 OpenResty 之后，我们又引入了 Kong API Gateway，所以也有必要对 Kong 简单的重新操作一下，做个记录。
-Kong 是什么？ Kong Gateway 自己的官方的介绍
- Kong 的名字来自金刚 Logo就是这只猩猩   比较简单的理解：Kong Gateway 就是一个基于 OpenResty （不知道 OpenResty 是什么？去目录上找相关的文章）的 API Gateway （所以本质上还是 Nginx + Lua)。
- Kong Gateway 结构   至于 API Gateway 是什么？我个人比较认可它是一个贴近微服务架构的概念，它实现了一种Facade模式，统一各个服务的反向代理和请求管理，包括并不限于 认证、权限、限流、熔断、安全、监控、日志&amp;hellip; 从实现上说，它可以是个Nginx，也可以是一个OpenResty，还可以是 Kong、APISIX、BFE 等等。
-这些年的变化 上一次自己部署 Kong 的时候，Kong 的版本还是 1.3，当时相比 0.1.x 版本已经有了很大的变化，是那种概念都不一样的非兼容变化。今天看了下官网，好家伙，都已经是 3.4.x 了，从 Changelogs 上看有了不小的调整（但是主要概念没有发生变化）。我看完后认为比较大的变化是：
- 现在有4种部署模式  Konnect：这个1.3的时候还没注意到，是一个Kong Gateway的SaaS服务； Hybird: 这个是一个新的模式，将服务分成了 Control Panel和Data Panel，也是当下一种比较流行的做法； Tranditional：这个就是依赖DB部署的传统做法了，本质上时通过DB实现配置的中心化管理和分发； Db-less and declarative: 这个时无DB的声明式配置模式，单机部署相当的友好。   Traditional with-DB 模式下不再支持 Cassandra DB了（从3.</description>
+      <description>引子 稍早之前对 OpenResty 进行了一个回顾，记得之前工作中，在接入网关升级改造中，使用 OpenResty 之后，我们又引入了 Kong API Gateway，所以也有必要对 Kong 简单的重新操作一下，做个记录。&#xA;Kong 是什么？ Kong Gateway 自己的官方的介绍&#xA;Kong 的名字来自金刚 Logo就是这只猩猩 比较简单的理解：Kong Gateway 就是一个基于 OpenResty （不知道 OpenResty 是什么？去目录上找相关的文章）的 API Gateway （所以本质上还是 Nginx + Lua)。&#xA;Kong Gateway 结构 至于 API Gateway 是什么？我个人比较认可它是一个贴近微服务架构的概念，它实现了一种Facade模式，统一各个服务的反向代理和请求管理，包括并不限于 认证、权限、限流、熔断、安全、监控、日志&amp;hellip; 从实现上说，它可以是个Nginx，也可以是一个OpenResty，还可以是 Kong、APISIX、BFE 等等。&#xA;这些年的变化 上一次自己部署 Kong 的时候，Kong 的版本还是 1.3，当时相比 0.1.x 版本已经有了很大的变化，是那种概念都不一样的非兼容变化。今天看了下官网，好家伙，都已经是 3.4.x 了，从 Changelogs 上看有了不小的调整（但是主要概念没有发生变化）。我看完后认为比较大的变化是：&#xA;现在有4种部署模式 Konnect：这个1.3的时候还没注意到，是一个Kong Gateway的SaaS服务； Hybird: 这个是一个新的模式，将服务分成了 Control Panel和Data Panel，也是当下一种比较流行的做法； Tranditional：这个就是依赖DB部署的传统做法了，本质上时通过DB实现配置的中心化管理和分发； Db-less and declarative: 这个时无DB的声明式配置模式，单机部署相当的友好。 Traditional with-DB 模式下不再支持 Cassandra DB了（从3.</description>
     </item>
-    
   </channel>
 </rss>

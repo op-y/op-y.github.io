@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <meta name="generator" content="Hugo 0.83.1" />
+  <meta name="generator" content="Hugo 0.128.0">
   <link rel="canonical" href="https://op-y.github.io/juicefs-in-kubernetes/" />
 
   
@@ -14,15 +14,15 @@
 本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。
 准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。
 安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。
- 客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据  具体可以参考官方技术架构说明
+客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据 具体可以参考官方技术架构说明
 安装Redis Redis的安装比较简单，这里不再赘述。
 准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！
- 阿里云OSS免费试用   完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。
+阿里云OSS免费试用 完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。
 过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。
 如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。
 本地安装JuiceFS 参考官方文档
- 安装JuiceFS客户端 分布式模式  在一台云服务器上下载JuiceFS客户端
-JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&#34;&#39; -f 4 | tr -d &#39;v&#39;) wget &#34;https://github.">
+安装JuiceFS客户端 分布式模式 在一台云服务器上下载JuiceFS客户端
+JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&#34;&#39; -f 4 | tr -d &#39;v&#39;) wget &#34;https://github.com/juicedata/juicefs/releases/download/v${JFS_LATEST_TAG}/juicefs-${JFS_LATEST_TAG}-linux-amd64.tar.gz tar -zxvf juicefs-1.1.1-linux-amd64.tar.gz install juicefs /usr/local/bin/ # 只有这一个二进制文件 创建文件系统">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -177,7 +177,7 @@ JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases
     <div class="intro">
       <a
         class="logo"
-        href="https://op-y.github.io"
+        href="https://op-y.github.io/"
         aria-label="Qin的自习室 home page"
       >
         
@@ -366,7 +366,7 @@ JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases
 
 <figure role="group" aria-describedby="caption-17fc9cb1b2b58bf22071e0f9d933ffb4">
   <a href="/juicefs-in-kubernetes/figure1-free-aliyun-oss.png" class="img-link">
-    <img src="/juicefs-in-kubernetes/figure1-free-aliyun-oss_hu6866619635b0df240cd4b00803650b97_240330_1080x0_resize_box_2.png">
+    <img src="/juicefs-in-kubernetes/figure1-free-aliyun-oss_hu6866619635b0df240cd4b00803650b97_240330_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-17fc9cb1b2b58bf22071e0f9d933ffb4">
     阿里云OSS免费试用
@@ -442,7 +442,7 @@ juicefs mount --background --cache-dir /jfscache --cache-size 10240 redis://:jfs
 
 <figure role="group" aria-describedby="caption-e747aea14b76fca531d4682d4ea0d29c">
   <a href="/juicefs-in-kubernetes/figure2-jfs-mount.png" class="img-link">
-    <img src="/juicefs-in-kubernetes/figure2-jfs-mount_hube38ddac11f91e80577b766198d43af2_27301_1080x0_resize_box_2.png">
+    <img src="/juicefs-in-kubernetes/figure2-jfs-mount_hube38ddac11f91e80577b766198d43af2_27301_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-e747aea14b76fca531d4682d4ea0d29c">
     juicesf mount
@@ -466,7 +466,7 @@ juicefs mount --background --cache-dir /jfscache --cache-size 10240 redis://:jfs
 
 <figure role="group" aria-describedby="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
   <a href="/juicefs-in-kubernetes/figure3-jfs-bench.png" class="img-link">
-    <img src="/juicefs-in-kubernetes/figure3-jfs-bench_hu3ae952071138f56cde4adbab043d59fd_306673_1080x0_resize_box_2.png">
+    <img src="/juicefs-in-kubernetes/figure3-jfs-bench_hu3ae952071138f56cde4adbab043d59fd_306673_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
     juicesf bench
@@ -516,7 +516,7 @@ kubectl apply -f https://raw.githubusercontent.com/juicedata/juicefs-csi-driver/
 
 <figure role="group" aria-describedby="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
   <a href="/juicefs-in-kubernetes/figure4-jfs-csi.png" class="img-link">
-    <img src="/juicefs-in-kubernetes/figure4-jfs-csi_hub3e600e07041abd6c0050184a933fb25_98216_1080x0_resize_box_2.png">
+    <img src="/juicefs-in-kubernetes/figure4-jfs-csi_hub3e600e07041abd6c0050184a933fb25_98216_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
     juicesf bench
@@ -604,7 +604,7 @@ spec:
 
 <figure role="group" aria-describedby="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
   <a href="/juicefs-in-kubernetes/figure5-jfs-in-pod.png" class="img-link">
-    <img src="/juicefs-in-kubernetes/figure5-jfs-in-pod_hu4112a535d77d946993403f603d5fbb8e_136487_1080x0_resize_box_2.png">
+    <img src="/juicefs-in-kubernetes/figure5-jfs-in-pod_hu4112a535d77d946993403f603d5fbb8e_136487_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
     juicesf bench
@@ -627,7 +627,7 @@ spec:
 
 <figure role="group" aria-describedby="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
   <a href="/juicefs-in-kubernetes/figure6-jfs-in-oss.png" class="img-link">
-    <img src="/juicefs-in-kubernetes/figure6-jfs-in-oss_hu6ab05a3083da408005708f6d11275bee_79053_1080x0_resize_box_2.png">
+    <img src="/juicefs-in-kubernetes/figure6-jfs-in-oss_hu6ab05a3083da408005708f6d11275bee_79053_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-4547b06f8181b6d05e4b8b6b64d4ccb3">
     juicesf bench

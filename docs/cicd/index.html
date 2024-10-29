@@ -5,27 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <meta name="generator" content="Hugo 0.83.1" />
+  <meta name="generator" content="Hugo 0.128.0">
   <link rel="canonical" href="https://op-y.github.io/cicd/" />
 
   
     
     <meta name="description" content="写在前面 之前已经回顾过了
- 流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes  我们工作拼图中剩下的一大块就是CI/CD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CI/CD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。
+流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes 我们工作拼图中剩下的一大块就是CI/CD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CI/CD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。
 简单讲讲CI/CD CI: 持续集成 CD：持续交付、持续部署
 当我们谈论CI/CD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。
 说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。
 以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。
 一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab&#43;SCM&#43;TCE&#43;…) 等等。
 CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。
- Devops 最为常见的示意图 （图片来自网络）   Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CI/CD一定是其中的环节之一。
- 敏捷开发 Devops CI/CD 的关系（图片来自网络）   敏捷开发（Agile）、Devops、CI/CD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。
+Devops 最为常见的示意图 （图片来自网络） Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CI/CD一定是其中的环节之一。
+敏捷开发 Devops CI/CD 的关系（图片来自网络） 敏捷开发（Agile）、Devops、CI/CD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。
 接下来要讲讲我们的做法了，当然主要是一些系统与故事。
 我们最早的做法 我接触到的最早期的CI/CD系统入下图。
- 最早期的CI/CD系统示意图   当时情况是大部分服务还在机房的物理机上，通过一些非常古老系统来部署运行（我们的业务是Java生态，当时使用了Tomcat、Jetty、Resin、Mule、AcitveMQ 这一类的Java Web Server、ESB、MQ等等，这些名词对于刚刚进入职场的同学而言都应该存在于历史书中。）
+最早期的CI/CD系统示意图 当时情况是大部分服务还在机房的物理机上，通过一些非常古老系统来部署运行（我们的业务是Java生态，当时使用了Tomcat、Jetty、Resin、Mule、AcitveMQ 这一类的Java Web Server、ESB、MQ等等，这些名词对于刚刚进入职场的同学而言都应该存在于历史书中。）
 这个阶段我们的CI/CD非常原始，但是也有效。大概的过程是：
- 一台物理机上部署了Jenkins，它通过插件能完成从GitLab拉取代码库并通过Maven进行构建生成Jar/War包； SRE同学通过人工方式（有些操作过于复杂没有交给Jenkins完成）去机器上执行一些部署脚本完成部署动作； 最后构建产生的Jar/War包在物理机上的各种系统中（Tomcat、Jetty、Resin、Mule 等）部署运行。  由于当时服务并不复杂，服务模块数量也不多，这种以Jenkins为中心辅之以自动化脚本的方式也算是能有效完成任务。
-后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200&#43;的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。">
+一台物理机上部署了Jenkins，它通过插件能完成从GitLab拉取代码库并通过Maven进行构建生成Jar/War包； SRE同学通过人工方式（有些操作过于复杂没有交给Jenkins完成）去机器上执行一些部署脚本完成部署动作； 最后构建产生的Jar/War包在物理机上的各种系统中（Tomcat、Jetty、Resin、Mule 等）部署运行。 由于当时服务并不复杂，服务模块数量也不多，这种以Jenkins为中心辅之以自动化脚本的方式也算是能有效完成任务。
+后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200&#43;的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。
+这种情况下，大概在2017-2018年左右我们十分被动地主动完成了一次CI/CD系统的升级改造。
+200块的做法 说被动是因为这次改造完全是形式所迫我们不得不解决痛点问题释放劳动力，不然大家都得陷入服务发布的泥潭中；说主动是因为这次改造就是SRE团队自己发起的，没有来自上边的KPI/OKR压力同时也没有人力于资源预算，也不局限于技术方案，目标就是为了实现CI/CD的自动化，解放SRE人力去干更重要的事情。
+这种情况下，当时几个并不太熟悉系统开发的SRE同学，边学变干，还硬生生的改造出了一个基本自动化的CI/CD系统。虽然现在回头看这个系统极为简陋根本没有设计可言，但在当时系统实现了自动化，真真实实地解决了SRE困境，在使用上也得到了业务同学的一致好评。
+那段时光是那几年中的黄金时代，团队同学全身心的投入，都无拘无束的。有想法你就可以放开手脚干，没有资源你自己想办法，一不小心就有意外的收获。那时我们几乎每个周末都泡在公司，想方案、出设计、写代码、调试、交流… 累了就去楼下咖啡店喝杯美式…一切都那么纯粹。以至于多年以后这个CI/CD系统一直被我们戏称为200块的 系统（这个投入就是200块的咖啡钱 同时对比公司后来大力投入开发新的CI/CD系统）。
+感慨了这么多，那这个系统长啥样呢，看看下边的示意图。
+200块的CI/CD系统示意图 变化主要在引入了Docker构建（当然不可避免的引入了镜像仓库，我们用的Harbor），既然服务都运行在容器里了为啥构建镜像不行是吧？
+在服务发布一侧，我们编写了一套脚本控制Kubernetes对服务进行升级（不要惊讶，真的是一套脚本，当时我们连Kubernetes 的 API 都没有掌握，纯粹通过脚本调用 kubectl 实现的控制。当然后来随着深入学习和个人成长，控制代码被改造成了通过 go sdk 操作 Kubernetes了。）">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -180,7 +187,7 @@ CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落�
     <div class="intro">
       <a
         class="logo"
-        href="https://op-y.github.io"
+        href="https://op-y.github.io/"
         aria-label="Qin的自习室 home page"
       >
         
@@ -382,7 +389,7 @@ CD：持续交付、持续部署</p>
 
 <figure role="group" aria-describedby="caption-3d4e4e3b5ff42e0c3284d20b961101cf">
   <a href="/cicd/figure1-devops.png" class="img-link">
-    <img src="/cicd/figure1-devops_hu59bc98b9cd199c016f2bed6ef0bcaca5_236995_1080x0_resize_box_2.png">
+    <img src="/cicd/figure1-devops_hu59bc98b9cd199c016f2bed6ef0bcaca5_236995_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-3d4e4e3b5ff42e0c3284d20b961101cf">
     Devops 最为常见的示意图 （图片来自网络）
@@ -429,7 +436,7 @@ CD：持续交付、持续部署</p>
 
 <figure role="group" aria-describedby="caption-4bae5e730d92bb1e6dc63f8c2ecb1435">
   <a href="/cicd/figure3-cicd-system-1.png" class="img-link">
-    <img src="/cicd/figure3-cicd-system-1_hu51210adde0f7c3624423bb10e144aa29_53375_1080x0_resize_box_2.png">
+    <img src="/cicd/figure3-cicd-system-1_hu51210adde0f7c3624423bb10e144aa29_53375_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-4bae5e730d92bb1e6dc63f8c2ecb1435">
     最早期的CI/CD系统示意图
@@ -465,7 +472,7 @@ CD：持续交付、持续部署</p>
 
 <figure role="group" aria-describedby="caption-8164c6819ba21bf516a681ca995f5d75">
   <a href="/cicd/figure4-cicd-system-2.png" class="img-link">
-    <img src="/cicd/figure4-cicd-system-2_hud057b7e2611147e88cdbc9b583664aec_121881_1080x0_resize_box_2.png">
+    <img src="/cicd/figure4-cicd-system-2_hud057b7e2611147e88cdbc9b583664aec_121881_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-8164c6819ba21bf516a681ca995f5d75">
     200块的CI/CD系统示意图
@@ -495,7 +502,7 @@ CD：持续交付、持续部署</p>
 
 <figure role="group" aria-describedby="caption-965808e0a22ae4ce71756506879d2b8e">
   <a href="/cicd/figure5-cicd-system-3.png" class="img-link">
-    <img src="/cicd/figure5-cicd-system-3_hu2c0464d2ca3519097a636bfe81c82192_75711_1080x0_resize_box_2.png">
+    <img src="/cicd/figure5-cicd-system-3_hu2c0464d2ca3519097a636bfe81c82192_75711_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-965808e0a22ae4ce71756506879d2b8e">
     200w的CI/CD系统示意图
@@ -527,7 +534,7 @@ CD：持续交付、持续部署</p>
 
 <figure role="group" aria-describedby="caption-5a3555e33015ae41a0765890e4b18853">
   <a href="/cicd/figure6-cicd-system-4.png" class="img-link">
-    <img src="/cicd/figure6-cicd-system-4_hub5dbfb477d5230c9dd0fce2767c31913_83109_1080x0_resize_box_2.png">
+    <img src="/cicd/figure6-cicd-system-4_hub5dbfb477d5230c9dd0fce2767c31913_83109_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-5a3555e33015ae41a0765890e4b18853">
     当前常见的CI/CD系统示意图

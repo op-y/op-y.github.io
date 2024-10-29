@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <meta name="generator" content="Hugo 0.83.1" />
+  <meta name="generator" content="Hugo 0.128.0">
   <link rel="canonical" href="https://op-y.github.io/traefik/" />
 
   
@@ -16,10 +16,10 @@
 当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。
 Traefik 是什么？ 其实在引言部分已经说的很清楚了。
 Traefik 官方介绍
- Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）   Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。
- Traefik 架构图   Traefik 安装&amp;测试 我们的运行环境如下
- kuberntes 1.27.2  这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会…
-Traefik 目前有 1.">
+Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象） Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。
+Traefik 架构图 Traefik 安装&amp;测试 我们的运行环境如下
+kuberntes 1.27.2 这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会…
+Traefik 目前有 1.x/2.x/3.x 几个版本（3.0目前还在rc阶段），不同的大版本之间存在不兼容的变更。从1.x到2.x的迭代中，Traefik从使用k8s自带的 Ingress 到使用了很多CRD（Custom Resource Definition）包括自己定义的 IngressRoute。为了更接近当年我们的使用，我使用了2.10版本但是使用 Ingress 作为路由的 provider。">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -174,7 +174,7 @@ Traefik 目前有 1.">
     <div class="intro">
       <a
         class="logo"
-        href="https://op-y.github.io"
+        href="https://op-y.github.io/"
         aria-label="Qin的自习室 home page"
       >
         
@@ -340,7 +340,7 @@ Traefik 目前有 1.">
 
 <figure role="group" aria-describedby="caption-bb00ba617ca4001fa50eea0cf374699a">
   <a href="/traefik/figure1-traefik-logo.png" class="img-link">
-    <img src="/traefik/figure1-traefik-logo_hu52a88c95b3fa98af44441aa71deb0899_35056_1080x0_resize_box_2.png">
+    <img src="/traefik/figure1-traefik-logo_hu52a88c95b3fa98af44441aa71deb0899_35056_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-bb00ba617ca4001fa50eea0cf374699a">
     Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）
@@ -362,7 +362,7 @@ Traefik 目前有 1.">
 
 <figure role="group" aria-describedby="caption-80c8b875eb8466e034263e0c056d8110">
   <a href="/traefik/figure2-traefik-arch.png" class="img-link">
-    <img src="/traefik/figure2-traefik-arch_hu2edfb038e9096214cddf27700dc8ad5d_283648_1080x0_resize_box_2.png">
+    <img src="/traefik/figure2-traefik-arch_hu2edfb038e9096214cddf27700dc8ad5d_283648_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-80c8b875eb8466e034263e0c056d8110">
     Traefik 架构图
@@ -559,7 +559,7 @@ spec:
 
 <figure role="group" aria-describedby="caption-59936f506b37d226f5517c0a39d8c6c1">
   <a href="/traefik/figure3-k8s-services.png" class="img-link">
-    <img src="/traefik/figure3-k8s-services_hub986424fc9b09341f4f23b66aeaa1f46_50304_1080x0_resize_box_2.png">
+    <img src="/traefik/figure3-k8s-services_hub986424fc9b09341f4f23b66aeaa1f46_50304_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-59936f506b37d226f5517c0a39d8c6c1">
     traefik 和 whoami 的service
@@ -581,7 +581,7 @@ spec:
 
 <figure role="group" aria-describedby="caption-ac8fe9b4533c94d23b8146a87662ed41">
   <a href="/traefik/figure4-traefik-proxy.png" class="img-link">
-    <img src="/traefik/figure4-traefik-proxy_hu801d5488f4cb4ec6a007e381be2674bc_97161_1080x0_resize_box_2.png">
+    <img src="/traefik/figure4-traefik-proxy_hu801d5488f4cb4ec6a007e381be2674bc_97161_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-ac8fe9b4533c94d23b8146a87662ed41">
     traefik 代理外部请求到 whoami

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on Qin的自习室</title>
+    <link>https://op-y.github.io/tags/golang/</link>
+    <description>Recent content in Golang on Qin的自习室</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 27 Oct 2024 15:00:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go开发中的测试</title>
+      <link>https://op-y.github.io/go-testing/</link>
+      <pubDate>Sun, 27 Oct 2024 15:00:00 +0800</pubDate>
+      <guid>https://op-y.github.io/go-testing/</guid>
+      <description>近期接手新的 Go 项目，阅读代码的过程中，遇到了一些涉及测试的问题，所以重温了 Go 测试相关的一些内容，同时还查阅了一些资料，在这里一并记录，分享给或许面临同样问题的你。对于 Go 开发的老司机们，也是一个知识回顾的好机会。&#xA;问题具体背景是，当前我们正在推广云环境办公，所以研发同学都是用的华为云桌面，OS 是 Windows 10，为了环境兼容性和符合之前的研发习惯，团队总结出一套 Windows + WSL + VSCode/Goland + WSL Plugin 的开发方式，多数情况下这套环境是能正常工作的，但是在需要使用 delve 进行 Go 代码调试时，IDE 就会报错。后经查证（在 VSCode 上）是 delve 出于安全考虑禁止调试服务的 client 端 和 server 端属于不同用户，如果要解决这个问题，一是升级WSL 2，一是尝试直接启动一个 VMWare 之类的虚拟机做开发。但是二者都依赖于 Windows 10 能开启虚拟化功能。但是华为云桌面并不能支持二次虚拟化，直接否定了这两个解决方案。&#xA;剩下的方法是在开发过程中尽量使用 Debug Log 和 Unit Test 进行功能的验证和测试，至少组内的同学是这么跟我说的。这也是我在项目中发现了大量的 _test.go 文件和测试用例的原因（写测试是个好习惯！）。就当我暗自庆幸前人们留下这么多测试代码时，却又发现测试代码中存在各种异常：循环依赖、测试用例中依赖功能直接报错、测试代码能跑通但是依赖功能不能正常返回数据导致结果和期望不一致&amp;hellip;如此种种，不一而足。&#xA;为了解决这些算不上棘手问题，我开始了回忆、查阅、重温、搜索、学习的过程。下图是我整理出的内容大纲，由于不是专业科普测试知识，这里不会按照惯例讲单元测试、集成测试、系统测试、UI测试、验收测试&amp;hellip;，我们主要关注的是 Go 开发中经常用的一些内容，所以内容主要集中于 Unit Test 和 Mock 两点。&#xA;本文内容大纲 示例代码 文中示例代码可以在 这里 获取。&#xA;Unit Test testing 包 对于 Go 开发者来说，单元测试不会陌生，几乎所有入门资料都会介绍 Go 官方提供了一个 testing 包，使用这个包能非常方便的在自己的代码中编写单元测试代码并通过 go test 命令运行单元测试（当然也可以使用 IDE 来运行，本质上也是执行 go test）。</description>
+    </item>
+  </channel>
+</rss>

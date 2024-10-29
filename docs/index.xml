@@ -4,257 +4,121 @@
     <title>Qin的自习室</title>
     <link>https://op-y.github.io/</link>
     <description>Recent content on Qin的自习室</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Jan 2021 16:33:01 +0800</lastBuildDate><atom:link href="https://op-y.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Oct 2024 15:00:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go开发中的测试</title>
+      <link>https://op-y.github.io/go-testing/</link>
+      <pubDate>Sun, 27 Oct 2024 15:00:00 +0800</pubDate>
+      <guid>https://op-y.github.io/go-testing/</guid>
+      <description>近期接手新的 Go 项目，阅读代码的过程中，遇到了一些涉及测试的问题，所以重温了 Go 测试相关的一些内容，同时还查阅了一些资料，在这里一并记录，分享给或许面临同样问题的你。对于 Go 开发的老司机们，也是一个知识回顾的好机会。&#xA;问题具体背景是，当前我们正在推广云环境办公，所以研发同学都是用的华为云桌面，OS 是 Windows 10，为了环境兼容性和符合之前的研发习惯，团队总结出一套 Windows + WSL + VSCode/Goland + WSL Plugin 的开发方式，多数情况下这套环境是能正常工作的，但是在需要使用 delve 进行 Go 代码调试时，IDE 就会报错。后经查证（在 VSCode 上）是 delve 出于安全考虑禁止调试服务的 client 端 和 server 端属于不同用户，如果要解决这个问题，一是升级WSL 2，一是尝试直接启动一个 VMWare 之类的虚拟机做开发。但是二者都依赖于 Windows 10 能开启虚拟化功能。但是华为云桌面并不能支持二次虚拟化，直接否定了这两个解决方案。&#xA;剩下的方法是在开发过程中尽量使用 Debug Log 和 Unit Test 进行功能的验证和测试，至少组内的同学是这么跟我说的。这也是我在项目中发现了大量的 _test.go 文件和测试用例的原因（写测试是个好习惯！）。就当我暗自庆幸前人们留下这么多测试代码时，却又发现测试代码中存在各种异常：循环依赖、测试用例中依赖功能直接报错、测试代码能跑通但是依赖功能不能正常返回数据导致结果和期望不一致&amp;hellip;如此种种，不一而足。&#xA;为了解决这些算不上棘手问题，我开始了回忆、查阅、重温、搜索、学习的过程。下图是我整理出的内容大纲，由于不是专业科普测试知识，这里不会按照惯例讲单元测试、集成测试、系统测试、UI测试、验收测试&amp;hellip;，我们主要关注的是 Go 开发中经常用的一些内容，所以内容主要集中于 Unit Test 和 Mock 两点。&#xA;本文内容大纲 示例代码 文中示例代码可以在 这里 获取。&#xA;Unit Test testing 包 对于 Go 开发者来说，单元测试不会陌生，几乎所有入门资料都会介绍 Go 官方提供了一个 testing 包，使用这个包能非常方便的在自己的代码中编写单元测试代码并通过 go test 命令运行单元测试（当然也可以使用 IDE 来运行，本质上也是执行 go test）。</description>
+    </item>
     <item>
       <title>2024春节前总结</title>
       <link>https://op-y.github.io/summary-in-spring-festival-2024/</link>
       <pubDate>Fri, 09 Feb 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/summary-in-spring-festival-2024/</guid>
-      <description>新年好！ 一晃又春节了，从八月底到现在已经五个多月了。这段时间学的做的内容也不少，在新年之前做一下整理，为假期后的工作做些准备。
-工作回顾  OpenResty Kong Traefik CI/CD系统 监控系统 HTTPS 完成了一部分，内容有点庞大 DNS项目  专项知识点 Go并发编程 二刷课程Go 并发编程实战课 和书籍 Go语言并发之道，写了一些代码片段。
-gRPC 二刷了《gRPC与云原生应用开发：以Go和Java为例》 系统学习了gRPC编程。 整理和重新编写了相关的示例代码，这了使用了Go和Python。
-prometheus 在工作回顾中监控系统部分提到过prometheus相关内容，在此基础上，参考官方文档，做了一个Go代码Instrumentation。顺道把prometheus client-go 代码学习了一遍。
-性能 重新学习了两门课程，在阿里云上做了一些实践。
- Linux 性能优化实战 后续做系统整理。 eBPF 核心技术与实战 eBPF确实是太底层了，要掌握很不容易，后续还要学习更多资料和做更多的实践。  kubernetes kubernetes 实战  kubeadm实战: 新增工作节点 kubeadm实战: 删除工作节点 kubeadm实战: 升级集群 kubeadm实战: 搭建高可用集群 kubernetes存储实战: 使用JuiceFS 还有一个关于 calico 网络插件的实践，由于在阿里云环境上最终没有实现预期效果，所以没有写文档记录。  kubernetes operator开发 按照内容递进阅读了书籍
- Kubernetes 编程 Kubernetes Operator Kubernetes Operator 开发进阶  阅读了官方文档
- Kubebuilder Operator SDK  总做了几个Demo示例</description>
+      <description>新年好！ 一晃又春节了，从八月底到现在已经五个多月了。这段时间学的做的内容也不少，在新年之前做一下整理，为假期后的工作做些准备。&#xA;工作回顾 OpenResty Kong Traefik CI/CD系统 监控系统 HTTPS 完成了一部分，内容有点庞大 DNS项目 专项知识点 Go并发编程 二刷课程Go 并发编程实战课 和书籍 Go语言并发之道，写了一些代码片段。&#xA;gRPC 二刷了《gRPC与云原生应用开发：以Go和Java为例》 系统学习了gRPC编程。 整理和重新编写了相关的示例代码，这了使用了Go和Python。&#xA;prometheus 在工作回顾中监控系统部分提到过prometheus相关内容，在此基础上，参考官方文档，做了一个Go代码Instrumentation。顺道把prometheus client-go 代码学习了一遍。&#xA;性能 重新学习了两门课程，在阿里云上做了一些实践。&#xA;Linux 性能优化实战 后续做系统整理。 eBPF 核心技术与实战 eBPF确实是太底层了，要掌握很不容易，后续还要学习更多资料和做更多的实践。 kubernetes kubernetes 实战 kubeadm实战: 新增工作节点 kubeadm实战: 删除工作节点 kubeadm实战: 升级集群 kubeadm实战: 搭建高可用集群 kubernetes存储实战: 使用JuiceFS 还有一个关于 calico 网络插件的实践，由于在阿里云环境上最终没有实现预期效果，所以没有写文档记录。 kubernetes operator开发 按照内容递进阅读了书籍&#xA;Kubernetes 编程 Kubernetes Operator Kubernetes Operator 开发进阶 阅读了官方文档&#xA;Kubebuilder Operator SDK 总做了几个Demo示例&#xA;代码学习 顺道学习了Kubernetes 以及 client-go 代码，参考网络上资料做几个实践&#xA;聚合 APIServer 自定义 Scheduler LeetCode 算法题 完成了LeetCode上编号 1 至 250 之间没有被锁的算题。</description>
     </item>
-    
     <item>
       <title>kubernetes存储实战: 使用JuiceFS</title>
       <link>https://op-y.github.io/juicefs-in-kubernetes/</link>
       <pubDate>Thu, 11 Jan 2024 21:26:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/juicefs-in-kubernetes/</guid>
-      <description>目标 在Kubernetes的使用过程中，有两个主题是无法回避的：网络与存储。经过早期版本的各种尝试，目前Kubernetes 提供了 CNI 与 CSI 以开放接口的形式对接任何第三方厂商开发的网络插件和存储插件。
-本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。
-准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。
-安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。
- 客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据  具体可以参考官方技术架构说明
-安装Redis Redis的安装比较简单，这里不再赘述。
-准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！
- 阿里云OSS免费试用   完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。
-过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。
-如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。
-本地安装JuiceFS 参考官方文档
- 安装JuiceFS客户端 分布式模式  在一台云服务器上下载JuiceFS客户端
-JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&amp;quot;&#39; -f 4 | tr -d &#39;v&#39;) wget &amp;quot;https://github.</description>
+      <description>目标 在Kubernetes的使用过程中，有两个主题是无法回避的：网络与存储。经过早期版本的各种尝试，目前Kubernetes 提供了 CNI 与 CSI 以开放接口的形式对接任何第三方厂商开发的网络插件和存储插件。&#xA;本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。&#xA;准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。&#xA;安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。&#xA;客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据 具体可以参考官方技术架构说明&#xA;安装Redis Redis的安装比较简单，这里不再赘述。&#xA;准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！&#xA;阿里云OSS免费试用 完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。&#xA;过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。&#xA;如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。&#xA;本地安装JuiceFS 参考官方文档&#xA;安装JuiceFS客户端 分布式模式 在一台云服务器上下载JuiceFS客户端&#xA;JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&amp;quot;&#39; -f 4 | tr -d &#39;v&#39;) wget &amp;quot;https://github.com/juicedata/juicefs/releases/download/v${JFS_LATEST_TAG}/juicefs-${JFS_LATEST_TAG}-linux-amd64.tar.gz tar -zxvf juicefs-1.1.1-linux-amd64.tar.gz install juicefs /usr/local/bin/ # 只有这一个二进制文件 创建文件系统</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 搭建高可用集群</title>
       <link>https://op-y.github.io/kubeadm-ha-cluster/</link>
       <pubDate>Sun, 07 Jan 2024 20:30:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-ha-cluster/</guid>
-      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。
-参考文档
- 容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置     使用的版本 Kubernetes 1.28.2   环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
-安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体  安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单
-sh -c &amp;quot;$(curl -fsSL https://raw.</description>
+      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。&#xA;参考文档&#xA;容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置 使用的版本 Kubernetes 1.28.2 环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。&#xA;安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体 安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单&#xA;sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot; 安装完成后，可以编辑 ~/.zshrc 配置文件更换主题，这里我个人习惯使用 agnoster 。</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 升级集群</title>
       <link>https://op-y.github.io/kubeadm-upgrade-cluster/</link>
       <pubDate>Tue, 02 Jan 2024 20:46:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-upgrade-cluster/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。
-准备工作 查看可以升级的版本
-apt update apt-cache madison kubeadm  升级kubeadm
-apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version  升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。&#xA;准备工作 查看可以升级的版本&#xA;apt update apt-cache madison kubeadm 升级kubeadm&#xA;apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version 升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 删除工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-delete/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-node-delete/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。
-移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。&#xA;移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 新增工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-join/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-node-join/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）
-准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
-安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。
-内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system  安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）&#xA;准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。&#xA;安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。&#xA;内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system 安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
     </item>
-    
     <item>
       <title>HTTPS 分享</title>
       <link>https://op-y.github.io/https/</link>
       <pubDate>Tue, 12 Sep 2023 00:23:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/https/</guid>
-      <description>引言 这是2019年3月一次内部技术分享，当时在笔记上留下了一些大纲，分享时的PPT已经不见了，借此机会再写一遍分享内容，于自己是一次知识巩固，于朋友们也算得上是一次技术交流。
-先聊聊密码学 谈到HTTPS，大家首先想到的是安全和加密通信。所以在开始HTTPS之旅前，有必要先聊一些密码学的内容。
-古典密码 密码并不是一个很新潮的技术，我甚至怀疑从有人类文明开始，密码技术就诞生了。毕竟我们每个人心底里都藏着那没多不想让人知道的秘密😊
-我们先来看看比较古老的密码。
-密码棒 密码棒是一种非常古老的密码，看着也有点像小时候的游戏。用一个纸条或者布条缠绕在有多个面（例如4个面）的棒子上，然后竖着在每个面上写字，写完后将纸条或者布条拉直，这时候得到的就是被打乱顺序的文字了。这也算得上一种密码吧！
- 密码棒 参考wiki   间接的证据指出，最早提到密码棒的是一位公元前7世纪的希腊诗人阿尔基罗库斯，后来的希腊和罗马作家也在作品提到。
-希腊历史学家普鲁塔克（Plutarch）曾写下密码棒的用法
-wiki 上给了一个例子，按照上述方法处理 &amp;ldquo;Help me I am under attack&amp;rdquo; 这句话，加解密过程为：
-加密过程：明文4个文字绕一圈，所以可以绕棒子5圈，故我们按照5个文字分一组，然后竖着读取每一列。（想象一下）：
-H E L P M E I A M U N D E R A T T A C K  得到密文：
-HENTEIDTLAEAPMRCMUAK  解密过程则相反：将密文4个文字一组分组（每间隔3个文字取一个，到尾部后绕回即可。）
-H E N T--------- E I D T--------- L A E A-------- P M R C--------- M U A K---------  得到明文：</description>
+      <description>引言 这是2019年3月一次内部技术分享，当时在笔记上留下了一些大纲，分享时的PPT已经不见了，借此机会再写一遍分享内容，于自己是一次知识巩固，于朋友们也算得上是一次技术交流。&#xA;先聊聊密码学 谈到HTTPS，大家首先想到的是安全和加密通信。所以在开始HTTPS之旅前，有必要先聊一些密码学的内容。&#xA;古典密码 密码并不是一个很新潮的技术，我甚至怀疑从有人类文明开始，密码技术就诞生了。毕竟我们每个人心底里都藏着那没多不想让人知道的秘密😊&#xA;我们先来看看比较古老的密码。&#xA;密码棒 密码棒是一种非常古老的密码，看着也有点像小时候的游戏。用一个纸条或者布条缠绕在有多个面（例如4个面）的棒子上，然后竖着在每个面上写字，写完后将纸条或者布条拉直，这时候得到的就是被打乱顺序的文字了。这也算得上一种密码吧！&#xA;密码棒 参考wiki 间接的证据指出，最早提到密码棒的是一位公元前7世纪的希腊诗人阿尔基罗库斯，后来的希腊和罗马作家也在作品提到。&#xA;希腊历史学家普鲁塔克（Plutarch）曾写下密码棒的用法&#xA;wiki 上给了一个例子，按照上述方法处理 &amp;ldquo;Help me I am under attack&amp;rdquo; 这句话，加解密过程为：&#xA;加密过程：明文4个文字绕一圈，所以可以绕棒子5圈，故我们按照5个文字分一组，然后竖着读取每一列。（想象一下）：&#xA;H E L P M E I A M U N D E R A T T A C K 得到密文：&#xA;HENTEIDTLAEAPMRCMUAK 解密过程则相反：将密文4个文字一组分组（每间隔3个文字取一个，到尾部后绕回即可。）&#xA;H E N T--------- E I D T--------- L A E A-------- P M R C--------- M U A K--------- 得到明文：&#xA;HELPMEIAMUNDERATTACK 凯撒密码 凯撒密码，即是人们常说的变换加密，根据苏维托尼乌斯的记载，凯撒曾用此方法对重要的军事信息进行加密。</description>
     </item>
-    
     <item>
       <title>关于CI/CD</title>
       <link>https://op-y.github.io/cicd/</link>
       <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/cicd/</guid>
-      <description>写在前面 之前已经回顾过了
- 流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes  我们工作拼图中剩下的一大块就是CI/CD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CI/CD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。
-简单讲讲CI/CD CI: 持续集成 CD：持续交付、持续部署
-当我们谈论CI/CD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。
-说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。
-以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。
-一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab+SCM+TCE+&amp;hellip;) 等等。
-CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。
- Devops 最为常见的示意图 （图片来自网络）   Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CI/CD一定是其中的环节之一。
- 敏捷开发 Devops CI/CD 的关系（图片来自网络）   敏捷开发（Agile）、Devops、CI/CD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。
-接下来要讲讲我们的做法了，当然主要是一些系统与故事。
-我们最早的做法 我接触到的最早期的CI/CD系统入下图。
- 最早期的CI/CD系统示意图   当时情况是大部分服务还在机房的物理机上，通过一些非常古老系统来部署运行（我们的业务是Java生态，当时使用了Tomcat、Jetty、Resin、Mule、AcitveMQ 这一类的Java Web Server、ESB、MQ等等，这些名词对于刚刚进入职场的同学而言都应该存在于历史书中。）
-这个阶段我们的CI/CD非常原始，但是也有效。大概的过程是：
- 一台物理机上部署了Jenkins，它通过插件能完成从GitLab拉取代码库并通过Maven进行构建生成Jar/War包； SRE同学通过人工方式（有些操作过于复杂没有交给Jenkins完成）去机器上执行一些部署脚本完成部署动作； 最后构建产生的Jar/War包在物理机上的各种系统中（Tomcat、Jetty、Resin、Mule 等）部署运行。  由于当时服务并不复杂，服务模块数量也不多，这种以Jenkins为中心辅之以自动化脚本的方式也算是能有效完成任务。
-后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200+的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。</description>
+      <description>写在前面 之前已经回顾过了&#xA;流量接入与分发（Nginx/OpenResty/Kong/Traefik） 监控系统（Open Falcon/Prometheus/Thanos/VictoriaMetrics （提到过一点的）统一运维平台（其中包括基于Ansible开发的配置管理系统、对接第三方服务的DNS管理系统、WebUI等） （开了一个天坑）服务运行环境 Kubernetes 我们工作拼图中剩下的一大块就是CI/CD系统了，它串联起了项目的开发、测试、部署和运维管理完成过程，相信具有一定规模的公司里，CI/CD系统都是基础设施很重要的一环。本篇文章我们就来回顾一些我们在这方面做的一些工作。&#xA;简单讲讲CI/CD CI: 持续集成 CD：持续交付、持续部署&#xA;当我们谈论CI/CD的时候，我们谈论更多的是一种软件工程上的方法轮：软件开发团队之间如何高效协作完成产品的交付。&#xA;说的实际一点就是: 研发团队开发规范、团队间之间如何协调（代码的提交与集成）、测试团队如何高效完成测试、运维团队如何快速完成项目的部署、监控、维护和反馈。&#xA;以这个目标为核心，从瀑布模型到敏捷开发等等，出现了各种开发模式，以这些模型为基础又产生了各种工程实践，出现了系列的工具和系统，它们或多或少的解决了整个开发模型中某些环节的问题。&#xA;一个公司，无论处于什么阶段，都会建设自己的一套工具和系统，来实践自己开发模式。Baidu 的 Noah系统、Bytedance 的 ByteCycle（GitLab+SCM+TCE+&amp;hellip;) 等等。&#xA;CI/CD 实际上就是工程实践中的概念，是集成与部署的最终落地形式，即我们通过什么手段完成项目的集成与部署。&#xA;Devops 最为常见的示意图 （图片来自网络） Devops 的概念已经出现好几年了，很多公司都有自己的实践。有些通过自动化系统打通 RD/QA/OP 之间的环节提高效率；有些干脆模糊 RD/QA/OP 之间的界限，通过技术手段让研发人员能独立完成研发流程中的各个环节。不论是那种方式CI/CD一定是其中的环节之一。&#xA;敏捷开发 Devops CI/CD 的关系（图片来自网络） 敏捷开发（Agile）、Devops、CI/CD 几个概念各不相同似乎有在说同一件事情，整个图比较能解释其中的异同，主要从关注点方面而言。&#xA;接下来要讲讲我们的做法了，当然主要是一些系统与故事。&#xA;我们最早的做法 我接触到的最早期的CI/CD系统入下图。&#xA;最早期的CI/CD系统示意图 当时情况是大部分服务还在机房的物理机上，通过一些非常古老系统来部署运行（我们的业务是Java生态，当时使用了Tomcat、Jetty、Resin、Mule、AcitveMQ 这一类的Java Web Server、ESB、MQ等等，这些名词对于刚刚进入职场的同学而言都应该存在于历史书中。）&#xA;这个阶段我们的CI/CD非常原始，但是也有效。大概的过程是：&#xA;一台物理机上部署了Jenkins，它通过插件能完成从GitLab拉取代码库并通过Maven进行构建生成Jar/War包； SRE同学通过人工方式（有些操作过于复杂没有交给Jenkins完成）去机器上执行一些部署脚本完成部署动作； 最后构建产生的Jar/War包在物理机上的各种系统中（Tomcat、Jetty、Resin、Mule 等）部署运行。 由于当时服务并不复杂，服务模块数量也不多，这种以Jenkins为中心辅之以自动化脚本的方式也算是能有效完成任务。&#xA;后续的转折发生在2017年，随着服务规模的不断扩大（陆陆续续扩大到有200+的服务模块），服务架构逐渐变得复杂（引入了Kong API Gateway、Docker、Kubernetes，后续还增加了阿里云环境形成了混合云架构），这套简易的CI/CD系统开始逐渐无法支撑SRE团队的业务了。最凸显的问题是，SRE人工执行部署脚本环节（这时候处理旧系统的部署的同时，还需针对Docker/Kubernetes做Image的构建和部署）变得异常耗费精力。我印象中工作最为繁重的时候，一周有一半的时间在处理服务发布。&#xA;这种情况下，大概在2017-2018年左右我们十分被动地主动完成了一次CI/CD系统的升级改造。&#xA;200块的做法 说被动是因为这次改造完全是形式所迫我们不得不解决痛点问题释放劳动力，不然大家都得陷入服务发布的泥潭中；说主动是因为这次改造就是SRE团队自己发起的，没有来自上边的KPI/OKR压力同时也没有人力于资源预算，也不局限于技术方案，目标就是为了实现CI/CD的自动化，解放SRE人力去干更重要的事情。&#xA;这种情况下，当时几个并不太熟悉系统开发的SRE同学，边学变干，还硬生生的改造出了一个基本自动化的CI/CD系统。虽然现在回头看这个系统极为简陋根本没有设计可言，但在当时系统实现了自动化，真真实实地解决了SRE困境，在使用上也得到了业务同学的一致好评。&#xA;那段时光是那几年中的黄金时代，团队同学全身心的投入，都无拘无束的。有想法你就可以放开手脚干，没有资源你自己想办法，一不小心就有意外的收获。那时我们几乎每个周末都泡在公司，想方案、出设计、写代码、调试、交流&amp;hellip; 累了就去楼下咖啡店喝杯美式&amp;hellip;一切都那么纯粹。以至于多年以后这个CI/CD系统一直被我们戏称为200块的 系统（这个投入就是200块的咖啡钱 同时对比公司后来大力投入开发新的CI/CD系统）。&#xA;感慨了这么多，那这个系统长啥样呢，看看下边的示意图。&#xA;200块的CI/CD系统示意图 变化主要在引入了Docker构建（当然不可避免的引入了镜像仓库，我们用的Harbor），既然服务都运行在容器里了为啥构建镜像不行是吧？&#xA;在服务发布一侧，我们编写了一套脚本控制Kubernetes对服务进行升级（不要惊讶，真的是一套脚本，当时我们连Kubernetes 的 API 都没有掌握，纯粹通过脚本调用 kubectl 实现的控制。当然后来随着深入学习和个人成长，控制代码被改造成了通过 go sdk 操作 Kubernetes了。）</description>
     </item>
-    
     <item>
       <title>Traefik Ingress Controller</title>
       <link>https://op-y.github.io/traefik/</link>
       <pubDate>Thu, 07 Sep 2023 11:07:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/traefik/</guid>
-      <description>引子 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。
-什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。
-在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。
-当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。
-Traefik 是什么？ 其实在引言部分已经说的很清楚了。
-Traefik 官方介绍
- Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象）   Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。
- Traefik 架构图   Traefik 安装&amp;amp;测试 我们的运行环境如下
- kuberntes 1.27.2  这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&amp;hellip;
-Traefik 目前有 1.</description>
+      <description>引子 之前已经回顾了 OpenResty 和 Kong 有关的内容（当然 Nginx 相关内容默认是必知必会了），这两天隐隐约约觉得还差了一点什么东西，昨晚想起来了，是 Kubernetes 边缘路由（Edge Router），这里和IP层边缘路由协议 BGP 之类的概念做一些区别啊。&#xA;什么是边缘路由呢，直观地说，就是将来自 Kubernetes 集群外部请求代理到集群内部服务的反向代理（通常它会以DaemonSet/Deployment 的形式部署在 Kubernetes 集群中，通过 NodePort 方式将 Service 暴露到集群外部以接受请求）。它主要解决了服务在 Kubernetes 集群内部 IP 不固定会随时变化，需要动态更新路由信息的问题。&#xA;在 Kubernetes 中把进入流量的描述称为一种 Ingress 资源，边缘路由通常对 Ingress、Service、Endpoint 对象进行监视实时调整自己代理流量的行为，实现对进入请求的正确代理。所以这种边缘路由的服务也被称作 Ingress Controller。&#xA;当下Ingress Controller的实现有很多种，之前我们使用的是 Traefik2，所以接下来回顾一下 Traefik。&#xA;Traefik 是什么？ 其实在引言部分已经说的很清楚了。&#xA;Traefik 官方介绍&#xA;Traefik 的 Logo 是一只交通管理员鼹鼠（非常的形象） Traefik 官方给的架构图如下，很直观，都不用过多解释就能看懂它在干什么。&#xA;Traefik 架构图 Traefik 安装&amp;amp;测试 我们的运行环境如下&#xA;kuberntes 1.27.2 这里出现了 Kubernetes，关于 kubernetes（或者简称k8s）又是一个天坑，这里不打算多说。等有机会&amp;hellip;&#xA;Traefik 目前有 1.x/2.x/3.x 几个版本（3.0目前还在rc阶段），不同的大版本之间存在不兼容的变更。从1.x到2.x的迭代中，Traefik从使用k8s自带的 Ingress 到使用了很多CRD（Custom Resource Definition）包括自己定义的 IngressRoute。为了更接近当年我们的使用，我使用了2.10版本但是使用 Ingress 作为路由的 provider。</description>
     </item>
-    
     <item>
       <title>有关监控</title>
       <link>https://op-y.github.io/monitoring/</link>
       <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/monitoring/</guid>
-      <description>写在前面 写这篇文章不为其它，只为总结一下之前做过的一些关于监控系统的工作，或许不久的将来能用得上。
-监控系统的演进 这里说的是曾经的一段工作经历中，公司监控系统的演进过程。包括了每个时期监控系统的建设背景，发展过程中遇到的问题，以及后续的演进方向。
-古早时期（before 2017） 在2017年之前的监控系统：没有监控系统😂！
-那个时期的业务，主要还是线下服务，线上服务刚刚起步，整个机房才20来台机器。我刚过去的时候完全没有监控系统。用户和业务线同学对故障容忍度出奇的高。印象比较深刻的一次，服务挂了半天后才恢复，没有人说啥，默默地恢复服务就好了。
-随着2017年初，公司开始大力发展 SaaS 服务，这种情况开始改变了。某一天乐哥跟我说：监控系统了解过吗？有个国产的监控系统叫 Open Falcon，你去调研一下，我们部署一套试试！
-2017-2019 说实话，之前我一直做业务运维，用过监控系统。但是监控系统长啥样？如何实现？我是完全没接触过的。这个时候我只能硬着头皮去学习Open Falcon了。
-之后的一段时间只能说过得非常充实。我认真看了Open Falcon的官方介绍和文档（当时还是v0.1.x，后来升级到v0.2.x，之后就停止迭代了，现在这个站点都已经无法打开了&amp;hellip;）。跟着官方文档我一步一步搭建起了公司第一套监控系统。之后慢慢扩展到所有的机房。
- Open Falcon 架构   之后由于运维部开发统一的运维平台，我们有了将Open Falcon集成到平台的需求。这时候就需要对Open Falcon进行二次开发了。正是这个契机，促使我认真学习了Open Falcon的源码，对整个系统有了深入了解。在此基础上我们开发了一个定制版本的 api 模块。虽然这个模块现在已经完成了它的历史使命，但是依然在我的仓库了放着。
- falcon-api
- 在使用Open Falcon过程中，顺带还开发了很多采集器（官方的采集器不少但是真的不够用）。
- falcon-plugins
- 此外就是Open Falcon的 alarm 组件需要外部提供的 provider 才能真正实现告警消息的发送，为此我开发了一个功能比较丰富的 provider 程序。
- MixProvider
- 日子就这样快乐地走到了2019年，Open Falcon使用过程中逐渐浮现出很多问题需要解决&amp;hellip;
-2019-2021 2019年我们面临的情况是 Kubernetes 的流行以及在公司全面铺开。这个时候很多业务都在向 Kubernetes 中迁移。
-对于那些在物理机/虚拟机上部署的中间件，Open Falcon 尚能支持；对于上 Kubernetes 的业务，Open Falcon 的能力就越来越捉襟见肘了。
-由于业务程序的Pod会在集群中不停地迁移，业务程序只有两种选择：
- 一种是将监控采集逻辑集成到代码里，主动向 agent 报告数据，这种方式对业务入侵太大； 另一种是集群中每个节点上 agent 能动态感知当前节点上正运行着哪些服务（其实本质上就是服务发现的问题），采集数据。 我们选择了前者，但显然做得不好&amp;hellip;  另外一个问题是，之前 Open Falcon 的部署，我们一直都是每个IDC独立部署一套。所有的 Open Falcon 系统不能统一管理，跨IDC的数据也不能聚合，存在一些使用局限。</description>
+      <description>写在前面 写这篇文章不为其它，只为总结一下之前做过的一些关于监控系统的工作，或许不久的将来能用得上。&#xA;监控系统的演进 这里说的是曾经的一段工作经历中，公司监控系统的演进过程。包括了每个时期监控系统的建设背景，发展过程中遇到的问题，以及后续的演进方向。&#xA;古早时期（before 2017） 在2017年之前的监控系统：没有监控系统😂！&#xA;那个时期的业务，主要还是线下服务，线上服务刚刚起步，整个机房才20来台机器。我刚过去的时候完全没有监控系统。用户和业务线同学对故障容忍度出奇的高。印象比较深刻的一次，服务挂了半天后才恢复，没有人说啥，默默地恢复服务就好了。&#xA;随着2017年初，公司开始大力发展 SaaS 服务，这种情况开始改变了。某一天乐哥跟我说：监控系统了解过吗？有个国产的监控系统叫 Open Falcon，你去调研一下，我们部署一套试试！&#xA;2017-2019 说实话，之前我一直做业务运维，用过监控系统。但是监控系统长啥样？如何实现？我是完全没接触过的。这个时候我只能硬着头皮去学习Open Falcon了。&#xA;之后的一段时间只能说过得非常充实。我认真看了Open Falcon的官方介绍和文档（当时还是v0.1.x，后来升级到v0.2.x，之后就停止迭代了，现在这个站点都已经无法打开了&amp;hellip;）。跟着官方文档我一步一步搭建起了公司第一套监控系统。之后慢慢扩展到所有的机房。&#xA;Open Falcon 架构 之后由于运维部开发统一的运维平台，我们有了将Open Falcon集成到平台的需求。这时候就需要对Open Falcon进行二次开发了。正是这个契机，促使我认真学习了Open Falcon的源码，对整个系统有了深入了解。在此基础上我们开发了一个定制版本的 api 模块。虽然这个模块现在已经完成了它的历史使命，但是依然在我的仓库了放着。&#xA;falcon-api&#xA;在使用Open Falcon过程中，顺带还开发了很多采集器（官方的采集器不少但是真的不够用）。&#xA;falcon-plugins&#xA;此外就是Open Falcon的 alarm 组件需要外部提供的 provider 才能真正实现告警消息的发送，为此我开发了一个功能比较丰富的 provider 程序。&#xA;MixProvider&#xA;日子就这样快乐地走到了2019年，Open Falcon使用过程中逐渐浮现出很多问题需要解决&amp;hellip;&#xA;2019-2021 2019年我们面临的情况是 Kubernetes 的流行以及在公司全面铺开。这个时候很多业务都在向 Kubernetes 中迁移。&#xA;对于那些在物理机/虚拟机上部署的中间件，Open Falcon 尚能支持；对于上 Kubernetes 的业务，Open Falcon 的能力就越来越捉襟见肘了。&#xA;由于业务程序的Pod会在集群中不停地迁移，业务程序只有两种选择：&#xA;一种是将监控采集逻辑集成到代码里，主动向 agent 报告数据，这种方式对业务入侵太大； 另一种是集群中每个节点上 agent 能动态感知当前节点上正运行着哪些服务（其实本质上就是服务发现的问题），采集数据。 我们选择了前者，但显然做得不好&amp;hellip; 另外一个问题是，之前 Open Falcon 的部署，我们一直都是每个IDC独立部署一套。所有的 Open Falcon 系统不能统一管理，跨IDC的数据也不能聚合，存在一些使用局限。</description>
     </item>
-    
     <item>
       <title>Kong 回顾</title>
       <link>https://op-y.github.io/kong/</link>
       <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kong/</guid>
-      <description>引子 稍早之前对 OpenResty 进行了一个回顾，记得之前工作中，在接入网关升级改造中，使用 OpenResty 之后，我们又引入了 Kong API Gateway，所以也有必要对 Kong 简单的重新操作一下，做个记录。
-Kong 是什么？ Kong Gateway 自己的官方的介绍
- Kong 的名字来自金刚 Logo就是这只猩猩   比较简单的理解：Kong Gateway 就是一个基于 OpenResty （不知道 OpenResty 是什么？去目录上找相关的文章）的 API Gateway （所以本质上还是 Nginx + Lua)。
- Kong Gateway 结构   至于 API Gateway 是什么？我个人比较认可它是一个贴近微服务架构的概念，它实现了一种Facade模式，统一各个服务的反向代理和请求管理，包括并不限于 认证、权限、限流、熔断、安全、监控、日志&amp;hellip; 从实现上说，它可以是个Nginx，也可以是一个OpenResty，还可以是 Kong、APISIX、BFE 等等。
-这些年的变化 上一次自己部署 Kong 的时候，Kong 的版本还是 1.3，当时相比 0.1.x 版本已经有了很大的变化，是那种概念都不一样的非兼容变化。今天看了下官网，好家伙，都已经是 3.4.x 了，从 Changelogs 上看有了不小的调整（但是主要概念没有发生变化）。我看完后认为比较大的变化是：
- 现在有4种部署模式  Konnect：这个1.3的时候还没注意到，是一个Kong Gateway的SaaS服务； Hybird: 这个是一个新的模式，将服务分成了 Control Panel和Data Panel，也是当下一种比较流行的做法； Tranditional：这个就是依赖DB部署的传统做法了，本质上时通过DB实现配置的中心化管理和分发； Db-less and declarative: 这个时无DB的声明式配置模式，单机部署相当的友好。   Traditional with-DB 模式下不再支持 Cassandra DB了（从3.</description>
+      <description>引子 稍早之前对 OpenResty 进行了一个回顾，记得之前工作中，在接入网关升级改造中，使用 OpenResty 之后，我们又引入了 Kong API Gateway，所以也有必要对 Kong 简单的重新操作一下，做个记录。&#xA;Kong 是什么？ Kong Gateway 自己的官方的介绍&#xA;Kong 的名字来自金刚 Logo就是这只猩猩 比较简单的理解：Kong Gateway 就是一个基于 OpenResty （不知道 OpenResty 是什么？去目录上找相关的文章）的 API Gateway （所以本质上还是 Nginx + Lua)。&#xA;Kong Gateway 结构 至于 API Gateway 是什么？我个人比较认可它是一个贴近微服务架构的概念，它实现了一种Facade模式，统一各个服务的反向代理和请求管理，包括并不限于 认证、权限、限流、熔断、安全、监控、日志&amp;hellip; 从实现上说，它可以是个Nginx，也可以是一个OpenResty，还可以是 Kong、APISIX、BFE 等等。&#xA;这些年的变化 上一次自己部署 Kong 的时候，Kong 的版本还是 1.3，当时相比 0.1.x 版本已经有了很大的变化，是那种概念都不一样的非兼容变化。今天看了下官网，好家伙，都已经是 3.4.x 了，从 Changelogs 上看有了不小的调整（但是主要概念没有发生变化）。我看完后认为比较大的变化是：&#xA;现在有4种部署模式 Konnect：这个1.3的时候还没注意到，是一个Kong Gateway的SaaS服务； Hybird: 这个是一个新的模式，将服务分成了 Control Panel和Data Panel，也是当下一种比较流行的做法； Tranditional：这个就是依赖DB部署的传统做法了，本质上时通过DB实现配置的中心化管理和分发； Db-less and declarative: 这个时无DB的声明式配置模式，单机部署相当的友好。 Traditional with-DB 模式下不再支持 Cassandra DB了（从3.</description>
     </item>
-    
     <item>
       <title>OpenResty上手</title>
       <link>https://op-y.github.io/openresty/</link>
       <pubDate>Tue, 05 Sep 2023 14:42:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/openresty/</guid>
-      <description>引子 没有想过要针对 Nginx、OpenResty、Kong 这类接入层中间件和系统专门写一些东西。最近因为DDDD的原因，需要回顾一下之前使用过的一些接入层开源系统以及做过的一些事情，所以简单的重新操作一下，做个记录。
-OpenResty 是什么？ 官方首页上有比较官方的介绍
-比较简单的理解：OpenResty 就是一个加强版的 Nginx，具体的加强之处就在于它给 Nginx 开发了一个 lua-nginx-module，这玩意儿在Nginx中直接集成了一个 Lua 解释器，让 Nginx 在处理请求的过程中可以执行内嵌的 Lua 脚本从而动态的实现一些 Nginx 原本很难做到的功能。
-此外 OpenResty 官方还开发了很多可以直接使用的组件，用户可以直接拿来用；OpenResty 社区还有很多第三方的组件，方便用户开发自己的功能。
-OpenResty 使用 安装 常见的操作系统都可以通过包管理工具直接安装对应的二进制版本。为了装逼有点参与感，我们还是源码编译安装。
-我们的运行环境如下
- kernel: 5.10.0-15-amd64 系统发行版：Debian GNU/Linux 11  当前 OpenResty 的最新版本是 openresty-1.21.4.2，我们就选择整个版本，开始操作
-cd ~ mkdir download &amp;amp;&amp;amp; cd download # 创建一个工作目录 wget https://openresty.org/download/openresty-1.21.4.2.tar.gz # 从官网下载源码 tar -zxvf openresty-1.21.4.2.tar.gz # 直接解压到当前目录  apt-get install libpcre3-dev libssl-dev perl make build-essential curl # 安装依赖  # 编译过程基本与nginx相同 # 我们指定了安装目录和一些需要安装的功能选项 cd openresty-1.</description>
+      <description>引子 没有想过要针对 Nginx、OpenResty、Kong 这类接入层中间件和系统专门写一些东西。最近因为DDDD的原因，需要回顾一下之前使用过的一些接入层开源系统以及做过的一些事情，所以简单的重新操作一下，做个记录。&#xA;OpenResty 是什么？ 官方首页上有比较官方的介绍&#xA;比较简单的理解：OpenResty 就是一个加强版的 Nginx，具体的加强之处就在于它给 Nginx 开发了一个 lua-nginx-module，这玩意儿在Nginx中直接集成了一个 Lua 解释器，让 Nginx 在处理请求的过程中可以执行内嵌的 Lua 脚本从而动态的实现一些 Nginx 原本很难做到的功能。&#xA;此外 OpenResty 官方还开发了很多可以直接使用的组件，用户可以直接拿来用；OpenResty 社区还有很多第三方的组件，方便用户开发自己的功能。&#xA;OpenResty 使用 安装 常见的操作系统都可以通过包管理工具直接安装对应的二进制版本。为了装逼有点参与感，我们还是源码编译安装。&#xA;我们的运行环境如下&#xA;kernel: 5.10.0-15-amd64 系统发行版：Debian GNU/Linux 11 当前 OpenResty 的最新版本是 openresty-1.21.4.2，我们就选择整个版本，开始操作&#xA;cd ~ mkdir download &amp;amp;&amp;amp; cd download # 创建一个工作目录 wget https://openresty.org/download/openresty-1.21.4.2.tar.gz # 从官网下载源码 tar -zxvf openresty-1.21.4.2.tar.gz # 直接解压到当前目录 apt-get install libpcre3-dev libssl-dev perl make build-essential curl # 安装依赖 # 编译过程基本与nginx相同 # 我们指定了安装目录和一些需要安装的功能选项 cd openresty-1.</description>
     </item>
-    
     <item>
       <title>一杯咖啡的诞生</title>
       <link>https://op-y.github.io/coffee-story/</link>
       <pubDate>Sun, 01 Aug 2021 23:46:45 +0800</pubDate>
-      
       <guid>https://op-y.github.io/coffee-story/</guid>
-      <description>引子 大家好，今天跟各位分享一个轻松一点的话题: 一杯咖啡是如何诞生的。
-先简单声明：文中图片、视频和故事均来自网络和B站，请大家随意食用，我只是互联网的搬运工&amp;hellip;
-早起一杯咖啡，精神一整天，已经是很多人的生活习惯；午后撸代码困了累了，来上一杯咖啡提神，休息一会儿，也已经是身边很多朋友调整节奏的方式；往前一两年，瑞幸咖啡用互联网营销方式“薅资本主义羊毛”，也让很多吃瓜群众看得不亦乐乎&amp;hellip;
-咖啡如今早已是生活中寻常不过的事物。平常我们享用到的咖啡多数以下图中的形态呈现的：印着各种logo的纸杯或者马克杯中糅合着苦、酸与醇的提神醒脑饮品。这一杯究竟何来？我们开始关于咖啡的故事。
- 各种品牌的咖啡   植物咖啡 咖啡豆大家在咖啡馆/咖啡店里多多少少见过。
-“那咖啡豆又从何而来？”
-“树上&amp;hellip;” 然后可能就说不上然后了。
-   咖啡树
-被子植物门|木兰纲|菊亚纲|茜草目|茜草科|咖啡族|咖啡属|咖啡种
-多年生常绿灌木或小乔木，植株较矮小，在世界各地广泛种植，原产于非洲北部、中部亚热带地区，是一种多年生经济作物。
-百度百科
-   咖啡树   树上长得像樱桃的红色果实就是咖啡果，咖啡果从结果到成熟如下图。
- 咖啡果成熟过程   一颗成熟的咖啡果由外向内解剖如下图。
- 咖啡果解剖    咖啡果实结构示意图   细看一颗咖啡果实的结构，从外到内包括了：外果皮、果肉、果胶、羊皮、银皮、种子。咖啡果实经过加工去掉外果皮、果肉、果胶、羊皮之后得到的是咖啡生豆，生豆经过加工最后呈现的才是生活中我们常见的咖啡豆。
-历史  牧羊人传说    6世纪的古阿比西尼亚（Abyssinia，现在的埃塞俄比亚），一名叫做卡尔迪的牧羊人，某天发现自己所放牧的羊群异常兴奋，他感到疑惑并追查后，发现原因似乎是羊群们吃下灌木丛所结的红色果实。卡拉迪某天到附近的修道院偶然提起这件事，修士们建议他不妨自己也试吃这种果实看看。卡尔迪和修士们一起试吃了果实之后，发现自己的身心变得大为畅快起来，精力充沛，被幸福感所包围，修士们大为吃惊，马上将果实带回修道院，分送给其他的修士。此后修士们在修行时能够一扫疲倦感，并且更加尽心尽力地修行。
-  六世纪咖啡起源于非洲之角埃塞俄比亚。 十一世纪人们发现水煮咖啡比直接咀嚼更美味。 十三纪时埃塞俄比亚军队入侵也门，将咖啡带到了阿拉伯世界。因为伊斯兰教义禁止教徒饮酒，有的宗教界人士认为这种饮料刺激神经，违反教义，曾一度禁止并关闭咖啡店，但埃及苏丹认为咖啡不违反教义，因而解禁，咖啡饮料迅速在阿拉伯地区流行开来。 十七世纪之前咖啡的种植和生产一直为阿拉伯人所垄断。当时主要被使用在医学和宗教上，医生和僧侣们承认咖啡具有提神、醒脑、健胃、强身、止血等功效；十五世纪初开始有文献记载咖啡的使用方式，并且在此时期融入宗教仪式中，同时也出现在民间做为日常饮品。因伊斯兰教严禁饮酒，因此咖啡成为当时很重要的社交饮品。 1570年，土耳其军队围攻维也纳，失败撤退时，有人在土耳其军队的营房中发现一口袋黑色的种子，谁也不知道是什么东西。一个曾在土耳其生活过的波兰人，拿走了这袋咖啡，在维也纳开了第一家咖啡店。16世纪末，咖啡以 “伊斯兰酒” 的名义通过意大利开始大规模传入欧洲。相传当时一些天主教人士认为咖啡是 “魔鬼饮料”，怂恿当时的教皇克莱门八世禁止这种饮料，但教皇品尝后认为可以饮用，并且祝福了咖啡，因此咖啡在欧洲逐步普及。 起初咖啡在欧洲价格不菲，只有贵族才能饮用咖啡，咖啡甚至被称为“黑色金子”。直到1690年，一位荷兰船长航行到也门，得到几棵咖啡苗，在印度尼西亚种植成功。 1727年荷属圭亚那的一位外交官的妻子，将几粒咖啡种子送给一位在巴西的西班牙人，他在巴西试种取得很好的效果。巴西的气候非常适宜咖啡生长，从此咖啡在南美洲迅速蔓延。因大量生产而价格下降的咖啡开始成为欧洲人的重要饮料。  至此世界咖啡种植的格局基本形成。非洲、亚洲、美洲的热带地区是咖啡的主要种植地。下图大致展示了主要的咖啡产地，详情请参考文后参考文献《世界咖啡地图》。
- 世界咖啡带    非洲  布隆迪 埃塞俄比亚  耶加雪菲（Yirgacheffe） 哈拉（Harrar）   肯尼亚  肯尼亚AA（Kenya AA）   马拉维 卢旺达  机无（kivu）   坦桑尼亚  乞力马扎罗（Kilimanjaro）   赞比亚   亚太  印度 印度尼西亚  爪哇（Java） 曼特宁（Mandheling）   巴布亚新几内亚 越南 也门 美国夏威夷  柯那（Kona）     美洲  玻利维亚 巴西  山多士（Santos） 摩吉安纳（Mogiana）   哥伦比亚 哥斯达黎加 古巴 多米尼加 厄瓜多尔 萨尔瓦多 危地马拉  安提瓜（Antigua）   洪都拉斯 牙买加  蓝山（Blue Mountain）   墨西哥 尼加拉瓜 巴拿马 秘鲁 委内瑞拉    品种：阿拉比卡 vs 罗布斯塔 从埃塞俄比亚走出来的原始品种咖啡，在传播过程中繁衍出了庞大的品种家族，其中还包括了很多实验室人造的品种。大体来说今天我们能喝到的咖啡，多数是下图咖啡品种树中，桔色（阿拉比卡/蒂比卡）和 紫色（罗布斯塔）这两支。很多咖啡广告里都会强调自己用的是阿拉比卡咖啡豆，为什么会这样？我们来探究一下。</description>
+      <description>引子 大家好，今天跟各位分享一个轻松一点的话题: 一杯咖啡是如何诞生的。&#xA;先简单声明：文中图片、视频和故事均来自网络和B站，请大家随意食用，我只是互联网的搬运工&amp;hellip;&#xA;早起一杯咖啡，精神一整天，已经是很多人的生活习惯；午后撸代码困了累了，来上一杯咖啡提神，休息一会儿，也已经是身边很多朋友调整节奏的方式；往前一两年，瑞幸咖啡用互联网营销方式“薅资本主义羊毛”，也让很多吃瓜群众看得不亦乐乎&amp;hellip;&#xA;咖啡如今早已是生活中寻常不过的事物。平常我们享用到的咖啡多数以下图中的形态呈现的：印着各种logo的纸杯或者马克杯中糅合着苦、酸与醇的提神醒脑饮品。这一杯究竟何来？我们开始关于咖啡的故事。&#xA;各种品牌的咖啡 植物咖啡 咖啡豆大家在咖啡馆/咖啡店里多多少少见过。&#xA;“那咖啡豆又从何而来？”&#xA;“树上&amp;hellip;” 然后可能就说不上然后了。&#xA;咖啡树&#xA;被子植物门|木兰纲|菊亚纲|茜草目|茜草科|咖啡族|咖啡属|咖啡种&#xA;多年生常绿灌木或小乔木，植株较矮小，在世界各地广泛种植，原产于非洲北部、中部亚热带地区，是一种多年生经济作物。&#xA;百度百科&#xA;咖啡树 树上长得像樱桃的红色果实就是咖啡果，咖啡果从结果到成熟如下图。&#xA;咖啡果成熟过程 一颗成熟的咖啡果由外向内解剖如下图。&#xA;咖啡果解剖 咖啡果实结构示意图 细看一颗咖啡果实的结构，从外到内包括了：外果皮、果肉、果胶、羊皮、银皮、种子。咖啡果实经过加工去掉外果皮、果肉、果胶、羊皮之后得到的是咖啡生豆，生豆经过加工最后呈现的才是生活中我们常见的咖啡豆。&#xA;历史 牧羊人传说 6世纪的古阿比西尼亚（Abyssinia，现在的埃塞俄比亚），一名叫做卡尔迪的牧羊人，某天发现自己所放牧的羊群异常兴奋，他感到疑惑并追查后，发现原因似乎是羊群们吃下灌木丛所结的红色果实。卡拉迪某天到附近的修道院偶然提起这件事，修士们建议他不妨自己也试吃这种果实看看。卡尔迪和修士们一起试吃了果实之后，发现自己的身心变得大为畅快起来，精力充沛，被幸福感所包围，修士们大为吃惊，马上将果实带回修道院，分送给其他的修士。此后修士们在修行时能够一扫疲倦感，并且更加尽心尽力地修行。&#xA;六世纪咖啡起源于非洲之角埃塞俄比亚。 十一世纪人们发现水煮咖啡比直接咀嚼更美味。 十三纪时埃塞俄比亚军队入侵也门，将咖啡带到了阿拉伯世界。因为伊斯兰教义禁止教徒饮酒，有的宗教界人士认为这种饮料刺激神经，违反教义，曾一度禁止并关闭咖啡店，但埃及苏丹认为咖啡不违反教义，因而解禁，咖啡饮料迅速在阿拉伯地区流行开来。 十七世纪之前咖啡的种植和生产一直为阿拉伯人所垄断。当时主要被使用在医学和宗教上，医生和僧侣们承认咖啡具有提神、醒脑、健胃、强身、止血等功效；十五世纪初开始有文献记载咖啡的使用方式，并且在此时期融入宗教仪式中，同时也出现在民间做为日常饮品。因伊斯兰教严禁饮酒，因此咖啡成为当时很重要的社交饮品。 1570年，土耳其军队围攻维也纳，失败撤退时，有人在土耳其军队的营房中发现一口袋黑色的种子，谁也不知道是什么东西。一个曾在土耳其生活过的波兰人，拿走了这袋咖啡，在维也纳开了第一家咖啡店。16世纪末，咖啡以 “伊斯兰酒” 的名义通过意大利开始大规模传入欧洲。相传当时一些天主教人士认为咖啡是 “魔鬼饮料”，怂恿当时的教皇克莱门八世禁止这种饮料，但教皇品尝后认为可以饮用，并且祝福了咖啡，因此咖啡在欧洲逐步普及。 起初咖啡在欧洲价格不菲，只有贵族才能饮用咖啡，咖啡甚至被称为“黑色金子”。直到1690年，一位荷兰船长航行到也门，得到几棵咖啡苗，在印度尼西亚种植成功。 1727年荷属圭亚那的一位外交官的妻子，将几粒咖啡种子送给一位在巴西的西班牙人，他在巴西试种取得很好的效果。巴西的气候非常适宜咖啡生长，从此咖啡在南美洲迅速蔓延。因大量生产而价格下降的咖啡开始成为欧洲人的重要饮料。 至此世界咖啡种植的格局基本形成。非洲、亚洲、美洲的热带地区是咖啡的主要种植地。下图大致展示了主要的咖啡产地，详情请参考文后参考文献《世界咖啡地图》。&#xA;世界咖啡带 非洲 布隆迪 埃塞俄比亚 耶加雪菲（Yirgacheffe） 哈拉（Harrar） 肯尼亚 肯尼亚AA（Kenya AA） 马拉维 卢旺达 机无（kivu） 坦桑尼亚 乞力马扎罗（Kilimanjaro） 赞比亚 亚太 印度 印度尼西亚 爪哇（Java） 曼特宁（Mandheling） 巴布亚新几内亚 越南 也门 美国夏威夷 柯那（Kona） 美洲 玻利维亚 巴西 山多士（Santos） 摩吉安纳（Mogiana） 哥伦比亚 哥斯达黎加 古巴 多米尼加 厄瓜多尔 萨尔瓦多 危地马拉 安提瓜（Antigua） 洪都拉斯 牙买加 蓝山（Blue Mountain） 墨西哥 尼加拉瓜 巴拿马 秘鲁 委内瑞拉 品种：阿拉比卡 vs 罗布斯塔 从埃塞俄比亚走出来的原始品种咖啡，在传播过程中繁衍出了庞大的品种家族，其中还包括了很多实验室人造的品种。大体来说今天我们能喝到的咖啡，多数是下图咖啡品种树中，桔色（阿拉比卡/蒂比卡）和 紫色（罗布斯塔）这两支。很多咖啡广告里都会强调自己用的是阿拉比卡咖啡豆，为什么会这样？我们来探究一下。</description>
     </item>
-    
     <item>
       <title>如何使用Hugo生成文章内容</title>
       <link>https://op-y.github.io/how_to_use_this_blog/</link>
       <pubDate>Wed, 13 Jan 2021 16:40:44 +0800</pubDate>
-      
       <guid>https://op-y.github.io/how_to_use_this_blog/</guid>
-      <description>前置要求 首先学会使用Git。可以直接阅读《Pro Git》的在线版。
-然后知道一些基本的Markdown语法，文章内容使用Markdown+一些主题特定的语法进行编辑。熟悉Markdown语法能编辑出样式精美的文章。
-使用工具 文章是使用 Hugo 生成的，目前使用的主题是 Cupper。需要知道Hugo的基本概念以及 hugo、 hugo new、hugo server 这些基本操作。内容编辑还可以参考主题目录下的示例文件。
- Cupper 主题提供的特殊样式
- 使用方式  将项目clone到本地 从master/main分支checkout出开发分支，如果是已经存在开发分支则是merge一下master/main分支最近的提交 git submodule init 初始化子项目（主题，初次使用时操作） git submodule update 拉取子项目（主题，可选） hugo new 创建新的文章 hugo server 用本地server调试文章页面 hugo 生成站点静态文件 将你开发分支新内容merge回master/main分支 在master/main分支上生成新静态文件 将内容push到Github  </description>
+      <description>前置要求 首先学会使用Git。可以直接阅读《Pro Git》的在线版。&#xA;然后知道一些基本的Markdown语法，文章内容使用Markdown+一些主题特定的语法进行编辑。熟悉Markdown语法能编辑出样式精美的文章。&#xA;使用工具 文章是使用 Hugo 生成的，目前使用的主题是 Cupper。需要知道Hugo的基本概念以及 hugo、 hugo new、hugo server 这些基本操作。内容编辑还可以参考主题目录下的示例文件。&#xA;Cupper 主题提供的特殊样式&#xA;使用方式 将项目clone到本地 从master/main分支checkout出开发分支，如果是已经存在开发分支则是merge一下master/main分支最近的提交 git submodule init 初始化子项目（主题，初次使用时操作） git submodule update 拉取子项目（主题，可选） hugo new 创建新的文章 hugo server 用本地server调试文章页面 hugo 生成站点静态文件 将你开发分支新内容merge回master/main分支 在master/main分支上生成新静态文件 将内容push到Github </description>
     </item>
-    
     <item>
       <title>关于自习室</title>
       <link>https://op-y.github.io/about/</link>
       <pubDate>Wed, 13 Jan 2021 16:36:04 +0800</pubDate>
-      
       <guid>https://op-y.github.io/about/</guid>
       <description>自习室里总有一把椅子留给你 —— Qin</description>
     </item>
-    
   </channel>
 </rss>

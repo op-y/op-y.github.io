@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <meta name="generator" content="Hugo 0.83.1" />
+  <meta name="generator" content="Hugo 0.128.0">
   <link rel="canonical" href="https://op-y.github.io/kubeadm-upgrade-cluster/" />
 
   
     
     <meta name="description" content="目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。
 准备工作 查看可以升级的版本
-apt update apt-cache madison kubeadm  升级kubeadm
-apt-mark unhold kubeadm &amp;&amp; \ apt-get update &amp;&amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;&amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version  升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.">
+apt update apt-cache madison kubeadm 升级kubeadm
+apt-mark unhold kubeadm &amp;&amp; \ apt-get update &amp;&amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;&amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version 升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.">
   
 
   <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
@@ -168,7 +168,7 @@ apt-mark unhold kubeadm &amp;&amp; \ apt-get update &amp;&amp; apt-get install -
     <div class="intro">
       <a
         class="logo"
-        href="https://op-y.github.io"
+        href="https://op-y.github.io/"
         aria-label="Qin的自习室 home page"
       >
         
@@ -481,7 +481,7 @@ There are pending nodes to be drained:
 
 <figure role="group" aria-describedby="caption-ce3f17b0ce87140a71ba9f0793493ee5">
   <a href="/kubeadm-upgrade-cluster/figure1-kubeadm-upgrade-cluster.png" class="img-link">
-    <img src="/kubeadm-upgrade-cluster/figure1-kubeadm-upgrade-cluster_hud0ed96d9ccc035df297ef0a829615dcd_53245_1080x0_resize_box_2.png">
+    <img src="/kubeadm-upgrade-cluster/figure1-kubeadm-upgrade-cluster_hud0ed96d9ccc035df297ef0a829615dcd_53245_1080x0_resize_box_3.png">
   </a>
   <figcaption id="caption-ce3f17b0ce87140a71ba9f0793493ee5">
     使用kubeadm升级集群

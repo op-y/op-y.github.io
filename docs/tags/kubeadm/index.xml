@@ -1,58 +1,40 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>kubeadm on Qin的自习室</title>
+    <title>Kubeadm on Qin的自习室</title>
     <link>https://op-y.github.io/tags/kubeadm/</link>
-    <description>Recent content in kubeadm on Qin的自习室</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Kubeadm on Qin的自习室</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Jan 2024 20:30:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/kubeadm/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 07 Jan 2024 20:30:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/tags/kubeadm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>kubeadm实战: 搭建高可用集群</title>
       <link>https://op-y.github.io/kubeadm-ha-cluster/</link>
       <pubDate>Sun, 07 Jan 2024 20:30:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-ha-cluster/</guid>
-      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。
-参考文档
- 容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置     使用的版本 Kubernetes 1.28.2   环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
-安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体  安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单
-sh -c &amp;quot;$(curl -fsSL https://raw.</description>
+      <description>目标 本篇记录使用 kubeadm 完成一个高可用 Kubernetes 集群搭建。&#xA;参考文档&#xA;容器运行时 安装 kubernetes 高可用拓扑选项 使用 Kubeadm 创建一个高可用 etcd 集群 etcd 配置 利用 kubeadm 创建高可用集群 flannel 配置 使用的版本 Kubernetes 1.28.2 环境准备 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。&#xA;安装一些必要的软件包 apt-get update apt-get install git lrzsz tmux zsh fonts-powerline # lrzsz 用于本地终端与云主机传输小文件 # tmux 方便登录云主机操作 # zsh 替换云主机shell环境 如果喜欢bash也可以保持默认环境 # fonts-powerline 是后续使用oh-my-zsh主题需要的字体 安装 oh-my-zsh 参考官方文档 https://ohmyz.sh/#install 过程非常简单&#xA;sh -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;quot; 安装完成后，可以编辑 ~/.zshrc 配置文件更换主题，这里我个人习惯使用 agnoster 。</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 升级集群</title>
       <link>https://op-y.github.io/kubeadm-upgrade-cluster/</link>
       <pubDate>Tue, 02 Jan 2024 20:46:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-upgrade-cluster/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。
-准备工作 查看可以升级的版本
-apt update apt-cache madison kubeadm  升级kubeadm
-apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version  升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成 Kubernetes 集群从 v1.27.2 到 v1.28.2 的升级。&#xA;准备工作 查看可以升级的版本&#xA;apt update apt-cache madison kubeadm 升级kubeadm&#xA;apt-mark unhold kubeadm &amp;amp;&amp;amp; \ apt-get update &amp;amp;&amp;amp; apt-get install -y kubeadm=&#39;1.28.2-00*&#39; &amp;amp;&amp;amp; \ apt-mark hold kubeadm # 确认版本 kubeadm version 升级控制面 # 确认升级计划 kubeadm upgrade plan v1.28.2 # dry-run 可以看有哪些更改 # kubeadm upgrade apply v1.28.2 --dry-run # 升级控制面 kubeadm upgrade apply v1.28.2 # 输出 [upgrade/config] Making sure the configuration is correct: [upgrade/config] Reading configuration from the cluster.</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 删除工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-delete/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-node-delete/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。
-移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 从当前 Kubernetes 集群中删除一个工作节点。&#xA;移除节点 # 驱逐节点上全部Pod kubectl drain &amp;lt;nodename&amp;gt; --delete-emptydir-data --force --ignore-daemonsets # reset kubeadm reset # 输出 W0102 11:42:46.315993 2170165 preflight.go:56] [reset] WARNING: Changes made to this host by &#39;kubeadm init&#39; or &#39;kubeadm join&#39; will be reverted. [reset] Are you sure you want to proceed? [y/N]: y [preflight] Running pre-flight checks W0102 11:42:49.869811 2170165 removeetcdmember.go:106] [reset] No kubeadm config, using etcd pod spec to get data directory [reset] Deleted contents of the etcd data directory: /var/lib/etcd [reset] Stopping the kubelet service [reset] Unmounting mounted directories in &amp;quot;/var/lib/kubelet&amp;quot; [reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki] [reset] Deleting files: [/etc/kubernetes/admin.</description>
     </item>
-    
     <item>
       <title>kubeadm实战: 新增工作节点</title>
       <link>https://op-y.github.io/kubeadm-node-join/</link>
       <pubDate>Tue, 02 Jan 2024 20:00:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/kubeadm-node-join/</guid>
-      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）
-准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。
-安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。
-内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system  安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
+      <description>目标 这篇笔记记录的是使用 kubeadm 完成一个新的工作节点（worker node）加入已有 Kubernetes 集群（这个集群也是通过 kubeadm 创建的，版本为 v1.27.2。）&#xA;准备机器 已有集群是使用阿里云轻应用服务器作为实验环境搭建的，所以先准备一台新的集群，选用了 Ubuntu 镜像（原有节点使用的 Debian，操作验证了不同 Linux 发行版组成集群没啥问题）。&#xA;安装容器运行时 由于集群使用的 Kubernetes 1.27 Containerd，这里保持一致。&#xA;内核模块安装和内核参数设置 cat &amp;lt;&amp;lt;EOF | tee /etc/modules-load.d/k8s.conf overlay br_netfilter EOF modprobe overlay modprobe br_netfilter # 设置所需的 sysctl 参数，参数在重新启动后保持不变 cat &amp;lt;&amp;lt;EOF | tee /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-ip6tables = 1 net.ipv4.ip_forward = 1 EOF # 应用 sysctl 参数而不重新启动 sysctl --system 安装containerd # 参考https://github.com/containerd/containerd/blob/main/docs/getting-started.md # 版本保持一致 1.7.2 wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz tar Cxzvf /usr/local containerd-1.</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,32 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>juicefs on Qin的自习室</title>
+    <title>Juicefs on Qin的自习室</title>
     <link>https://op-y.github.io/tags/juicefs/</link>
-    <description>Recent content in juicefs on Qin的自习室</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Juicefs on Qin的自习室</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Jan 2024 21:26:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/juicefs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Jan 2024 21:26:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/tags/juicefs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>kubernetes存储实战: 使用JuiceFS</title>
       <link>https://op-y.github.io/juicefs-in-kubernetes/</link>
       <pubDate>Thu, 11 Jan 2024 21:26:00 +0800</pubDate>
-      
       <guid>https://op-y.github.io/juicefs-in-kubernetes/</guid>
-      <description>目标 在Kubernetes的使用过程中，有两个主题是无法回避的：网络与存储。经过早期版本的各种尝试，目前Kubernetes 提供了 CNI 与 CSI 以开放接口的形式对接任何第三方厂商开发的网络插件和存储插件。
-本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。
-准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。
-安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。
- 客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据  具体可以参考官方技术架构说明
-安装Redis Redis的安装比较简单，这里不再赘述。
-准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！
- 阿里云OSS免费试用   完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。
-过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。
-如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。
-本地安装JuiceFS 参考官方文档
- 安装JuiceFS客户端 分布式模式  在一台云服务器上下载JuiceFS客户端
-JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&amp;quot;&#39; -f 4 | tr -d &#39;v&#39;) wget &amp;quot;https://github.</description>
+      <description>目标 在Kubernetes的使用过程中，有两个主题是无法回避的：网络与存储。经过早期版本的各种尝试，目前Kubernetes 提供了 CNI 与 CSI 以开放接口的形式对接任何第三方厂商开发的网络插件和存储插件。&#xA;本次实践的目标是搭建一个 JuiceFS 文件系统，并在 Kubernetes 集群中以动态配置形式使用 JuiceFS 持久数据卷。&#xA;准备环境 本次实践直接使用上一次实践搭建的高可用Kubernetes集群。&#xA;安装JuiceFS Juicefs 的设计理念很前沿（应该说是我很久没关注过存储这个主题了）。大致上JuiceFS分为了客户端、Meta存储、数据存储。&#xA;客户端用于文件系统相关操作 Meta存储用于保存文件系统和文件的元信息 数据存储按照 Chunk、Slice、Block的粒度存储文件数据 具体可以参考官方技术架构说明&#xA;安装Redis Redis的安装比较简单，这里不再赘述。&#xA;准备对象存储 对象存储（Object Storage）服务有很多种可选，云上的 AWS S3、GCS、Azure Blob、阿里云OSS等，也可以使用自己搭建的MinIO、Ceph存储。为了降低操作复杂度，这里直接使用阿里云OSS，特别是如果是第一次开通OSS服务，可以申请免费试用，真香！&#xA;阿里云OSS免费试用 完成申请后，阿里云会给你的账号发放一个试用的资源包。之后在OSS控制台上按照使用说明，创建好Bucket，创建RAM用户账号，并对账号进行OSS相关操作权限进行授权。&#xA;过程中注意要记录好账号的 AccessKey ID 与 AccessKey Secret，在后续操作中要使用。&#xA;如果对对象存储服务不熟悉，在继续后续的操作之前，可以尝试通过Open API和SDK操作一下OSS服务，熟悉一下对象存储服务。&#xA;本地安装JuiceFS 参考官方文档&#xA;安装JuiceFS客户端 分布式模式 在一台云服务器上下载JuiceFS客户端&#xA;JFS_LATEST_TAG=$(curl -s https://api.github.com/repos/juicedata/juicefs/releases/latest | grep &#39;tag_name&#39; | cut -d &#39;&amp;quot;&#39; -f 4 | tr -d &#39;v&#39;) wget &amp;quot;https://github.com/juicedata/juicefs/releases/download/v${JFS_LATEST_TAG}/juicefs-${JFS_LATEST_TAG}-linux-amd64.tar.gz tar -zxvf juicefs-1.1.1-linux-amd64.tar.gz install juicefs /usr/local/bin/ # 只有这一个二进制文件 创建文件系统</description>
     </item>
-    
   </channel>
 </rss>

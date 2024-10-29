@@ -4,206 +4,170 @@
     <title>Tags on Qin的自习室</title>
     <link>https://op-y.github.io/tags/</link>
     <description>Recent content in Tags on Qin的自习室</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Feb 2024 20:00:00 +0800</lastBuildDate><atom:link href="https://op-y.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Oct 2024 15:00:00 +0800</lastBuildDate>
+    <atom:link href="https://op-y.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>summary</title>
+      <title>Golang</title>
+      <link>https://op-y.github.io/tags/golang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://op-y.github.io/tags/golang/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Summary</title>
       <link>https://op-y.github.io/tags/summary/</link>
-      <pubDate>Fri, 09 Feb 2024 20:00:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/summary/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>juicefs</title>
+      <title>Juicefs</title>
       <link>https://op-y.github.io/tags/juicefs/</link>
-      <pubDate>Thu, 11 Jan 2024 21:26:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/juicefs/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>kubernetes</title>
+      <title>Kubernetes</title>
       <link>https://op-y.github.io/tags/kubernetes/</link>
-      <pubDate>Thu, 11 Jan 2024 21:26:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/kubernetes/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>storage</title>
+      <title>Storage</title>
       <link>https://op-y.github.io/tags/storage/</link>
-      <pubDate>Thu, 11 Jan 2024 21:26:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/storage/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>kubeadm</title>
+      <title>Kubeadm</title>
       <link>https://op-y.github.io/tags/kubeadm/</link>
-      <pubDate>Sun, 07 Jan 2024 20:30:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/kubeadm/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>cryptography</title>
+      <title>Cryptography</title>
       <link>https://op-y.github.io/tags/cryptography/</link>
-      <pubDate>Tue, 12 Sep 2023 00:23:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/cryptography/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>https</title>
+      <title>Https</title>
       <link>https://op-y.github.io/tags/https/</link>
-      <pubDate>Tue, 12 Sep 2023 00:23:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/https/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>CD</title>
       <link>https://op-y.github.io/tags/cd/</link>
-      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/cd/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>CI</title>
       <link>https://op-y.github.io/tags/ci/</link>
-      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/ci/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>docker</title>
+      <title>Docker</title>
       <link>https://op-y.github.io/tags/docker/</link>
-      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/docker/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Jenkins</title>
       <link>https://op-y.github.io/tags/jenkins/</link>
-      <pubDate>Fri, 08 Sep 2023 23:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/jenkins/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Traefik</title>
       <link>https://op-y.github.io/tags/traefik/</link>
-      <pubDate>Thu, 07 Sep 2023 11:07:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/traefik/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>monitoring</title>
+      <title>Monitoring</title>
       <link>https://op-y.github.io/tags/monitoring/</link>
-      <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/monitoring/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>open-falcon</title>
+      <title>Open-Falcon</title>
       <link>https://op-y.github.io/tags/open-falcon/</link>
-      <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/open-falcon/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>prometheus</title>
+      <title>Prometheus</title>
       <link>https://op-y.github.io/tags/prometheus/</link>
-      <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/prometheus/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>victoria-metrics</title>
+      <title>Victoria-Metrics</title>
       <link>https://op-y.github.io/tags/victoria-metrics/</link>
-      <pubDate>Wed, 06 Sep 2023 15:21:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/victoria-metrics/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>kong</title>
+      <title>Kong</title>
       <link>https://op-y.github.io/tags/kong/</link>
-      <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/kong/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>lua</title>
+      <title>Lua</title>
       <link>https://op-y.github.io/tags/lua/</link>
-      <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/lua/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>nginx</title>
+      <title>Nginx</title>
       <link>https://op-y.github.io/tags/nginx/</link>
-      <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/nginx/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>openresty</title>
+      <title>Openresty</title>
       <link>https://op-y.github.io/tags/openresty/</link>
-      <pubDate>Tue, 05 Sep 2023 22:52:00 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/openresty/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>coffee</title>
+      <title>Coffee</title>
       <link>https://op-y.github.io/tags/coffee/</link>
-      <pubDate>Sun, 01 Aug 2021 23:46:45 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/coffee/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>howto</title>
+      <title>Howto</title>
       <link>https://op-y.github.io/tags/howto/</link>
-      <pubDate>Wed, 13 Jan 2021 16:40:44 +0800</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://op-y.github.io/tags/howto/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

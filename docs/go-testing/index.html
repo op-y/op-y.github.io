@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="generator" content="Hugo 0.128.0">
+  <link rel="canonical" href="https://op-y.github.io/go-testing/" />
+
+  
+    
+    <meta name="description" content="近期接手新的 Go 项目，阅读代码的过程中，遇到了一些涉及测试的问题，所以重温了 Go 测试相关的一些内容，同时还查阅了一些资料，在这里一并记录，分享给或许面临同样问题的你。对于 Go 开发的老司机们，也是一个知识回顾的好机会。
+问题具体背景是，当前我们正在推广云环境办公，所以研发同学都是用的华为云桌面，OS 是 Windows 10，为了环境兼容性和符合之前的研发习惯，团队总结出一套 Windows &#43; WSL &#43; VSCode/Goland &#43; WSL Plugin 的开发方式，多数情况下这套环境是能正常工作的，但是在需要使用 delve 进行 Go 代码调试时，IDE 就会报错。后经查证（在 VSCode 上）是 delve 出于安全考虑禁止调试服务的 client 端 和 server 端属于不同用户，如果要解决这个问题，一是升级WSL 2，一是尝试直接启动一个 VMWare 之类的虚拟机做开发。但是二者都依赖于 Windows 10 能开启虚拟化功能。但是华为云桌面并不能支持二次虚拟化，直接否定了这两个解决方案。
+剩下的方法是在开发过程中尽量使用 Debug Log 和 Unit Test 进行功能的验证和测试，至少组内的同学是这么跟我说的。这也是我在项目中发现了大量的 _test.go 文件和测试用例的原因（写测试是个好习惯！）。就当我暗自庆幸前人们留下这么多测试代码时，却又发现测试代码中存在各种异常：循环依赖、测试用例中依赖功能直接报错、测试代码能跑通但是依赖功能不能正常返回数据导致结果和期望不一致…如此种种，不一而足。
+为了解决这些算不上棘手问题，我开始了回忆、查阅、重温、搜索、学习的过程。下图是我整理出的内容大纲，由于不是专业科普测试知识，这里不会按照惯例讲单元测试、集成测试、系统测试、UI测试、验收测试…，我们主要关注的是 Go 开发中经常用的一些内容，所以内容主要集中于 Unit Test 和 Mock 两点。
+本文内容大纲 示例代码 文中示例代码可以在 这里 获取。
+Unit Test testing 包 对于 Go 开发者来说，单元测试不会陌生，几乎所有入门资料都会介绍 Go 官方提供了一个 testing 包，使用这个包能非常方便的在自己的代码中编写单元测试代码并通过 go test 命令运行单元测试（当然也可以使用 IDE 来运行，本质上也是执行 go test）。">
+  
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://op-y.github.io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://op-y.github.io/favicon-32x32.png"> 
+  <link rel="icon" type="image/png" sizes="16x16" href="https://op-y.github.io/favicon-16x16.png"> 
+  <link rel="manifest" href="https://op-y.github.io/site.webmanifest"> 
+  <link rel="mask-icon" href="https://op-y.github.io/safari-pinned-tab.svg" color="#000000"> 
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    body {
+      visibility: hidden;
+      opacity: 0;
+    }
+  </style>
+
+  <style id="darkTheme">
+    .intro-and-nav,
+    .main-and-footer {
+      filter: invert(100%);
+    }
+
+    * {
+      background-color: inherit
+    }
+
+    img:not([src*=".svg"]),
+    .colors,
+    iframe,
+    .demo-container {
+      filter: invert(100%);
+    }
+  </style>
+
+  <link rel="stylesheet" href="/css/prism.css" media="none" onload="this.media='all';">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+  
+
+  
+  
+  <title>Go开发中的测试 | Qin的自习室</title>
+</head>
+
+  <body>
+    <a href="#main">skip to content</a>
+    <noscript>
+  <style>
+    body {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</noscript>
+
+    <svg style="display: none">
+  <symbol id="bookmark" viewBox="0 0 40 50">
+   <g transform="translate(2266 3206.2)">
+    <path style="stroke:currentColor;stroke-width:3.2637;fill:none" d="m-2262.2-3203.4-.2331 42.195 16.319-16.318 16.318 16.318.2331-42.428z"/>
+   </g>
+  </symbol>
+
+  <symbol id="w3c" viewBox="0 0 127.09899 67.763">
+   <text font-size="83" style="font-size:83px;font-family:Trebuchet;letter-spacing:-12;fill-opacity:0" letter-spacing="-12" y="67.609352" x="-26.782778">W3C</text>
+   <text font-size="83" style="font-size:83px;font-weight:bold;font-family:Trebuchet;fill-opacity:0" y="67.609352" x="153.21722" font-weight="bold">SVG</text>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m33.695.377 12.062 41.016 12.067-41.016h8.731l-19.968 67.386h-.831l-12.48-41.759-12.479 41.759h-.832l-19.965-67.386h8.736l12.061 41.016 8.154-27.618-3.993-13.397h8.737z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m91.355 46.132c0 6.104-1.624 11.234-4.862 15.394-3.248 4.158-7.45 6.237-12.607 6.237-3.882 0-7.263-1.238-10.148-3.702-2.885-2.47-5.02-5.812-6.406-10.022l6.82-2.829c1.001 2.552 2.317 4.562 3.953 6.028 1.636 1.469 3.56 2.207 5.781 2.207 2.329 0 4.3-1.306 5.909-3.911 1.609-2.606 2.411-5.738 2.411-9.401 0-4.049-.861-7.179-2.582-9.399-1.995-2.604-5.129-3.912-9.397-3.912h-3.327v-3.991l11.646-20.133h-14.062l-3.911 6.655h-2.493v-14.976h32.441v4.075l-12.31 21.217c4.324 1.385 7.596 3.911 9.815 7.571 2.22 3.659 3.329 7.953 3.329 12.892z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m125.21 0 1.414 8.6-5.008 9.583s-1.924-4.064-5.117-6.314c-2.693-1.899-4.447-2.309-7.186-1.746-3.527.73-7.516 4.938-9.258 10.13-2.084 6.21-2.104 9.218-2.178 11.978-.115 4.428.58 7.043.58 7.043s-3.04-5.626-3.011-13.866c.018-5.882.947-11.218 3.666-16.479 2.404-4.627 5.954-7.404 9.114-7.728 3.264-.343 5.848 1.229 7.841 2.938 2.089 1.788 4.213 5.698 4.213 5.698l4.94-9.837z"/>
+   <path style="fill:currentColor;image-rendering:optimizeQuality;shape-rendering:geometricPrecision" d="m125.82 48.674s-2.208 3.957-3.589 5.48c-1.379 1.524-3.849 4.209-6.896 5.555-3.049 1.343-4.646 1.598-7.661 1.306-3.01-.29-5.807-2.032-6.786-2.764-.979-.722-3.486-2.864-4.897-4.854-1.42-2-3.634-5.995-3.634-5.995s1.233 4.001 2.007 5.699c.442.977 1.81 3.965 3.749 6.572 1.805 2.425 5.315 6.604 10.652 7.545 5.336.945 9.002-1.449 9.907-2.031.907-.578 2.819-2.178 4.032-3.475 1.264-1.351 2.459-3.079 3.116-4.108.487-.758 1.276-2.286 1.276-2.286l-1.276-6.644z"/>
+  </symbol>
+
+  <symbol id="tag" viewBox="0 0 177.16535 177.16535">
+    <g transform="translate(0 -875.2)">
+     <path style="fill-rule:evenodd;stroke-width:0;fill:currentColor" d="m159.9 894.3-68.79 8.5872-75.42 77.336 61.931 60.397 75.429-76.565 6.8495-69.755zm-31.412 31.835a10.813 10.813 0 0 1 1.8443 2.247 10.813 10.813 0 0 1 -3.5174 14.872l-.0445.0275a10.813 10.813 0 0 1 -14.86 -3.5714 10.813 10.813 0 0 1 3.5563 -14.863 10.813 10.813 0 0 1 13.022 1.2884z"/>
+    </g>
+  </symbol>
+
+  <symbol id="balloon" viewBox="0 0 141.73228 177.16535">
+   <g transform="translate(0 -875.2)">
+    <g>
+     <path style="fill:currentColor" d="m68.156 882.83-.88753 1.4269c-4.9564 7.9666-6.3764 17.321-5.6731 37.378.36584 10.437 1.1246 23.51 1.6874 29.062.38895 3.8372 3.8278 32.454 4.6105 38.459 4.6694-.24176 9.2946.2879 14.377 1.481 1.2359-3.2937 5.2496-13.088 8.886-21.623 6.249-14.668 8.4128-21.264 10.253-31.252 1.2464-6.7626 1.6341-12.156 1.4204-19.764-.36325-12.93-2.1234-19.487-6.9377-25.843-2.0833-2.7507-6.9865-7.6112-7.9127-7.8436-.79716-.20019-6.6946-1.0922-6.7755-1.0248-.02213.0182-5.0006-.41858-7.5248-.22808l-2.149-.22808h-3.3738z"/>
+     <path style="fill:currentColor" d="m61.915 883.28-3.2484.4497c-1.7863.24724-3.5182.53481-3.8494.63994-2.4751.33811-4.7267.86957-6.7777 1.5696-.28598 0-1.0254.20146-2.3695.58589-5.0418 1.4418-6.6374 2.2604-8.2567 4.2364-6.281 7.6657-11.457 18.43-12.932 26.891-1.4667 8.4111.71353 22.583 5.0764 32.996 3.8064 9.0852 13.569 25.149 22.801 37.517 1.3741 1.841 2.1708 2.9286 2.4712 3.5792 3.5437-1.1699 6.8496-1.9336 10.082-2.3263-1.3569-5.7831-4.6968-21.86-6.8361-33.002-.92884-4.8368-2.4692-14.322-3.2452-19.991-.68557-5.0083-.77707-6.9534-.74159-15.791.04316-10.803.41822-16.162 1.5026-21.503 1.4593-5.9026 3.3494-11.077 6.3247-15.852z"/>
+     <path style="fill:currentColor" d="m94.499 885.78c-.10214-.0109-.13691 0-.0907.0409.16033.13489 1.329 1.0675 2.5976 2.0723 6.7003 5.307 11.273 14.568 12.658 25.638.52519 4.1949.24765 14.361-.5059 18.523-2.4775 13.684-9.7807 32.345-20.944 53.519l-3.0559 5.7971c2.8082.76579 5.7915 1.727 8.9926 2.8441 11.562-11.691 18.349-19.678 24.129-28.394 7.8992-11.913 11.132-20.234 12.24-31.518.98442-10.02-1.5579-20.876-6.7799-28.959-.2758-.4269-.57803-.86856-.89617-1.3166-3.247-6.13-9.752-12.053-21.264-16.131-2.3687-.86369-6.3657-2.0433-7.0802-2.1166z"/>
+     <path style="fill:currentColor" d="m32.52 892.22c-.20090-.13016-1.4606.81389-3.9132 2.7457-11.486 9.0476-17.632 24.186-16.078 39.61.79699 7.9138 2.4066 13.505 5.9184 20.562 5.8577 11.77 14.749 23.219 30.087 38.74.05838.059.12188.1244.18052.1838 1.3166-.5556 2.5965-1.0618 3.8429-1.5199-.66408-.32448-1.4608-1.3297-3.8116-4.4602-5.0951-6.785-8.7512-11.962-13.051-18.486-5.1379-7.7948-5.0097-7.5894-8.0586-13.054-6.2097-11.13-8.2674-17.725-8.6014-27.563-.21552-6.3494.13041-9.2733 1.775-14.987 2.1832-7.5849 3.9273-10.986 9.2693-18.07 1.7839-2.3656 2.6418-3.57 2.4409-3.7003z"/>
+     <path style="fill:currentColor" d="m69.133 992.37c-6.2405.0309-12.635.76718-19.554 2.5706 4.6956 4.7759 9.935 10.258 12.05 12.625l4.1272 4.6202h11.493l3.964-4.4516c2.0962-2.3541 7.4804-7.9845 12.201-12.768-8.378-1.4975-16.207-2.6353-24.281-2.5955z"/>
+     <rect style="stroke-width:0;fill:currentColor" ry="2.0328" height="27.746" width="22.766" y="1017.7" x="60.201"/>
+    </g>
+   </g>
+  </symbol>
+
+  <symbol id="info" viewBox="0 0 41.667 41.667">
+   <g transform="translate(-37.035 -1004.6)">
+    <path style="stroke-linejoin:round;stroke:currentColor;stroke-linecap:round;stroke-width:3.728;fill:none" d="m76.25 1030.2a18.968 18.968 0 0 1 -23.037 13.709 18.968 18.968 0 0 1 -13.738 -23.019 18.968 18.968 0 0 1 23.001 -13.768 18.968 18.968 0 0 1 13.798 22.984"/>
+    <g transform="matrix(1.1146 0 0 1.1146 -26.276 -124.92)">
+     <path style="stroke:currentColor;stroke-linecap:round;stroke-width:3.728;fill:none" d="m75.491 1039.5v-8.7472"/>
+     <path style="stroke-width:0;fill:currentColor" transform="scale(-1)" d="m-73.193-1024.5a2.3719 2.3719 0 0 1 -2.8807 1.7142 2.3719 2.3719 0 0 1 -1.718 -2.8785 2.3719 2.3719 0 0 1 2.8763 -1.7217 2.3719 2.3719 0 0 1 1.7254 2.8741"/>
+    </g>
+   </g>
+  </symbol>
+
+  <symbol id="warning" viewBox="0 0 48.430474 41.646302">
+    <g transform="translate(-1.1273 -1010.2)">
+     <path style="stroke-linejoin:round;stroke:currentColor;stroke-linecap:round;stroke-width:4.151;fill:none" d="m25.343 1012.3-22.14 37.496h44.28z"/>
+     <path style="stroke:currentColor;stroke-linecap:round;stroke-width:4.1512;fill:none" d="m25.54 1027.7v8.7472"/>
+     <path style="stroke-width:0;fill:currentColor" d="m27.839 1042.8a2.3719 2.3719 0 0 1 -2.8807 1.7143 2.3719 2.3719 0 0 1 -1.718 -2.8785 2.3719 2.3719 0 0 1 2.8763 -1.7217 2.3719 2.3719 0 0 1 1.7254 2.8741"/>
+    </g>
+  </symbol>
+
+  <symbol id="menu" viewBox="0 0 50 50">
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="0" x="0"/>
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="20" x="0"/>
+     <rect style="stroke-width:0;fill:currentColor" height="10" width="50" y="40" x="0"/>
+   </symbol>
+
+   <symbol id="link" viewBox="0 0 50 50">
+    <g transform="translate(0 -1002.4)">
+     <g transform="matrix(.095670 0 0 .095670 2.3233 1004.9)">
+      <g>
+       <path style="stroke-width:0;fill:currentColor" d="m452.84 192.9-128.65 128.65c-35.535 35.54-93.108 35.54-128.65 0l-42.881-42.886 42.881-42.876 42.884 42.876c11.845 11.822 31.064 11.846 42.886 0l128.64-128.64c11.816-11.831 11.816-31.066 0-42.9l-42.881-42.881c-11.822-11.814-31.064-11.814-42.887 0l-45.928 45.936c-21.292-12.531-45.491-17.905-69.449-16.291l72.501-72.526c35.535-35.521 93.136-35.521 128.64 0l42.886 42.881c35.535 35.523 35.535 93.141-.001 128.66zm-254.28 168.51-45.903 45.9c-11.845 11.846-31.064 11.817-42.881 0l-42.884-42.881c-11.845-11.821-11.845-31.041 0-42.886l128.65-128.65c11.819-11.814 31.069-11.814 42.884 0l42.886 42.886 42.876-42.886-42.876-42.881c-35.54-35.521-93.113-35.521-128.65 0l-128.65 128.64c-35.538 35.545-35.538 93.146 0 128.65l42.883 42.882c35.51 35.54 93.11 35.54 128.65 0l72.496-72.499c-23.956 1.597-48.092-3.784-69.474-16.283z"/>
+      </g>
+     </g>
+    </g>
+  </symbol>
+
+  <symbol id="doc" viewBox="0 0 35 45">
+   <g transform="translate(-147.53 -539.83)">
+    <path style="stroke:currentColor;stroke-width:2.4501;fill:none" d="m149.38 542.67v39.194h31.354v-39.194z"/>
+    <g style="stroke-width:25" transform="matrix(.098003 0 0 .098003 133.69 525.96)">
+     <path d="m220 252.36h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+     <path style="stroke:currentColor;stroke-width:25;fill:none" d="m220 409.95h200"/>
+     <path d="m220 488.74h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+     <path d="m220 331.15h200" style="stroke:currentColor;stroke-width:25;fill:none"/>
+    </g>
+   </g>
+ </symbol>
+
+ <symbol id="tick" viewBox="0 0 177.16535 177.16535">
+  <g transform="translate(0 -875.2)">
+   <rect style="stroke-width:0;fill:currentColor" transform="rotate(30)" height="155" width="40" y="702.99" x="556.82"/>
+   <rect style="stroke-width:0;fill:currentColor" transform="rotate(30)" height="40" width="90.404" y="817.99" x="506.42"/>
+  </g>
+ </symbol>
+</svg>
+
+    <div class="wrapper">
+      <header class="intro-and-nav" role="banner">
+  <div>
+    <div class="intro">
+      <a
+        class="logo"
+        href="https://op-y.github.io/"
+        aria-label="Qin的自习室 home page"
+      >
+        
+          <img 
+            src="/images/logo.svg" 
+            alt="Logo"
+          >
+        
+      </a>
+      <p class="library-desc">
+         Qin的自习室：记录学习点点滴滴的地方。 
+      </p>
+    </div>
+    <nav id="patterns-nav" class="patterns" role="navigation">
+  <h2 class="vh">Main navigation</h2>
+  <button id="menu-button" aria-expanded="false">
+    <svg viewBox="0 0 50 50" aria-hidden="true" focusable="false">
+      <use href="#menu"></use>
+    </svg>
+    Menu
+  </button>
+  
+  <ul id="patterns-list">
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Qin</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/post/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">分享文章</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/tags/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">Tags</span>
+      </a>
+    </li>
+  
+    <li class="pattern">
+      
+      
+      
+      
+      <a href="/about/" >
+        <svg class="bookmark-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 50">
+          <use href="#bookmark"></use>
+        </svg>
+        <span class="text">关于自习室</span>
+      </a>
+    </li>
+  
+  </ul>
+</nav>
+    
+  </div>
+</header>
+
+      <div class="main-and-footer">
+        <div>
+          
+  <main id="main">
+    <h1>
+      <svg class="bookmark-icon" aria-hidden="true" viewBox="0 0 40 50" focusable="false">
+        <use href="#bookmark"></use>
+      </svg>
+      Go开发中的测试
+    </h1>
+
+    <div class="date">
+      
+      
+      <strong>Publish date: </strong>Oct 27, 2024
+      
+        
+      
+    </div>
+
+    
+      <div class="tags">
+        <strong>Tags: </strong>
+        <ul aria-label="tags">
+          
+            <li>
+              <svg class="tag-icon" aria-hidden="true" viewBox="0 0 177.16535 177.16535" focusable="false">
+                <use href="#tag"></use>
+              </svg>
+              
+              <a href="/tags/golang/">Golang</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+  <nav class="toc" aria-labelledby="toc-heading">
+    <strong id="toc-heading">Table of Contents</strong>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#示例代码">示例代码</a></li>
+    <li><a href="#unit-test">Unit Test</a>
+      <ul>
+        <li><a href="#testing-包">testing 包</a>
+          <ul>
+            <li><a href="#基础测试">基础测试</a></li>
+            <li><a href="#包外测试">包外测试</a></li>
+            <li><a href="#测试子任务">测试子任务</a></li>
+            <li><a href="#表驱动法">表驱动法</a></li>
+            <li><a href="#测试钩子">测试钩子</a></li>
+            <li><a href="#基准测试与模糊测试">基准测试与模糊测试</a></li>
+            <li><a href="#测试覆盖率">测试覆盖率</a></li>
+          </ul>
+        </li>
+        <li><a href="#testify-工具">testify 工具</a></li>
+      </ul>
+    </li>
+    <li><a href="#mock">Mock</a>
+      <ul>
+        <li><a href="#什么是mock">什么是mock</a>
+          <ul>
+            <li><a href="#go-mock">go-mock</a></li>
+            <li><a href="#第三方-mock-工具">第三方 Mock 工具</a></li>
+          </ul>
+        </li>
+        <li><a href="#mock-中间件">Mock 中间件</a></li>
+      </ul>
+    </li>
+    <li><a href="#后记">后记</a></li>
+  </ul>
+</nav>
+  </nav>
+
+
+
+    <p>近期接手新的 Go 项目，阅读代码的过程中，遇到了一些涉及测试的问题，所以重温了 Go 测试相关的一些内容，同时还查阅了一些资料，在这里一并记录，分享给或许面临同样问题的你。对于 Go 开发的老司机们，也是一个知识回顾的好机会。</p>
+<p>问题具体背景是，当前我们正在推广云环境办公，所以研发同学都是用的华为云桌面，OS 是 Windows 10，为了环境兼容性和符合之前的研发习惯，团队总结出一套 Windows + WSL + VSCode/Goland + WSL Plugin 的开发方式，多数情况下这套环境是能正常工作的，但是在需要使用 delve 进行 Go 代码调试时，IDE 就会报错。后经查证（在 VSCode 上）是 delve 出于安全考虑禁止调试服务的 client 端 和 server 端属于不同用户，如果要解决这个问题，一是升级WSL 2，一是尝试直接启动一个 VMWare 之类的虚拟机做开发。但是二者都依赖于 Windows 10 能开启虚拟化功能。但是华为云桌面并不能支持二次虚拟化，直接否定了这两个解决方案。</p>
+<p>剩下的方法是在开发过程中尽量使用 Debug Log 和 Unit Test 进行功能的验证和测试，至少组内的同学是这么跟我说的。这也是我在项目中发现了大量的 _test.go 文件和测试用例的原因（写测试是个好习惯！）。就当我暗自庆幸前人们留下这么多测试代码时，却又发现测试代码中存在各种异常：循环依赖、测试用例中依赖功能直接报错、测试代码能跑通但是依赖功能不能正常返回数据导致结果和期望不一致&hellip;如此种种，不一而足。</p>
+<p>为了解决这些算不上棘手问题，我开始了回忆、查阅、重温、搜索、学习的过程。下图是我整理出的内容大纲，由于不是专业科普测试知识，这里不会按照惯例讲单元测试、集成测试、系统测试、UI测试、验收测试&hellip;，我们主要关注的是 Go 开发中经常用的一些内容，所以内容主要集中于 Unit Test 和 Mock 两点。</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-6bd274021bd81f33d71c1cf80566722a">
+  <a href="/go-testing/outline.jpg" class="img-link">
+    <img src="/go-testing/outline_hu1cf7dad3403de02e1b907d6a78846e8d_57972_1080x0_resize_q99_box.jpg">
+  </a>
+  <figcaption id="caption-6bd274021bd81f33d71c1cf80566722a">
+    本文内容大纲
+  </figcaption>
+</figure>
+
+<h2 id="示例代码">示例代码</h2>
+<p>文中示例代码可以在 <a href="https://github.com/op-y/mytest">这里</a> 获取。</p>
+<h2 id="unit-test">Unit Test</h2>
+<h3 id="testing-包">testing 包</h3>
+<p>对于 Go 开发者来说，单元测试不会陌生，几乎所有入门资料都会介绍 Go 官方提供了一个 <a href="https://pkg.go.dev/testing">testing</a> 包，使用这个包能非常方便的在自己的代码中编写单元测试代码并通过 <strong>go test</strong> 命令运行单元测试（当然也可以使用 IDE 来运行，本质上也是执行 go test）。</p>
+<h4 id="基础测试">基础测试</h4>
+<p>如官方文档描述，编写一个基本的单元测试非常简单。在任何一个包内，创建一个如 <strong>xxx_test.go</strong> 这样以 _test.go 结尾的文件，文件中 <strong>import testing</strong> 包，然后在文件中编写 *<em>func TestXXX(t <em>testing.T) {&hellip;}</em></em> 这样，名称以 Test 开头接收一个 *testing.T 对象的参数，且没有返回值的函数。这样 go test 就能识别该文件是测试代码文件（正常编译时会忽略该文件），文件中 TestXXX 函数时测试函数。</p>
+<p>以示例仓库中代码为例</p>
+
+
+
+
+<div class="code-annotated "><code>
+package math
+
+import (
+	&#34;github.com/op-y/mytest/function&#34;
+)
+
+func Add(a, b int) int {
+	return a + b
+}
+
+func Sub(a, b int) int {
+	return a - b
+}
+
+func Mul(a, b int) int {
+	return a * b
+}
+
+func Div(a, b int) int {
+	return a / b
+}
+
+func Rand10() int {
+	// 返回10以内的整数
+	return function.RandInt(10)
+}
+</code></div>
+
+<p>math.go 中是一些简单的业务代码，一眼就能看出这里就是简单的整数加减乘除，暂时先忽略这里引入的 function 包，为了测试Add函数的功能，我在 math 包中创建一个 math_test.go 文件并编写相应TestAdd函数如下。</p>
+
+
+
+
+<div class="code-annotated "><code>
+package math
+
+import (
+	&#34;testing&#34;
+)
+
+func TestAdd(t *testing.T) {
+	a, b, expected := 1, 2, 3
+	result := Add(a, b)
+	if result != expected {
+		t.Fatalf(&#34;%d add %d eq %d, but expect %d&#34;, a, b, result, expected)
+	}
+	t.Log(&#34;test pass&#34;)
+}
+</code></div>
+
+<p>这样一个符合 go test 要求的测试用例就写好了。然后进入math目录，运行相应的命令执行该测试用例。</p>
+
+
+<pre class="cmd">
+  
+  <code>cd math</code>
+  
+  <code>go test -v -count=1 -run=^TestAdd$ ./.</code>
+  
+</pre>
+
+<aside aria-label="note" class="note">
+  <div>
+    <svg class="sign" aria-hidden="true" viewBox="0 0 41.667306 41.66729" focusable="false">
+      <use href="#info"></use>
+    </svg>
+    想要了解更多 go test 选项和参数请参考 Go 语言官方文档。
+  </div>
+</aside>
+
+<p>测试结果输出如下。可以看出这个测试用例顺利通过了。</p>
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestAdd
+    math_test.go:13: test pass
+--- PASS: TestAdd (0.00s)
+PASS
+ok      github.com/op-y/mytest/math     0.671s
+</code></div>
+
+<p>现在一个最基础的单元测试就完成了。继续往下，是我在项目中遇到的第一个问题。</p>
+<h4 id="包外测试">包外测试</h4>
+<p>这个问题的报错非常简单粗暴: <strong>import cycle not allowed in test</strong> ！</p>
+<p>顾名思义，代码中出现了循环依赖。在项目中这样的报错还不少😂。为了方便解释，这里模拟了一下这个场景。我先创建一个业务包名为 function，在包中创建一个 function.go 文件，里边有 RandInt 和 Fibonacci 两个函数，分别用于生成随机数和获取<strong>斐波那切数列</strong>中的第 N 项，然后再创建一个 function_test.go 测试文件，在文件中编写一个 TestFibonacci 测试函数。</p>
+
+
+
+
+<div class="code-annotated "><code>
+package function
+
+import (
+	&#34;math/rand&#34;
+)
+
+func RandInt(upper int) int {
+	// 返回upper以内随机整数
+	return rand.Intn(upper)
+}
+
+func Fibonacci(num int) int {
+	if num == 0 || num == 1 {
+		return 1
+	}
+	return Fibonacci(num-1) + Fibonacci(num-2)
+}
+</code></div>
+
+
+
+
+
+<div class="code-annotated "><code>
+package function
+
+import (
+	&#34;testing&#34;
+
+	&#34;github.com/op-y/mytest/math&#34;
+)
+
+func TestFibonacci(t *testing.T) {
+	fibs := []int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55}
+	idx := math.Rand10()
+	expected := fibs[idx]
+	result := Fibonacci(idx)
+	if result != expected {
+		t.Fatalf(&#34;the %d fibonacci number is %d, but expect %d&#34;, idx, result, expected)
+	}
+	t.Logf(&#34;the %d fibonacci number is %d, test pass&#34;, idx, result)
+}
+</code></div>
+
+<p>在这个简单的场景下，能很直观的看出问题所在。测试函数 TestFibonacci 调用了 math.Rand10 随机生成 10 以内的整数，这非常正常（一个上层功能依赖一个底层的功能），然后回头看 math.go 文件中 Rand10，上一节被我们刻意忽略的对 function 的导入产生影响了，math 中又依赖了 function.RandInt（当然，这里是我有意为之的，项目代码中就是这种类似情况），这样在 math 和 function 之间就产生了循环依赖，而且这种循环依赖是因为测试代码产生的。</p>
+<p>那如何解决这种问题呢？其实 Go 官方已经提供了一种方法：包外测试。Go 允许开发者在一个包下的 _test.go 文件中，定义个一个同名的以_test结尾的包用于测试，执行测试时 go test 会认为该包是一个外部包，循环依赖的问题迎刃而解。我们将 function_test.go 改写如下。</p>
+
+
+
+
+<div class="code-annotated "><code>
+package function_test
+
+import (
+	&#34;testing&#34;
+
+	&#34;github.com/op-y/mytest/function&#34;
+	&#34;github.com/op-y/mytest/math&#34;
+)
+
+func TestFibonacci(t *testing.T) {
+	fibs := []int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55}
+	idx := math.Rand10()
+	expected := fibs[idx]
+	result := function.Fibonacci(idx)
+	if result != expected {
+		t.Fatalf(&#34;the %d fibonacci number is %d, but expect %d&#34;, idx, result, expected)
+	}
+	t.Logf(&#34;the %d fibonacci number is %d, test pass&#34;, idx, result)
+}
+</code></div>
+
+<p>此时已经可以正常运行测试。</p>
+
+
+<pre class="cmd">
+  
+  <code>go test -v -count=1 -run=^TestFibonacci$ ./.</code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestFibonacci
+    function_test.go:18: the 3 fibonacci number is 3, test pass
+--- PASS: TestFibonacci (0.00s)
+PASS
+ok      github.com/op-y/mytest/function 0.538s
+</code></div>
+
+<p>这里要注意的是，由于 function_test 已经是一个外部包，所以测试代码中不能直接调用 Fibonacci 函数了，需要 import function 然后以 function.Fibonacci 方式调用。</p>
+<p>联想能力强的朋友会注意到一个问题，作为一个外部包，那原来 function 包中定义的一些 <strong>非导出</strong> 变量与函数就无法测试了。确实！一个常见的做法是，再编写一个 _export.go 文件例如 function_export.go ，通过一些中间的函数来获取 function 包中的非导出内容。</p>
+<p>如此，遇到的第一个问题就解决了。</p>
+<p>在项目中，我还看到了很多测试的不同方式。有些虽然没有被充分使用起来，但有总比没有强！继续往下，我做了一些整理和补充。</p>
+<h4 id="测试子任务">测试子任务</h4>
+<p>测试函数 TestXXX 的另一种使用方法是使用方法是通过 testing.T.Run 方法，在一个测试函数中运行多个测试用例。这样做的用途是什么呢？官方示例的注释告诉我们，可将多个测试集中在一个函数中，然后统一执行一些前置和后置动作。</p>
+<p>我们在 math_test.go 增加如下测试函数。</p>
+
+
+
+
+<div class="code-annotated "><code>
+func TestSubtests(t *testing.T) {
+	// setup code
+	a, b := 100, 10
+	t.Run(&#34;Add&#34;, func(t *testing.T) {
+		expected := 110
+		result := Add(a, b)
+		if result != expected {
+			t.Fatalf(&#34;%d add %d eq %d, but expect %d&#34;, a, b, result, expected)
+		}
+		t.Log(&#34;test pass&#34;)
+	})
+	t.Run(&#34;Sub&#34;, func(t *testing.T) {
+		expected := 90
+		result := Sub(a, b)
+		if result != expected {
+			t.Fatalf(&#34;%d sub %d eq %d, but expect %d&#34;, a, b, result, expected)
+		}
+		t.Log(&#34;test pass&#34;)
+	})
+	t.Run(&#34;Mul&#34;, func(t *testing.T) {
+		expected := 1000
+		result := Mul(a, b)
+		if result != expected {
+			t.Fatalf(&#34;%d mul %d eq %d, but expect %d&#34;, a, b, result, expected)
+		}
+		t.Log(&#34;test pass&#34;)
+	})
+	t.Run(&#34;Div&#34;, func(t *testing.T) {
+		expected := 10
+		result := Div(a, b)
+		if result != expected {
+			t.Fatalf(&#34;%d div %d eq %d, but expect %d&#34;, a, b, result, expected)
+		}
+		t.Log(&#34;test pass&#34;)
+	})
+	// tear-down code
+}
+</code></div>
+
+
+
+<pre class="cmd">
+  
+  <code>go test -timeout 30s -run ^TestSubtests$ github.com/op-y/mytest/math -v -count=1</code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestSubtests
+=== RUN   TestSubtests/Add
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/math/math_test.go:25: test pass
+=== RUN   TestSubtests/Sub
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/math/math_test.go:33: test pass
+=== RUN   TestSubtests/Mul
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/math/math_test.go:41: test pass
+=== RUN   TestSubtests/Div
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/math/math_test.go:49: test pass
+--- PASS: TestSubtests (0.00s)
+    --- PASS: TestSubtests/Add (0.00s)
+    --- PASS: TestSubtests/Sub (0.00s)
+    --- PASS: TestSubtests/Mul (0.00s)
+    --- PASS: TestSubtests/Div (0.00s)
+PASS
+ok  	github.com/op-y/mytest/math	0.974s
+</code></div>
+
+<p>可以看到一个测试函数执行了四个测试子任务。</p>
+<h4 id="表驱动法">表驱动法</h4>
+<p>提及一次执行多个测试任务（测试用例），通常针对一个功能，执行多个不同测试用例，更常用的是表驱动法（Table Driven Test）。它是在一个测试中，将多组测试输入参数和期待输出按照表格的形式组织（数据结构上通常是一个对象数组），然后在测试中遍历这组测试数据，执行测试，对比实际输出和期待输出，以验证功能是否符合预期。</p>
+<p>在 math_test.go 中有这么一个测试函数。</p>
+
+
+
+
+<div class="code-annotated "><code>
+
+func TestTableDriven(t *testing.T) {
+	var tests = []struct {
+		a        int
+		b        int
+		expected int
+	}{
+		{1, 2, 3},
+		{2, 3, 5},
+		{3, 5, 8},
+	}
+	for _, tt := range tests {
+		result := Add(tt.a, tt.b)
+		if result != tt.expected {
+			t.Errorf(&#34;Add(%d, %d): got %d, want %d&#34;, tt.a, tt.b, result, tt.expected)
+		}
+	}
+}
+</code></div>
+
+<p>这里就将三组测试用例集中在一个表中，然后在测试过程中遍历这些测试用例并执行。运行效果如下。</p>
+
+
+<pre class="cmd">
+  
+  <code>go test -v -count=1 -run=^TestTableDriven$ ./.</code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestTableDriven
+--- PASS: TestTableDriven (0.00s)
+PASS
+ok      github.com/op-y/mytest/math     0.695s
+</code></div>
+
+<h4 id="测试钩子">测试钩子</h4>
+<p>前面介绍测试子任务时，提到它的一个作用是可以将测试集中，然后统一运行一些前置和后置逻辑。针对这种场景，其实 testing 包中还提供了一个 testing.M 对象和 TestMain 方法。只需要在 _test.go 文件中加入一个 *<em>TestMain(m <em>testing.M)</em></em> 函数，并在函数中调用 m.Run() 方法，go test 在执行单个 TestXXX 方法时的逻辑就会发生变化，它将通过调用 TestMain 函数来执行该 TestXXX。如此一来我们就可以在 m.Run() 执行前后加上自己的处理逻辑了。</p>
+<p>我们在 math_test.go 中追加 TestMain 函数。</p>
+
+
+
+
+<div class="code-annotated "><code>
+func TestMain(m *testing.M) {
+	fmt.Println(&#34;有些场景需要在测试用例运行之前做一些初始化工作如: 读取配置、建立数据库连接...&#34;)
+	m.Run()
+	fmt.Println(&#34;有些场景需要在测试用例运行之后做一些清理工作如: 关闭文件、关闭数据连接...&#34;)
+}
+</code></div>
+
+<p>然后再执行前一个表驱动测试，效果如下。</p>
+
+
+
+
+<div class="code-annotated "><code>
+有些场景需要在测试用例运行之前做一些初始化工作如: 读取配置、建立数据库连接...
+=== RUN   TestTableDriven
+--- PASS: TestTableDriven (0.00s)
+PASS
+有些场景需要在测试用例运行之后做一些清理工作如: 关闭文件、关闭数据连接...
+ok  	github.com/op-y/mytest/math	0.717s
+</code></div>
+
+<h4 id="基准测试与模糊测试">基准测试与模糊测试</h4>
+<p>testing 包还为我们准备了两类测试方法：基准测试和模糊测试。在开发过程中可能使用较少，但是在一些特定场景下用得上。</p>
+<p>基准测试主要用来测试代码的性能，类似基本的单元测试，它使用 testing.B 对象，测试方法以 Benchmark 开头接受一个 *testing.B 入参且无返回值。特别的是执行基准测试需要在 go test 命令中加上 -bench 选项，如果加上 -benchmem 可以测试内存使用的情况，更多选项参考官方文档。</p>
+<p>在 function_test.go 中有一个基准测试的用例。</p>
+
+
+
+
+<div class="code-annotated "><code>
+func BenchmarkFibonacci1h(b *testing.B) {
+	for range b.N {
+		num := 10
+		function.Fibonacci(num)
+	}
+}
+</code></div>
+
+<p>执行效果如下。</p>
+
+
+<pre class="cmd">
+  
+  <code>go test -benchmem -run=^$ -bench ^BenchmarkFibonacci1h$ github.com/op-y/mytest/function -v -count=1</code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated "><code>
+goos: darwin
+goarch: arm64
+pkg: github.com/op-y/mytest/function
+BenchmarkFibonacci1h
+BenchmarkFibonacci1h-8   	 3492006	       341.3 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/op-y/mytest/function	1.796s
+</code></div>
+
+<p>模糊测试官方说法是通过随机性的输入来测试功的一些边界情况是否正确，类似基本的单元测试，它使用 testing.F 对象，测试方法以 Fuzz 开头接受一个 *testing.F 入参且无返回值。</p>
+<p>在 function_test.go 中有一个模糊测试的例子。</p>
+
+
+
+
+<div class="code-annotated "><code>
+func FuzzFibonacci(f *testing.F) {
+	for _, seed := range [][]int{
+		{0, 1},
+		{1, 1},
+		{2, 2},
+		{3, 3},
+		{4, 5},
+		{5, 8},
+		{6, 13},
+		{7, 21},
+		{8, 34},
+		{9, 55},
+	} {
+		f.Add(seed[0], seed[1])
+	}
+	f.Fuzz(func(t *testing.T, in, expected int) {
+		result := function.Fibonacci(in)
+		if result != expected {
+			t.Fatalf(&#34;the %d fibonacci number is %d, but expect %d&#34;, in, result, expected)
+		}
+	})
+}
+</code></div>
+
+<p>执行效果如下。</p>
+
+
+<pre class="cmd">
+  
+  <code>go test -timeout 30s -run ^FuzzFibonacci$ github.com/op-y/mytest/function -v -count=1</code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   FuzzFibonacci
+=== RUN   FuzzFibonacci/seed#0
+=== RUN   FuzzFibonacci/seed#1
+=== RUN   FuzzFibonacci/seed#2
+=== RUN   FuzzFibonacci/seed#3
+=== RUN   FuzzFibonacci/seed#4
+=== RUN   FuzzFibonacci/seed#5
+=== RUN   FuzzFibonacci/seed#6
+=== RUN   FuzzFibonacci/seed#7
+=== RUN   FuzzFibonacci/seed#8
+=== RUN   FuzzFibonacci/seed#9
+--- PASS: FuzzFibonacci (0.00s)
+    --- PASS: FuzzFibonacci/seed#0 (0.00s)
+    --- PASS: FuzzFibonacci/seed#1 (0.00s)
+    --- PASS: FuzzFibonacci/seed#2 (0.00s)
+    --- PASS: FuzzFibonacci/seed#3 (0.00s)
+    --- PASS: FuzzFibonacci/seed#4 (0.00s)
+    --- PASS: FuzzFibonacci/seed#5 (0.00s)
+    --- PASS: FuzzFibonacci/seed#6 (0.00s)
+    --- PASS: FuzzFibonacci/seed#7 (0.00s)
+    --- PASS: FuzzFibonacci/seed#8 (0.00s)
+    --- PASS: FuzzFibonacci/seed#9 (0.00s)
+PASS
+ok  	github.com/op-y/mytest/function	0.463s
+</code></div>
+
+<p>我个人对模糊测试的作用目前还不太理解，需要各位更多的去查阅资料了。</p>
+<h4 id="测试覆盖率">测试覆盖率</h4>
+<p>官方在 testing 包中还为开发者提供了测试覆盖率统计工具，它的实现原理可以参考<a href="https://go.dev/blog/cover">这里</a>。从使用的角度来说比较简单。</p>
+<p>我们新定义一个包 date，实现一个根据序号返回当前星期几的函数 GetWeekDayName。</p>
+
+
+
+
+<div class="code-annotated "><code>
+package date
+
+func GetWeekDayName(day int) string {
+	switch day {
+	case 0:
+		return &#34;星期天&#34;
+	case 1:
+		return &#34;星期一&#34;
+	case 2:
+		return &#34;星期二&#34;
+	case 3:
+		return &#34;星期三&#34;
+	case 4:
+		return &#34;星期四&#34;
+	case 5:
+		return &#34;星期五&#34;
+	case 6:
+		return &#34;星期六&#34;
+	}
+	return &#34;序号不在合理范围&#34;
+}
+</code></div>
+
+<p>然后为它准备一个测试文件 date_test.go 如下。</p>
+
+
+
+
+<div class="code-annotated numbered"><code>
+func TestGetWeekDayName(t *testing.T) {
+	var tests = []struct {
+		day      int
+		expected string
+	}{
+		{0, &#34;星期天&#34;},
+		{3, &#34;星期三&#34;},
+		{8, &#34;序号不在合理范围&#34;},
+	}
+	for _, tt := range tests {
+		result := GetWeekDayName(tt.day)
+		if result != tt.expected {
+			t.Errorf(&#34;GetWeekDayName(%d): got %s, want %s&#34;, tt.day, result, tt.expected)
+		}
+	}
+}
+</code></div>
+
+<p>这里我们使用表驱动法，测试了8种情况中的3中，直观上看覆盖了 3/8 左右的代码。运行测试，这里加上 -coverprofile=coverage.out 选项。go test 会将测试覆盖率统计结果数据输出到当前目录 coverage.out 中。</p>
+
+
+<pre class="cmd">
+  
+  <code>cd date</code>
+  
+  <code>go test -run=TestGetWeekDayName -coverprofile=coverage.out ./.        </code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated "><code>
+ok      github.com/op-y/mytest/date     0.685s  coverage: 44.4% of statements
+</code></div>
+
+<p>实际测试覆盖代码在 44.4% 左右。对于输出文件，我们还可以用浏览器查看。</p>
+
+
+<pre class="cmd">
+  
+  <code>go tool cover -html=coverage.out</code>
+  
+</pre>
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<figure role="group" aria-describedby="caption-b9d7acdf7923f4bb43b9c350edfff881">
+  <a href="/go-testing/coverage.png" class="img-link">
+    <img src="/go-testing/coverage_hue6126bc775f2b4f465e2851c8d487be4_102482_1080x0_resize_box_3.png">
+  </a>
+  <figcaption id="caption-b9d7acdf7923f4bb43b9c350edfff881">
+    测试覆盖率可视化
+  </figcaption>
+</figure>
+
+<h3 id="testify-工具">testify 工具</h3>
+<p>古方提供的 testing 包对开中常见的测试场景而言已经非常够用了。不过总有追求极致的开发者们，所以社区里涌现出了更多更为便捷的测试工具。其中 <a href="https://github.com/stretchr/testify">testify</a> 应该是目前开发者使用最多的第三方测试工具包了。按照其官方文档所描述</p>
+
+
+<blockquote class="blockquote">
+  <p>
+    <p>testify 包含以下几个包：</p>
+<ul>
+<li>assert 提供了一个全面的断言函数集。</li>
+<li>http 包含了使你更容易进行http活动测试的工具。</li>
+<li>mock 提供了一个系统来模拟你的对象。</li>
+<li>suite 提供了一个基本测试结构，包含了setup/teardown等功能。</li>
+</ul>
+<p>testify 是 Go 测试的强大工具，它可以帮助你写出更好的测试。</p>
+
+    
+  </p>
+</blockquote>
+<p>就目前观察而言，其中 http 和 mock 包由于还有细分领域的各种工具，所以使用的开发者相对较少，而 assert 包和 suite 包，由于其设计与使用更加符合测试惯例、更接近Java、Python 等面相对象语言的测试习惯，受到了广大 Go 开发者的欢迎。</p>
+<p>我们在示例代码 math 包中创建了 assertion_test.go 和 suite_test.go 两个文件，做了简单的演示说明。</p>
+
+
+
+
+<div class="code-annotated numbered"><code>
+package math
+
+import (
+	&#34;testing&#34;
+
+	&#34;github.com/stretchr/testify/assert&#34;
+)
+
+func TestMath(t *testing.T) {
+
+	a, b, expected := 1, 2, 3
+	result := Add(a, b)
+	assert.Equal(t, result, expected,
+		&#34;Add(%d, %d) is %d, expected is %d&#34;, a, b, result, expected)
+
+	a, b, unexpected := 2, 1, 0
+	result = Sub(a, b)
+	assert.NotEqual(t, result, unexpected,
+		&#34;Sub(%d, %d) eq %d, of course not %d&#34;, a, b, result, unexpected)
+
+	assert.Nil(t, nil, &#34;nil of course eq nil&#34;)
+
+	a, b, expected = 100, 10, 10
+	result = Div(a, b)
+	if assert.NotNil(t, result, &#34;result of Div must not be nil&#34;) {
+		assert.Equal(t, expected, result)
+	}
+}
+</code></div>
+
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestMath
+--- PASS: TestMath (0.00s)
+PASS
+ok  	github.com/op-y/mytest/math	0.829s
+</code></div>
+
+<p>如 assertion_test.go 中所示，<a href="https://pkg.go.dev/github.com/stretchr/testify@v1.8.1/assert#pkg-functions">assert</a> 包提供了一系列的断言函数，开发者可以很方便地运行测试用例，如果结合表驱动测试方法则会更加便捷。此外，testify 中还有一个 <a href="https://pkg.go.dev/github.com/stretchr/testify@v1.8.1/require#pkg-functions">require</a> 包，其功能与 assert 类似，不同之处在于 assert 在测试用例失败时使用 Errorf 方式输出信息，不会终止后续测试用例运行，而 require 使用 Fatalf 输出信息，会立即终止测试运行。</p>
+
+
+
+
+<div class="code-annotated "><code>
+package math
+
+import (
+	&#34;fmt&#34;
+	&#34;testing&#34;
+
+	&#34;github.com/stretchr/testify/suite&#34;
+)
+
+type MathTestSuite struct {
+	suite.Suite
+}
+
+func (suite *MathTestSuite) SetupSuite() {
+	fmt.Println(&#34;在测试组运行之前总有些事情要做...&#34;)
+}
+
+func (suite *MathTestSuite) SetupTest() {
+	fmt.Println(&#34;在测试运行之前总有些事情要做...&#34;)
+}
+
+func (suite *MathTestSuite) BeforeTest(suiteName, testName string) {
+	fmt.Printf(&#34;要运行 %s 测试组里 %s 测试用例了...\n&#34;, suiteName, testName)
+}
+
+func (suite *MathTestSuite) AfterTest(suiteName, testName string) {
+	fmt.Printf(&#34;运行完 %s 测试组里 %s 测试用例了...\n&#34;, suiteName, testName)
+}
+
+func (suite *MathTestSuite) TearDownTest() {
+	fmt.Println(&#34;在测试运行之后总有些事情要做...&#34;)
+}
+
+func (suite *MathTestSuite) TearDownSuite() {
+	fmt.Println(&#34;在测试组运行之后总有些事情要做...&#34;)
+}
+
+func (suite *MathTestSuite) TestAdd() {
+	suite.Equal(Add(1, 2), 3)
+}
+
+func (suite *MathTestSuite) TestSub() {
+	suite.Equal(Sub(2, 1), 1)
+}
+
+func (suite *MathTestSuite) TestMul() {
+	suite.Equal(Mul(9, 9), 81)
+}
+
+func (suite *MathTestSuite) TestDiv() {
+	suite.Equal(Div(100, 10), 10)
+}
+
+func TestMathTestSuite(t *testing.T) {
+	suite.Run(t, new(MathTestSuite))
+}
+</code></div>
+
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestMathTestSuite
+在测试组运行之前总有些事情要做...
+=== RUN   TestMathTestSuite/TestAdd
+在测试运行之前总有些事情要做...
+要运行 MathTestSuite 测试组里 TestAdd 测试用例了...
+运行完 MathTestSuite 测试组里 TestAdd 测试用例了...
+在测试运行之后总有些事情要做...
+=== RUN   TestMathTestSuite/TestDiv
+在测试运行之前总有些事情要做...
+要运行 MathTestSuite 测试组里 TestDiv 测试用例了...
+运行完 MathTestSuite 测试组里 TestDiv 测试用例了...
+在测试运行之后总有些事情要做...
+=== RUN   TestMathTestSuite/TestMul
+在测试运行之前总有些事情要做...
+要运行 MathTestSuite 测试组里 TestMul 测试用例了...
+运行完 MathTestSuite 测试组里 TestMul 测试用例了...
+在测试运行之后总有些事情要做...
+=== RUN   TestMathTestSuite/TestSub
+在测试运行之前总有些事情要做...
+要运行 MathTestSuite 测试组里 TestSub 测试用例了...
+运行完 MathTestSuite 测试组里 TestSub 测试用例了...
+在测试运行之后总有些事情要做...
+在测试组运行之后总有些事情要做...
+--- PASS: TestMathTestSuite (0.00s)
+    --- PASS: TestMathTestSuite/TestAdd (0.00s)
+    --- PASS: TestMathTestSuite/TestDiv (0.00s)
+    --- PASS: TestMathTestSuite/TestMul (0.00s)
+    --- PASS: TestMathTestSuite/TestSub (0.00s)
+PASS
+ok  	github.com/op-y/mytest/math	0.339s
+</code></div>
+
+<p>suite 包与之前提到的官方 testing 包中 TestMain 函数相似，但是 suite 提供更加细粒度的控制方式。如 suite_test.go 中所示，我们定义了 MathTestSuite 结构体，它包含了suite.Suite 成员，在此基础上，可以为 MathTestSuite 实现一系列的测试 <a href="https://pkg.go.dev/github.com/stretchr/testify@v1.8.1/suite#pkg-types">hook</a>，这样一来就可以实现在整体测试运行前后、每个测试函数运行前后执行特定的逻辑，然后再给 MathTestSuite 实现了一些测试方法，这里就是 TestAdd、TestSub、TestMul、TestDiv 了，最后通过一个标准的 TestXXX 方法调用 suite.Run(t, new(MathTestSuite)) 即可运行全部的测试了。当然也可以单独执行其中某一个测试方法，执行过程类似。</p>
+<h2 id="mock">Mock</h2>
+<p>介绍 testify 的时候，我们提到了其有一个 mock 包，不过不常用，更多的开发者会针对自己面临的场景选择更加合适和趁手的 Mock 工具。这里我就要结合遇到的第二个问题，来介绍测试中的 Mock 了。</p>
+<h3 id="什么是mock">什么是mock</h3>
+<p>通常在面向对象程序设计中，Mock（中文常称为模拟对象）是以可控的方式模拟真实对象行为的假的对象。程序员通常创造模拟对象来测试其他对象的行为，很类似汽车设计者使用碰撞测试假人来模拟车辆碰撞中人的动态行为。</p>
+<p>我在项目中遇到的第个二问题就是这样一类场景。</p>
+<ul>
+<li>其一是待测试的一个功能依赖内部系统返回用户的考勤数据和请假数据，业务代码根据这两个数据决定后续的执行逻辑，但是测试环境里这些外部系统都能正常访问，不过它们没有返回任何数据，会导致测试结果不符合预期；</li>
+<li>其二是待测试的这个功能需要调用外部公司的OpenAPI，由于测试用例中的数据都是编造的，调用第三方的OpenAPI 必然会得到一个异常响应，这与我测试的出发点是不匹配的，也会导致测试结果不符合预期。</li>
+</ul>
+<p>当时，我第一时间就想到了使用 Mock 方式模拟这两类调用，按照我的预期来返回数据。我在项目中找了很久，没有看到前人留下来的 Mock 代码，也不知道之前如何做到的。所以只能找合适的 Mock 工具现写了。</p>
+<h4 id="go-mock">go-mock</h4>
+<p>我照常想到的是 Go 官方的解决方案。官方之前提供了一个 <a href="https://github.com/golang/mock">mock</a> 工具，但是它在2023年就进入了归档状态，不少人说是因为这个工具太稳定了，没啥需要改进的，才被归档的😂。不过在此之后 <a href="https://www.uber.com">Uber</a> fork 了这个项目，并一直在开发和维护这个 <a href="https://github.com/uber-go/mock">mock</a> 工具。</p>
+<p>Go/Uber 的这个 Mock 工具，从实现上说，是传统的面相对象方式，具体到 Go 项目中，它要求 <strong>被mock</strong> 的对象需要实现一个 <strong>interface</strong>，然后通过 Mock 工具分析这个 interface，自动生成 <strong>mock对象</strong>，后续的测试代码中就可以使用这个 Mock 对象模拟真实对象的行为了。</p>
+<p>为了说明我在项目中遇到的问题，我在示例代码中模拟了这一过程。</p>
+<p>首先，要使用这个 Mock 工具，我们先要安装它。</p>
+
+
+<pre class="cmd">
+  
+  <code>go install go.uber.org/mock/mockgen@latest</code>
+  
+</pre>
+
+<p>项目中的业务代码是直接用函数写的，并没有实现某一个 interface，这里我姑且用一个 DepService 接口和一个 DepServiceImpl 结构体来替代。</p>
+
+
+
+
+<div class="code-annotated "><code>
+package dep
+
+type UserAttendanceInfo struct {
+	UserId       int    `json:&#34;user_id&#34;`
+	UserName     string `json:&#34;user_name&#34;`
+	RealWorkTime string `json:&#34;real_work_time&#34;`
+	VacationTime string `json:&#34;vacation_time&#34;`
+}
+
+// 这个接口不一定要包含真实Service所有方法
+type DepService interface {
+	GetUserAttendanceInfo(userId int) (*UserAttendanceInfo, error)
+	ProcessOrder(orderId int) error
+}
+</code></div>
+
+
+
+
+
+<div class="code-annotated "><code>
+package dep
+
+import (
+	&#34;errors&#34;
+	&#34;fmt&#34;
+)
+
+type DepServiceImpl struct{}
+
+func NewDepServiceImpl() *DepServiceImpl {
+	return &amp;DepServiceImpl{}
+}
+
+func (svc *DepServiceImpl) Init() {}
+
+func (svc *DepServiceImpl) GetUserAttendanceInfo(userId int) (*UserAttendanceInfo, error) {
+	fmt.Println(&#34;不用想了, 依赖的接口不会返回数据!&#34;)
+	return nil, nil
+}
+
+func (svc *DepServiceImpl) ProcessOrder(orderId int) error {
+	fmt.Println(&#34;不用想了, 三方系统无法正常处理测试数据!&#34;)
+	return errors.New(&#34;参数异常&#34;)
+}
+
+func (svc *DepServiceImpl) Do(userId, orderId int) error {
+	fmt.Println(&#34;一些前置工作&#34;)
+	info, err := svc.GetUserAttendanceInfo(userId)
+	if err != nil {
+		fmt.Println(&#34;获取用户出勤信息异常&#34;)
+		return err
+	}
+	if info.VacationTime != &#34;0&#34; &amp;&amp; info.RealWorkTime &lt; &#34;8&#34; {
+		if err := svc.ProcessOrder(orderId); err != nil {
+			fmt.Println(&#34;处理订单异常&#34;)
+			return err
+		}
+	}
+	fmt.Println(&#34;一些收尾工作&#34;)
+	return nil
+}
+</code></div>
+
+<p>参照项目中的情况，有一个测试文件，这里是 dep_test.go，其中的测试因为外部依赖接口问题是无法正常通过的。所以我们先使用 Mock 工具生成 Mock 对象到 dep_mock.go 中。</p>
+
+
+<pre class="cmd">
+  
+  <code>mockgen -source=foo.go -destination=dep_mock.go -package=dep</code>
+  
+</pre>
+
+
+
+
+
+<div class="code-annotated numbered"><code>
+// Code generated by MockGen. DO NOT EDIT.
+// Source: interface.go
+//
+// Generated by this command:
+//
+//	mockgen -source=interface.go -destination=dep_mock.go -package=dep
+//
+
+// Package dep is a generated GoMock package.
+package dep
+
+import (
+	reflect &#34;reflect&#34;
+
+	gomock &#34;go.uber.org/mock/gomock&#34;
+)
+
+// MockDepService is a mock of DepService interface.
+type MockDepService struct {
+	ctrl     *gomock.Controller
+	recorder *MockDepServiceMockRecorder
+	isgomock struct{}
+}
+
+// MockDepServiceMockRecorder is the mock recorder for MockDepService.
+type MockDepServiceMockRecorder struct {
+	mock *MockDepService
+}
+
+// NewMockDepService creates a new mock instance.
+func NewMockDepService(ctrl *gomock.Controller) *MockDepService {
+	mock := &amp;MockDepService{ctrl: ctrl}
+	mock.recorder = &amp;MockDepServiceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDepService) EXPECT() *MockDepServiceMockRecorder {
+	return m.recorder
+}
+
+// GetUserAttendanceInfo mocks base method.
+func (m *MockDepService) GetUserAttendanceInfo(userId int) (*UserAttendanceInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, &#34;GetUserAttendanceInfo&#34;, userId)
+	ret0, _ := ret[0].(*UserAttendanceInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserAttendanceInfo indicates an expected call of GetUserAttendanceInfo.
+func (mr *MockDepServiceMockRecorder) GetUserAttendanceInfo(userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, &#34;GetUserAttendanceInfo&#34;, reflect.TypeOf((*MockDepService)(nil).GetUserAttendanceInfo), userId)
+}
+
+// ProcessOrder mocks base method.
+func (m *MockDepService) ProcessOrder(orderId int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, &#34;ProcessOrder&#34;, orderId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ProcessOrder indicates an expected call of ProcessOrder.
+func (mr *MockDepServiceMockRecorder) ProcessOrder(orderId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, &#34;ProcessOrder&#34;, reflect.TypeOf((*MockDepService)(nil).ProcessOrder), orderId)
+}
+</code></div>
+
+<p>然后就可以改写测试用例，在其中使用 Mock 对象跑通测试了。</p>
+
+
+
+
+<div class="code-annotated numbered"><code>
+package dep
+
+import (
+	&#34;testing&#34;
+
+	&#34;go.uber.org/mock/gomock&#34;
+)
+
+func TestServiceDo(t *testing.T) {
+    // 创建 Mock 对象
+	ctrl := gomock.NewController(t)
+	m := NewMockDepService(ctrl)
+
+    // 设置 Mock 对象的行为
+	m.EXPECT().GetUserAttendanceInfo(gomock.Any()).
+		DoAndReturn(func(userId int) (*UserAttendanceInfo, error) {
+			if userId == 101 {
+				return &amp;UserAttendanceInfo{
+					UserId:       101,
+					UserName:     &#34;张三&#34;,
+					RealWorkTime: &#34;6&#34;,
+					VacationTime: &#34;2&#34;,
+				}, nil
+			} else {
+				return &amp;UserAttendanceInfo{
+					UserId:       999,
+					UserName:     &#34;其它人&#34;,
+					RealWorkTime: &#34;8&#34;,
+					VacationTime: &#34;0&#34;,
+				}, nil
+			}
+		}).
+		AnyTimes()
+
+    // 设置 Mock 对象的行为
+	m.EXPECT().ProcessOrder(gomock.Any()).Return(nil).AnyTimes()
+
+	svc := NewDepServiceImpl()
+	svc.Init()
+
+	userId, orderId := 101, 101
+	t.Log(&#34;一些前置工作&#34;)
+    // 这里使用了 Mock 对象
+	info, err := m.GetUserAttendanceInfo(userId)
+	if err != nil {
+		t.Fatal(&#34;访问依赖接口异常&#34;)
+	}
+	if info.RealWorkTime == info.VacationTime {
+		t.Fatal(&#34;张三的测试用例中 RealWorkTime 与 VacationTime 不应该相等!&#34;)
+	}
+
+    // 这里也使用了 Mock 对象
+	if err := m.ProcessOrder(orderId); err != nil {
+		t.Fatal(&#34;访问三方依赖接口异常&#34;)
+	}
+	t.Log(&#34;一些收尾工作&#34;)
+	t.Log(&#34;完成业务流程测试&#34;)
+}
+</code></div>
+
+<p>正常运行结果如下。至此第二个问题得到了解决。</p>
+
+
+
+
+<div class="code-annotated "><code>
+=== RUN   TestServiceDo
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/dep/dep_test.go:39: 一些前置工作
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/dep/dep_test.go:50: 一些收尾工作
+    /Users/yezhiqin/gopath/src/github.com/op-y/mytest/dep/dep_test.go:51: 完成业务流程测试
+--- PASS: TestServiceDo (0.00s)
+PASS
+ok  	github.com/op-y/mytest/dep	0.654s
+</code></div>
+
+<h4 id="第三方-mock-工具">第三方 Mock 工具</h4>
+<p>在官方的 Mock 工具之外，不乏一些实现路径不同的 Mock 工具。解决问题过程中，我通过查阅资料发现了这些各有特点的 Mock工具，将它们分享在这里。通过了解同一功能（mock）的不同实现途径，我也受到了不少启发。</p>
+<p>首先是 <strong>monkey patch</strong> 方式，接触过 Python 的朋友一定不会陌生，在动态语言中，由于语言特性，使用一个对象替代另一个对象非常简单，那么在 Go 这种静态语言中能做到吗？Bouke 大神还真就做了，它的 <a href="https://github.com/bouk/monkey">mock</a> 项目是在 Go 中通过动态修改函数 <strong>代码段</strong> 来实现 Mock 功能，其指导思想可以参考他的文章 <a href="https://bou.ke/blog/monkey-patching-in-go/">monkey-patching-in-go</a>。后来国内开发者在此基础上改进，又实现了支持并发monkey patch 的工具 <a href="https://github.com/go-kiss/monkey">mock</a>。我在示例代码 gokiss 目录中留下了 go-kiss/monkey 项目自己提供的 example。</p>
+<p>上述这种 monkey patch 通过黑科技去修改汇编代码的方式虽然让 Mock 变的很简单，但也不是完全没有代价的。首先，在程序运行时修改函数的代码段这个操作有些操作系统本身就不支持。其中就有苹果的 M 系列芯片平台。苹果为了安全性，在系统层面禁止内存同时拥有可写和可执行权限。所以 monkey patch 没法在 M 系列芯片设备上原生运行。其次就是兼容性问题。因为底层实现依赖 Go 语言的 ABI，但 Go 语言只保证 API 下向兼容，从不保证 ABI 稳定不变。未来某个 Go 版本 ABI 大改，有可能导致之前写的单元测试都没法正常运行。</p>
+<p>顺着修改代码的思路，又有高手 <a href="https://blog.xhd2015.xyz">xhd2015</a> 创造了新的 Mock工具。不是直接修改底层汇编代码有平台不兼容的问题吗？那是不是可以参考 testing 实现 coverage 的 <a href="https://go.dev/blog/cover">原理</a> 在编译期间直接修改源码呢？于是有了 <a href="https://github.com/xhd2015/go-mock">go-mock</a> 项目。之后 xhd2015 大佬又通过编译期间修改 IR 代码的方式实现了另一个 <a href="https://github.com/xhd2015/xgo">xgo</a> Mock工具。</p>
+<p>那这种修改编译期间临时修改 Go 源码或者修改 IR 代码方式就完全没有缺点了吗？也不是，最大的不足是这种方式通常只能 Mock 我们自己编写的代码，而且由于其实现原理，运行开销也不小。</p>
+<h3 id="mock-中间件">Mock 中间件</h3>
+<p>有关项目问题中 Mock 的内容，到这里其实已经结束了。不过我还想简单的补充一些开源项目，它们主要是我这次项目学习中还没有遇到的场景，即 Mock HTTP服务和数据库，我将它们放在下边，以供各位参考。</p>
+<ul>
+<li>Mock HTTP
+<ul>
+<li><a href="https://pkg.go.dev/net/http/httptest">net/http/httptest</a></li>
+<li><a href="https://github.com/h2non/gock">gock</a></li>
+<li><a href="https://github.com/jarcoal/httpmock">httpmock</a></li>
+</ul>
+</li>
+<li>Mock MySQL
+<ul>
+<li><a href="https://github.com/DATA-DOG/go-sqlmock">go-sqlmock</a></li>
+</ul>
+</li>
+<li>Mock Redis
+<ul>
+<li><a href="https://github.com/alicebob/miniredis">miniredis</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="后记">后记</h2>
+<p>测试是开发过程中必不可少的一个环节，也是我们每个开发者应该熟练掌握的技能。经历这次解决新项目学习中遇到的各种测试问题，我对 Go 开发中的测试有了更加深入的理解。希望我分享的故事和提供的各种信息对你有帮助！</p>
+
+  </main>
+  <div id="disqus-container">
+  
+</div>
+
+
+          
+            <footer role="contentinfo">
+  <div
+  
+  >
+    <label for="themer">
+      dark theme: <input type="checkbox" id="themer" class="vh">
+      
+      <span aria-hidden="true"></span>
+    </label>
+  </div>
+  
+    Powered by <a href="https://gohugo.io/">Hugo</a>. Themed by <a href="https://github.com/zwbetz-gh/cupper-hugo-theme">Cupper</a>.
+  
+</footer>
+
+          
+        </div>
+      </div>
+    </div>
+    
+
+<script src="/js/dom-scripts.js"></script>  
+
+<script src="/js/prism.js"></script>
+
+
+
+
+
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+    
+  
+
+  </body>
+</html>
