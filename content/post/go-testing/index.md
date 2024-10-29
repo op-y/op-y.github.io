@@ -31,7 +31,7 @@ options="1080x" >}}
 
 #### 基础测试
 
-如官方文档描述，编写一个基本的单元测试非常简单。在任何一个包内，创建一个如 **xxx_test.go** 这样以 _test.go 结尾的文件，文件中 **import testing** 包，然后在文件中编写 **func TestXXX(t *testing.T) {...}** 这样，名称以 Test 开头接收一个 *testing.T 对象的参数，且没有返回值的函数。这样 go test 就能识别该文件是测试代码文件（正常编译时会忽略该文件），文件中 TestXXX 函数时测试函数。
+如官方文档描述，编写一个基本的单元测试非常简单。在任何一个包内，创建一个如 **xxx_test.go** 这样以 _test.go 结尾的文件，文件中 **import testing** 包，然后在文件中编写 func TestXXX(t *testing.T) {...} 这样，名称以 Test 开头接收一个 *testing.T 对象的参数，且没有返回值的函数。这样 go test 就能识别该文件是测试代码文件（正常编译时会忽略该文件），文件中 TestXXX 函数是测试函数。
 
 以示例仓库中代码为例
 
@@ -110,7 +110,7 @@ ok      github.com/op-y/mytest/math     0.671s
 
 这个问题的报错非常简单粗暴: **import cycle not allowed in test** ！
 
-顾名思义，代码中出现了循环依赖。在项目中这样的报错还不少😂。为了方便解释，这里模拟了一下这个场景。我先创建一个业务包名为 function，在包中创建一个 function.go 文件，里边有 RandInt 和 Fibonacci 两个函数，分别用于生成随机数和获取**斐波那切数列**中的第 N 项，然后再创建一个 function_test.go 测试文件，在文件中编写一个 TestFibonacci 测试函数。
+顾名思义，代码中出现了循环依赖。在项目中这样的报错还不少😂。为了方便解释，这里模拟了一下这个场景。我先创建一个业务包，包名为 function，在包中创建一个 function.go 文件，里边有 RandInt 和 Fibonacci 两个函数，分别用于生成随机数和获取**斐波那切数列**中的第 N 项，然后再创建一个 function_test.go 测试文件，在文件中编写一个 TestFibonacci 测试函数。
 
 {{< code >}}
 package function
@@ -314,7 +314,7 @@ ok      github.com/op-y/mytest/math     0.695s
 
 #### 测试钩子
 
-前面介绍测试子任务时，提到它的一个作用是可以将测试集中，然后统一运行一些前置和后置逻辑。针对这种场景，其实 testing 包中还提供了一个 testing.M 对象和 TestMain 方法。只需要在 _test.go 文件中加入一个 **TestMain(m *testing.M)** 函数，并在函数中调用 m.Run() 方法，go test 在执行单个 TestXXX 方法时的逻辑就会发生变化，它将通过调用 TestMain 函数来执行该 TestXXX。如此一来我们就可以在 m.Run() 执行前后加上自己的处理逻辑了。
+前面介绍测试子任务时，提到它的一个作用是可以将测试集中，然后统一运行一些前置和后置逻辑。针对这种场景，其实 testing 包中还提供了一个 testing.M 对象和 TestMain 方法。只需要在 _test.go 文件中加入一个 TestMain(m *testing.M) 函数，并在函数中调用 m.Run() 方法，go test 在执行单个 TestXXX 方法时的逻辑就会发生变化，它将通过调用 TestMain 函数来执行该 TestXXX。如此一来我们就可以在 m.Run() 执行前后加上自己的处理逻辑了。
 
 我们在 math_test.go 中追加 TestMain 函数。
 
@@ -511,7 +511,7 @@ options="1080x" >}}
 
 ### testify 工具
 
-古方提供的 testing 包对开中常见的测试场景而言已经非常够用了。不过总有追求极致的开发者们，所以社区里涌现出了更多更为便捷的测试工具。其中 [testify](https://github.com/stretchr/testify) 应该是目前开发者使用最多的第三方测试工具包了。按照其官方文档所描述
+官方提供的 testing 包对开中常见的测试场景而言已经非常够用了。不过总有追求极致的开发者们，所以社区里涌现出了更多更为便捷的测试工具。其中 [testify](https://github.com/stretchr/testify) 应该是目前开发者使用最多的第三方测试工具包了。按照其官方文档所描述
 
 {{< blockquote >}}
 testify 包含以下几个包：
@@ -677,11 +677,13 @@ suite 包与之前提到的官方 testing 包中 TestMain 函数相似，但是 
 
 当时，我第一时间就想到了使用 Mock 方式模拟这两类调用，按照我的预期来返回数据。我在项目中找了很久，没有看到前人留下来的 Mock 代码，也不知道之前如何做到的。所以只能找合适的 Mock 工具现写了。
 
+### code Mock
+
 #### go-mock
 
-我照常想到的是 Go 官方的解决方案。官方之前提供了一个 [mock](https://github.com/golang/mock) 工具，但是它在2023年就进入了归档状态，不少人说是因为这个工具太稳定了，没啥需要改进的，才被归档的😂。不过在此之后 [Uber](https://www.uber.com) fork 了这个项目，并一直在开发和维护这个 [mock](https://github.com/uber-go/mock) 工具。
+我首先想到的是 Go 官方的解决方案。官方之前提供了一个 [mock](https://github.com/golang/mock) 工具，但是它在2023年就进入了归档状态，不少人说是因为这个工具太稳定了，没啥需要改进的，才被归档的😂。不过在此之后 [Uber](https://www.uber.com) fork 了这个项目，并一直在开发和维护这个 [mock](https://github.com/uber-go/mock) 工具。
 
-Go/Uber 的这个 Mock 工具，从实现上说，是传统的面相对象方式，具体到 Go 项目中，它要求 **被mock** 的对象需要实现一个 **interface**，然后通过 Mock 工具分析这个 interface，自动生成 **mock对象**，后续的测试代码中就可以使用这个 Mock 对象模拟真实对象的行为了。
+Go/Uber 的这个 Mock 工具，从实现上说，是传统的面相对象方式，具体到 Go 项目中，它要求 **被Mock*对象** 需要实现一个 **interface**，然后通过 Mock 工具分析这个 interface，自动生成 **Mock对象**，后续的测试代码中就可以使用这个 Mock 对象模拟真实对象的行为了。
 
 为了说明我在项目中遇到的问题，我在示例代码中模拟了这一过程。
 
@@ -911,15 +913,15 @@ ok  	github.com/op-y/mytest/dep	0.654s
 
 在官方的 Mock 工具之外，不乏一些实现路径不同的 Mock 工具。解决问题过程中，我通过查阅资料发现了这些各有特点的 Mock工具，将它们分享在这里。通过了解同一功能（mock）的不同实现途径，我也受到了不少启发。
 
-首先是 **monkey patch** 方式，接触过 Python 的朋友一定不会陌生，在动态语言中，由于语言特性，使用一个对象替代另一个对象非常简单，那么在 Go 这种静态语言中能做到吗？Bouke 大神还真就做了，它的 [mock](https://github.com/bouk/monkey) 项目是在 Go 中通过动态修改函数 **代码段** 来实现 Mock 功能，其指导思想可以参考他的文章 [monkey-patching-in-go](https://bou.ke/blog/monkey-patching-in-go/)。后来国内开发者在此基础上改进，又实现了支持并发monkey patch 的工具 [mock](https://github.com/go-kiss/monkey)。我在示例代码 gokiss 目录中留下了 go-kiss/monkey 项目自己提供的 example。
+首先是 **Monkey Patch** 方式，接触过 Python 的朋友一定不会陌生，在动态语言中，由于语言特性，使用一个对象替代另一个对象非常简单，那么在 Go 这种静态语言中能做到吗？[Bouke](https://bou.ke/) 大神还真就做了，它的 [mock](https://github.com/bouk/monkey) 项目是在 Go 中通过动态修改函数 **代码段** 来实现 Mock 功能，其指导思想可以参考他的文章 [monkey-patching-in-go](https://bou.ke/blog/monkey-patching-in-go/)。后来国内开发者在此基础上改进，又实现了支持并发Monkey Patch 的工具 [mock](https://github.com/go-kiss/monkey)。我在示例代码 gokiss 目录中留下了 go-kiss/monkey 项目自己提供的 example。
 
-上述这种 monkey patch 通过黑科技去修改汇编代码的方式虽然让 Mock 变的很简单，但也不是完全没有代价的。首先，在程序运行时修改函数的代码段这个操作有些操作系统本身就不支持。其中就有苹果的 M 系列芯片平台。苹果为了安全性，在系统层面禁止内存同时拥有可写和可执行权限。所以 monkey patch 没法在 M 系列芯片设备上原生运行。其次就是兼容性问题。因为底层实现依赖 Go 语言的 ABI，但 Go 语言只保证 API 下向兼容，从不保证 ABI 稳定不变。未来某个 Go 版本 ABI 大改，有可能导致之前写的单元测试都没法正常运行。
+上述这种 Monkey Patch 通过黑科技去修改汇编代码的方式虽然让 Mock 变的很简单，但也不是完全没有代价的。首先，在程序运行时修改函数的代码段这个操作有些操作系统本身就不支持。其中就有苹果的 M 系列芯片平台。苹果为了安全性，在系统层面禁止内存同时拥有可写和可执行权限。所以 Monkey Patch 没法在 M 系列芯片设备上原生运行。其次就是兼容性问题。因为底层实现依赖 Go 语言的 ABI，但 Go 语言只保证 API 下向兼容，从不保证 ABI 稳定不变。未来某个 Go 版本 ABI 大改，有可能导致之前写的单元测试都没法正常运行。
 
-顺着修改代码的思路，又有高手 [xhd2015](https://blog.xhd2015.xyz) 创造了新的 Mock工具。不是直接修改底层汇编代码有平台不兼容的问题吗？那是不是可以参考 testing 实现 coverage 的 [原理](https://go.dev/blog/cover) 在编译期间直接修改源码呢？于是有了 [go-mock](https://github.com/xhd2015/go-mock) 项目。之后 xhd2015 大佬又通过编译期间修改 IR 代码的方式实现了另一个 [xgo](https://github.com/xhd2015/xgo) Mock工具。
+顺着修改代码的思路，又有高手 [xhd2015](https://blog.xhd2015.xyz) 创造了新的 Mock工具。直接修改底层汇编代码不是有平台兼容性问题吗？那是不是可以参考 testing 实现 coverage 的 [原理](https://go.dev/blog/cover) 在编译期间直接修改源码呢？于是有了 [go-mock](https://github.com/xhd2015/go-mock) 项目。之后 xhd2015 大佬又通过编译期间修改 IR 代码的方式实现了另一个 [xgo](https://github.com/xhd2015/xgo) Mock工具。
 
-那这种修改编译期间临时修改 Go 源码或者修改 IR 代码方式就完全没有缺点了吗？也不是，最大的不足是这种方式通常只能 Mock 我们自己编写的代码，而且由于其实现原理，运行开销也不小。
+那这种修改编译期间临时修改 Go 源码或者修改 IR 代码方式就完全没有缺点了吗？也不是，最大的不足是这种方式通常只能 Mock 我们自己编写的代码，对三方库和中间件无能为力，而且由于其实现原理，运行开销也不小。
 
-### Mock 中间件
+### HTTP&DB Mock
 
 有关项目问题中 Mock 的内容，到这里其实已经结束了。不过我还想简单的补充一些开源项目，它们主要是我这次项目学习中还没有遇到的场景，即 Mock HTTP服务和数据库，我将它们放在下边，以供各位参考。
 
